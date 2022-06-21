@@ -7,15 +7,13 @@ mainInput = "TryThisToo.csv"
 fileName = mainwd+"\\"+mainInput
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300)
-pipr = '300'
-pipl = '300m'
+
 # =============================================================================
 
 #IMPORTS---------
 import csv
 import numpy as np
-from tkinter import *
-from tkinter import ttk
+from easygui import *
 from math import pi
 from opentrons import protocol_api
 
@@ -280,7 +278,7 @@ metadata = {
 }
 
 ############# MAIN #############
-def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl, pipr):
+def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList):
     #global cmdList, deckMap, amtList, pipr, pipl
 # ==============Checking Pipl and PipR=========================================
 #     print(pipl)
@@ -288,24 +286,31 @@ def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl,
 # =============================================================================
 
 ############################## Userinput  ##############################
-    def printtext():
-        global e
-        string = e.get() 
-        print string   
+    title = "Pipette selection"
+     
+    choices = ["300", "300m", "1000"]
+     
+    # message / question to be asked
+    msg = "Select any one option for pipr"
+     
+    # opening a choice box using our msg and choices
+    pipr = choicebox(msg, choices = choices)
+     
+    # printing the selected option
+    print(pipr)
     
-    from Tkinter import *
-    root = Tk()
-    
-    root.title('Name')
-    
-    e = Entry(root)
-    e.pack()
-    e.focus_set()
-    
-    b = Button(root,text='okay',command=printtext)
-    b.pack(side='bottom')
-    root.mainloop()
-
+    title = "Pipette selection"
+     
+    choices = ["300", "300m", "1000"]
+     
+    # message / question to be asked
+    msg = "Select any one option for pipl"
+     
+    # opening a choice box using our msg and choices
+    pipl = choicebox(msg, choices = choices)
+     
+    # printing the selected option
+    print(pipl)
 
 ##############################  SETTINGS  ##############################
     dBottom = 4
@@ -646,7 +651,7 @@ from opentrons import simulate
 amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
 bep = simulate.get_protocol_api('2.5')
 bep.home()
-run(bep, cmdList, deckMap, amtList, pipl, pipr)
+run(bep, cmdList, deckMap, amtList)
 for line in bep.commands():
     print(line)
 #=============================================================================
