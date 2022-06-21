@@ -14,6 +14,8 @@ pipl = '300m'
 #IMPORTS---------
 import csv
 import numpy as np
+from tkinter import *
+from tkinter import ttk
 from math import pi
 from opentrons import protocol_api
 
@@ -284,6 +286,27 @@ def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl,
 #     print(pipl)
 #     print(pipr)
 # =============================================================================
+
+############################## Userinput  ##############################
+    def printtext():
+        global e
+        string = e.get() 
+        print string   
+    
+    from Tkinter import *
+    root = Tk()
+    
+    root.title('Name')
+    
+    e = Entry(root)
+    e.pack()
+    e.focus_set()
+    
+    b = Button(root,text='okay',command=printtext)
+    b.pack(side='bottom')
+    root.mainloop()
+
+
 ##############################  SETTINGS  ##############################
     dBottom = 4
     dTop = 2
@@ -376,12 +399,6 @@ def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl,
         #parse all informations
         source_ware = cmdRow[0]
         source_well = cmdRow[1].split(', ')
-        
-# =============================================================================
-#         source_type = deckMap[]
-#         
-#         source_type = cmdRow[8] #NEW
-# =============================================================================
         target_ware = cmdRow[2]
         target_well = cmdRow[3].split(', ')
         transfer_amt = float(cmdRow[4]) #only one transfer amount is allowed
@@ -624,6 +641,7 @@ def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl,
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
+#=============================================================================
 from opentrons import simulate
 amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
 bep = simulate.get_protocol_api('2.5')
@@ -631,4 +649,5 @@ bep.home()
 run(bep, cmdList, deckMap, amtList, pipl, pipr)
 for line in bep.commands():
     print(line)
+#=============================================================================
 
