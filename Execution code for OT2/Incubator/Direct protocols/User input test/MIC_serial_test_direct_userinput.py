@@ -7,6 +7,7 @@ mainInput = "TryThisToo.csv"
 fileName = mainwd+"\\"+mainInput
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300)
+#for 2020 --> DO NOT RUN ANY POSSIBLE MULTICHANNEL COMMANDS THROUGH 2020.DOES NOT LIKE IT (check for reservoir; 300m and well commands(not 8 after eachother))
 
 # =============================================================================
 
@@ -20,7 +21,7 @@ from opentrons import protocol_api
 ####### CUSTOM LIBRARY #########
 def ReadCSV_Dat(file_name):
     
-    #save all read info into the variable: command_list
+    #save all read info into the variable: command_list NOTE: this protocol is ready for multichannel and so needs np.empty(9). Normal protocol is np.empty(8)
     content_list = np.empty(9)
     print(content_list)
     with open(file_name, 'r') as file:
@@ -30,12 +31,12 @@ def ReadCSV_Dat(file_name):
             for cmdRow in cmdCSV:
                 print(cmdRow)
                 content_list = np.vstack([content_list, cmdRow])
-                print("delimiter tries ;")
+                print("delimiter ;")
         except: #if ; doesnt work it will try it with , as delimiter
             cmdCSV = csv.reader(file,delimiter=',')
             for cmdRow in cmdCSV:
                 content_list = np.vstack([content_list, cmdRow])
-                print("delimiter tries ,")       
+                print("delimiter ,")       
     
     #Find starting point of amount list and command list
     indices = []
@@ -301,7 +302,7 @@ def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList):
     
     title = "Pipette selection"
      
-    choices = ["300", "300m", "1000"]
+    choices = ["300", "300m", "1000", "Do not use"]
      
     # message / question to be asked
     msg = "Select any one option for pipl"
