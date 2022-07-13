@@ -272,9 +272,9 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 #METADATA----------
 metadata = {
     'protocolName': 'MIC serial to controller',
-    'author': 'Sebastian <sebastian.tandar@gmail.com>', 'Jorn <jorn@brinkonline.nl>'
-    'description': '96 wells plate MIC with p300 possibility', 'semi universal script'
-    'apiLevel': '2.5'
+    'author': 'Sebastian <sebastian.tandar@gmail.com>' 'Jorn <jorn@brinkonline.nl>',
+    'description': '96 wells plate MIC with p300 possibility' 'semi universal script',
+    'apiLevel': '2.12'
 }
 
 ############# MAIN #############
@@ -631,4 +631,5 @@ bep.home()
 run(bep, cmdList, deckMap, amtList, pipl, pipr)
 for line in bep.commands():
     print(line)
+
 

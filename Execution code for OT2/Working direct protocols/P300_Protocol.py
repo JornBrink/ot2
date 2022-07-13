@@ -1,5 +1,5 @@
 #INPUT FILE NAME---------------------
-fileName = "CommandList_PMID-BN_SM_CEF_EXPID-SM_CEF-4_Nannings.Ben.csv"
+fileName = "CommandList_PMID-_EXPID--_.(11).csv"
 
 #IMPORTS---------
 import csv
@@ -224,18 +224,19 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 
 ##############################   METADATA   ##############################
 metadata = {
-    'protocolName': 'OT2_CommandExecuter_vx1',
-    'author': 'Sebastian T. Tandar <sebastian.tandar@gmail.com>',
-    'description': 'MultiplateMIC translator to Python 2.7 API__patch 20201111',
-    'apiLevel': '2.2'
+    'protocolName': 'OT2_CommandExecuter_P300_protocol_20220713',
+    'author': 'Sebastian T. Tandar <sebastian.tandar@gmail.com> Jorn Brink <brinkj@vuw.leidenuniv.nl>',
+    'description': 'MultiplateMIC translator to Python 2.12 API__patch 20220713',
+    'apiLevel': '2.12'
 }
-
+#updated API level to 2.12 from 2.2
 
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     #READ
     global fileName #calling from global
-    os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+    #os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+    os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
     dBottom = 4

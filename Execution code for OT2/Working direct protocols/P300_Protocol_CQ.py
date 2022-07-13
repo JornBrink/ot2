@@ -222,13 +222,13 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 
 ##############################   METADATA   ##############################
 metadata = {
-    'protocolName': 'OT2_CommandExecuter_vx1',
+    'protocolName': 'OT2_CommandExecuter_Checkerboard',
     'author': 'Sebastian T. Tandar <sebastian.tandar@gmail.com>',
-    'description': 'MultiplateMIC translator to Python 2.7 API__patch 20201111',
-    'apiLevel': '2.2'
+    'description': 'MultiplateMIC translator to Python 2.12 API__patch 20220713',
+    'apiLevel': '2.12'
 }
 
-
+#api level 2.12 from 2.2
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     #READ
