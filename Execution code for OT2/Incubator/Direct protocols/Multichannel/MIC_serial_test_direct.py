@@ -7,7 +7,7 @@ mainInput = "TryThisToo.csv"
 fileName = mainwd+"\\"+mainInput
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300)
-pipr = '300'
+pipr = '1000'
 pipl = '300m'
 # =============================================================================
 
@@ -272,18 +272,17 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 #METADATA----------
 metadata = {
     'protocolName': 'MIC serial to controller',
-    'author': 'Sebastian <sebastian.tandar@gmail.com>' 'Jorn <jorn@brinkonline.nl>',
+    'author': 'Sebastian <sebastian.tandar@gmail.com> Jorn <jorn@brinkonline.nl>',
     'description': '96 wells plate MIC with p300 possibility' 'semi universal script',
     'apiLevel': '2.12'
 }
 
 ############# MAIN #############
-def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl, pipr):
-    #global cmdList, deckMap, amtList, pipr, pipl
-# ==============Checking Pipl and PipR=========================================
-#     print(pipl)
-#     print(pipr)
-# =============================================================================
+def run(protocol: protocol_api.ProtocolContext):
+    #os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+    #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+    amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+    
 ##############################  SETTINGS  ##############################
     dBottom = 4
     dTop = 2
@@ -316,6 +315,7 @@ def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl,
                 
     #load pipettes
         #single-channel
+        
     if(pipr == "300"):
         right_pipette = protocol.load_instrument('p300_single_gen2', 'right', tip_racks=tipLocs_300s)
         right_pipette.flow_rate.aspirate=aspirateSpeed
@@ -624,12 +624,14 @@ def run(protocol: protocol_api.ProtocolContext, cmdList, deckMap, amtList, pipl,
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-from opentrons import simulate
-amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-bep = simulate.get_protocol_api('2.5')
-bep.home()
-run(bep, cmdList, deckMap, amtList, pipl, pipr)
-for line in bep.commands():
-    print(line)
+# =============================================================================
+# from opentrons import simulate
+# amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+# bep = simulate.get_protocol_api('2.12')
+# bep.home()
+# run(bep)
+# for line in bep.commands():
+#     print(line)
+# =============================================================================
 
 

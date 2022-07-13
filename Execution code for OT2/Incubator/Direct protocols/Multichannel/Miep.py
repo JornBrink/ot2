@@ -7,21 +7,20 @@ mainInput = "TryThisToo.csv"
 fileName = mainwd+"\\"+mainInput
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300)
-#for 2020 --> DO NOT RUN ANY POSSIBLE MULTICHANNEL COMMANDS THROUGH 2020.DOES NOT LIKE IT (check for reservoir; 300m and well commands(not 8 after eachother))
-
+pipr = '300'
+pipl = '300m'
 # =============================================================================
 
 #IMPORTS---------
 import csv
 import numpy as np
-from easygui import *
 from math import pi
 from opentrons import protocol_api
 
 ####### CUSTOM LIBRARY #########
 def ReadCSV_Dat(file_name):
     
-    #save all read info into the variable: command_list NOTE: this protocol is ready for multichannel and so needs np.empty(9). Normal protocol is np.empty(8)
+    #save all read info into the variable: command_list
     content_list = np.empty(9)
     print(content_list)
     with open(file_name, 'r') as file:
@@ -31,12 +30,12 @@ def ReadCSV_Dat(file_name):
             for cmdRow in cmdCSV:
                 print(cmdRow)
                 content_list = np.vstack([content_list, cmdRow])
-                print("delimiter ;")
+                print("delimiter tries ;")
         except: #if ; doesnt work it will try it with , as delimiter
             cmdCSV = csv.reader(file,delimiter=',')
             for cmdRow in cmdCSV:
                 content_list = np.vstack([content_list, cmdRow])
-                print("delimiter ,")       
+                print("delimiter tries ,")       
     
     #Find starting point of amount list and command list
     indices = []
@@ -273,43 +272,17 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 #METADATA----------
 metadata = {
     'protocolName': 'MIC serial to controller',
-    'author': 'Sebastian <sebastian.tandar@gmail.com> Jorn <jorn@brinkonline.nl>',
+    'author': 'Sebastian <sebastian.tandar@gmail.com>' 'Jorn <jorn@brinkonline.nl>',
     'description': '96 wells plate MIC with p300 possibility' 'semi universal script',
     'apiLevel': '2.12'
 }
 
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
+    global fileName #calling from global
     #os.chdir('/var/lib/jupyter/notebooks/User Inputs')
     #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-    
-############################## Userinput  ##############################
-    title = "Pipette selection"
-     
-    choices = ["300", "300m", "1000"]
-     
-    # message / question to be asked
-    msg = "Select any one option for pipr"
-     
-    # opening a choice box using our msg and choices
-    pipr = choicebox(msg, choices = choices)
-     
-    # printing the selected option
-    print(pipr)
-    
-    title = "Pipette selection"
-     
-    choices = ["300", "300m", "1000", "Do not use"]
-     
-    # message / question to be asked
-    msg = "Select any one option for pipl"
-     
-    # opening a choice box using our msg and choices
-    pipl = choicebox(msg, choices = choices)
-     
-    # printing the selected option
-    print(pipl)
 
 ##############################  SETTINGS  ##############################
     dBottom = 4
@@ -343,6 +316,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 
     #load pipettes
         #single-channel
+        
     if(pipr == "300"):
         right_pipette = protocol.load_instrument('p300_single_gen2', 'right', tip_racks=tipLocs_300s)
         right_pipette.flow_rate.aspirate=aspirateSpeed
@@ -403,6 +377,12 @@ def run(protocol: protocol_api.ProtocolContext):
         #parse all informations
         source_ware = cmdRow[0]
         source_well = cmdRow[1].split(', ')
+        
+# =============================================================================
+#         source_type = deckMap[]
+#         
+#         source_type = cmdRow[8] #NEW
+# =============================================================================
         target_ware = cmdRow[2]
         target_well = cmdRow[3].split(', ')
         transfer_amt = float(cmdRow[4]) #only one transfer amount is allowed
@@ -645,13 +625,13 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-#=============================================================================
-from opentrons import simulate
-amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-bep = simulate.get_protocol_api('2.5')
-bep.home()
-run(bep)
-for line in bep.commands():
-    print(line)
-#=============================================================================
+# =============================================================================
+# from opentrons import simulate
+# amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+# bep = simulate.get_protocol_api('2.12')
+# bep.home()
+# run(bep)
+# for line in bep.commands():
+#     print(line)
+# =============================================================================
 
