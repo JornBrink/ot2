@@ -1,9 +1,12 @@
-#INPUTS------------
+#INPUTS------------Do not touch
 #mainwd = '/var/lib/jupyter/notebooks/Development/User Inputs'
 # =============================================================================
 mainwd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel"
 
-mainInput = "TryThisToo.csv"
+#input file name here
+mainInput = "CommandList_PMID-_EXPID--_..csv"
+
+#filename input do not touch 
 fileName = mainwd+"\\"+mainInput
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300)
@@ -21,22 +24,41 @@ from opentrons import protocol_api
 def ReadCSV_Dat(file_name):
     
     #save all read info into the variable: command_list
-    content_list = np.empty(9)
-    print(content_list)
-    with open(file_name, 'r') as file:
-        try: #Tries to first get 9 column with ; as delimiter
-            cmdCSV = csv.reader(file, delimiter=';')
-            print(cmdCSV)
-            for cmdRow in cmdCSV:
-                print(cmdRow)
-                content_list = np.vstack([content_list, cmdRow])
-                print("delimiter tries ;")
-        except: #if ; doesnt work it will try it with , as delimiter
-            cmdCSV = csv.reader(file,delimiter=',')
-            for cmdRow in cmdCSV:
-                content_list = np.vstack([content_list, cmdRow])
-                print("delimiter tries ,")       
+    #possible that for "normal" operation (with normal csv)
     
+    try:
+        content_list = np.empty(9)
+        print(content_list)
+        with open(file_name, 'r') as file:
+            try: #Tries to first get 9 column with ; as delimiter
+                cmdCSV = csv.reader(file, delimiter=';')
+                print(cmdCSV)
+                for cmdRow in cmdCSV:
+                    print(cmdRow)
+                    content_list = np.vstack([content_list, cmdRow])
+                    print("delimiter tries ;")
+            except: #if ; doesnt work it will try it with , as delimiter
+                cmdCSV = csv.reader(file,delimiter=',')
+                for cmdRow in cmdCSV:
+                    content_list = np.vstack([content_list, cmdRow])
+                    print("delimiter tries ,") 
+    except:
+        content_list = np.empty(8)
+        print(content_list)
+        with open(file_name, 'r') as file:
+            try: #Tries to first get 9 column with ; as delimiter
+                cmdCSV = csv.reader(file, delimiter=';')
+                print(cmdCSV)
+                for cmdRow in cmdCSV:
+                    print(cmdRow)
+                    content_list = np.vstack([content_list, cmdRow])
+                    print("delimiter tries ;")
+            except: #if ; doesnt work it will try it with , as delimiter
+                cmdCSV = csv.reader(file,delimiter=',')
+                for cmdRow in cmdCSV:
+                    content_list = np.vstack([content_list, cmdRow])
+                    print("delimiter tries ,") 
+        
     #Find starting point of amount list and command list
     indices = []
     for a in range(len(content_list)):
@@ -625,13 +647,11 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-# =============================================================================
-# from opentrons import simulate
-# amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-# bep = simulate.get_protocol_api('2.12')
-# bep.home()
-# run(bep)
-# for line in bep.commands():
-#     print(line)
-# =============================================================================
+from opentrons import simulate
+amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+bep = simulate.get_protocol_api('2.12')
+bep.home()
+run(bep)
+for line in bep.commands():
+    print(line)
 
