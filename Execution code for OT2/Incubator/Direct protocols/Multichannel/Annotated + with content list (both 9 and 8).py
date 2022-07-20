@@ -1,4 +1,4 @@
-#INPUTS------------Do not touch
+#INPUTS------------Do not touch ANYTHING but the mainInput and pipr/pipl(if needed)
 #mainwd = '/var/lib/jupyter/notebooks/Development/User Inputs'
 # =============================================================================
 mainwd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel"
@@ -9,10 +9,13 @@ mainInput = "CommandList_PMID-_EXPID--_..csv"
 #filename input do not touch 
 fileName = mainwd+"\\"+mainInput
 
-#this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300)
+#this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300) 
+#Note do not change to 1000 unless you want the p1000 to be used
 pipr = '300'
 pipl = '300m'
 # =============================================================================
+
+#update: 20/07/2022
 
 #IMPORTS---------
 import csv
@@ -42,11 +45,11 @@ def ReadCSV_Dat(file_name):
                 for cmdRow in cmdCSV:
                     content_list = np.vstack([content_list, cmdRow])
                     print("delimiter tries ,") 
-    except:
+    except:     #this is to use the np.empty 8 of "normal" csv
         content_list = np.empty(8)
         print(content_list)
         with open(file_name, 'r') as file:
-            try: #Tries to first get 9 column with ; as delimiter
+            try: #Tries to first get 8 column with ; as delimiter
                 cmdCSV = csv.reader(file, delimiter=';')
                 print(cmdCSV)
                 for cmdRow in cmdCSV:
@@ -65,11 +68,11 @@ def ReadCSV_Dat(file_name):
         if(">" in content_list[a][0]):
             indices.append(a)
 
-    #get amount list
+    #get amount list of liquids in the first few rows csv
     amt_list = content_list[indices[0]+1:indices[1]]
     amt_list = [x[[0, 1, 2, 4]] for x in amt_list]
     
-    #get command list
+    #get command list under the amount lists
     cmd_list = content_list[indices[1]+1:indices[2]]
     
     #get input deck map
@@ -295,13 +298,14 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 metadata = {
     'protocolName': 'MIC serial to controller',
     'author': 'Sebastian <sebastian.tandar@gmail.com>' 'Jorn <jorn@brinkonline.nl>',
-    'description': '96 wells plate MIC with p300 possibility' 'semi universal script',
+    'description': '96 wells plate MIC with p300 possibility' 'somewhat universal script',
     'apiLevel': '2.12'
 }
 
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     global fileName #calling from global
+    #search for where the user input it. Possible to use for jupyter. not really nessesary to use
     #os.chdir('/var/lib/jupyter/notebooks/User Inputs')
     #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
@@ -398,13 +402,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
         #parse all informations
         source_ware = cmdRow[0]
-        source_well = cmdRow[1].split(', ')
-        
-# =============================================================================
-#         source_type = deckMap[]
-#         
-#         source_type = cmdRow[8] #NEW
-# =============================================================================
+        source_well = cmdRow[1].split(', ')      
         target_ware = cmdRow[2]
         target_well = cmdRow[3].split(', ')
         transfer_amt = float(cmdRow[4]) #only one transfer amount is allowed
@@ -647,11 +645,13 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-from opentrons import simulate
-amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-bep = simulate.get_protocol_api('2.12')
-bep.home()
-run(bep)
-for line in bep.commands():
-    print(line)
+# =============================================================================
+# from opentrons import simulate
+# amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+# bep = simulate.get_protocol_api('2.12')
+# bep.home()
+# run(bep)
+# for line in bep.commands():
+#     print(line)
+# =============================================================================
 
