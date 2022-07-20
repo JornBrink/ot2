@@ -10,7 +10,7 @@ mainInput = "CommandList_PMID-_EXPID--_..csv"
 fileName = mainwd+"\\"+mainInput
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300) 
-#Note do not change to 1000 unless you want the p1000 to be used
+#Note do not change to 1000 unless you want the p1000 to be used (tips not sterile yet)
 pipr = '300'
 pipl = '300m'
 # =============================================================================
@@ -44,7 +44,8 @@ def ReadCSV_Dat(file_name):
                 cmdCSV = csv.reader(file,delimiter=',')
                 for cmdRow in cmdCSV:
                     content_list = np.vstack([content_list, cmdRow])
-                    print("delimiter tries ,") 
+                    print("delimiter tries ,")
+
     except:     #this is to use the np.empty 8 of "normal" csv
         content_list = np.empty(8)
         print(content_list)
@@ -297,7 +298,7 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 #METADATA----------
 metadata = {
     'protocolName': 'MIC serial to controller',
-    'author': 'Sebastian <sebastian.tandar@gmail.com>' 'Jorn <jorn@brinkonline.nl>',
+    'author': 'Sebastian <sebastian.tandar@gmail.com>' 'Jorn <jornbrink@kpnmail.nl>',
     'description': '96 wells plate MIC with p300 possibility' 'somewhat universal script',
     'apiLevel': '2.12'
 }

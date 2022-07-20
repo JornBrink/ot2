@@ -1078,6 +1078,7 @@ main <- function(file_path, file_name=""){
     adjustment <- cal_amtList_Excess(allAmt2, cmdList, deckMap2)
     allAmt <- ConvertAmtList_MCtoMV(adjustment[[2]])
     cmdList <<- adjustment[[1]]
+    
     #################
     #CREATING OUTPUT#
     #################
