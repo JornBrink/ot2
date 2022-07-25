@@ -1,7 +1,7 @@
 #INPUTS------------Do not touch ANYTHING but the mainInput and pipr/pipl(if needed)
-#mainwd = '/var/lib/jupyter/notebooks/Development/User Inputs'
+mainwd = '/var/lib/jupyter/notebooks/Development/User Inputs'
 # =============================================================================
-mainwd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel"
+#mainwd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel"
 
 #input file name here
 mainInput = "CommandList_PMID-_EXPID--_..csv"

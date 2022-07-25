@@ -226,7 +226,7 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 metadata = {
     'protocolName': 'OT2_CommandExecuter_P300_protocol_20220713',
     'author': 'Sebastian T. Tandar <sebastian.tandar@gmail.com> Jorn Brink <brinkj@vuw.leidenuniv.nl>',
-    'description': 'MultiplateMIC translator to Python 2.12 API__patch 20220713',
+    'description': 'MultiplateMIC translator to Python 2.12 API__patch 20220725',
     'apiLevel': '2.12'
 }
 #updated API level to 2.12 from 2.2
@@ -235,9 +235,13 @@ metadata = {
 def run(protocol: protocol_api.ProtocolContext):
     #READ
     global fileName #calling from global
-    #os.chdir('C:/Users/jornb/Desktop')
-    os.chdir('/var/lib/jupyter/notebooks/User Inputs')
-    #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+    try:
+        #os.chdir('C:/Users/jornb/Desktop')
+        #os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+        os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+    except:
+        os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+    
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
     dBottom = 4
