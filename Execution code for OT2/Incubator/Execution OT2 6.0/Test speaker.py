@@ -2,7 +2,7 @@
 import subprocess 
 from opentrons import protocol_api, types
 metadata = {'apiLevel': '2.9'} 
-AUDIO_FILE_PATH = '/var/lib/jupyter/notebooks/ARIVAMINION.mp3' 
+AUDIO_FILE_PATH = '/var/lib/jupyter/notebooks/JornsCave/ARIVAMINION.mp3' 
 def run_quiet_process(command): 
     subprocess.check_output('{} &> /dev/null'.format(command), shell=True) 
 def test_speaker(): 
