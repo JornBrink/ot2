@@ -122,7 +122,7 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
             h_bot = 23.36 #mm
             r = 15.62/2 #mm
             minH = 5 #mm
-            stab = 5 #mm
+            stab = 5 #mm changed from 5 to 3
         elif("1.5" in tube_type):
             #Tube Dimensions - Eppendorf
             h_bot = 38.3-20 #mm -- bot cone 17.8 (-20); h 37.8
