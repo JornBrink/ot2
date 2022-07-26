@@ -1,5 +1,5 @@
 #INPUTS------------Do not touch ANYTHING but the mainInput and pipr/pipl(if needed)
-fileName = "TryThis.csv"
+fileName = "TryThisToo.csv"
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300) 
 #Note do not change to 1000 unless you want the p1000 to be used (tips not sterile yet)
@@ -213,9 +213,10 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
         
     #if source is a nest reservoir
     elif( "eservoir" in tube_type):
-        h_tip = src_amt /8.2/71.2 - 2 #volume with a 5mm stap
+        h_tip = src_amt /8.2/71.2 - 2 #volume with a 2mm stap
         h_tip = max(h_tip,2) #max tip hover
      
+    
     else:
     #deep well dimensions
         h_bot = 0
@@ -647,5 +648,5 @@ def run(protocol: protocol_api.ProtocolContext):
 # run(bep)
 # for line in bep.commands():
 #     print(line)
-# 
 # =============================================================================
+

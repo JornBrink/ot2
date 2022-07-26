@@ -1,7 +1,7 @@
 import subprocess 
 from opentrons import protocol_api, types
 metadata = {'apiLevel': '2.9'} 
-AUDIO_FILE_PATH = '/etc/audio/speaker-test.mp3' 
+AUDIO_FILE_PATH = '/var/lib/jupyter/notebooks/JornsCave/SMILER_DISPATCHFX.mp3'  
 def run_quiet_process(command): 
     subprocess.check_output('{} &> /dev/null'.format(command), shell=True) 
 def test_speaker(): 
@@ -19,3 +19,9 @@ def run(protocol: protocol_api.ProtocolContext):
     p20.pick_up_tip()
     p20.drop_tip()
     test_speaker()
+    
+    
+    
+    
+    
+    
