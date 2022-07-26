@@ -24,37 +24,37 @@ def ReadCSV_Dat(file_name):
     
     try:
         content_list = np.empty(9)
-        print(content_list)
+        #print(content_list)
         with open(file_name, 'r') as file:
             try: #Tries to first get 9 column with ; as delimiter
                 cmdCSV = csv.reader(file, delimiter=';')
-                print(cmdCSV)
+                #print(cmdCSV)
                 for cmdRow in cmdCSV:
-                    print(cmdRow)
+                   # print(cmdRow)
                     content_list = np.vstack([content_list, cmdRow])
-                    print("delimiter tries ;")
+                    #print("delimiter tries ;")
             except: #if ; doesnt work it will try it with , as delimiter
                 cmdCSV = csv.reader(file,delimiter=',')
                 for cmdRow in cmdCSV:
                     content_list = np.vstack([content_list, cmdRow])
-                    print("delimiter tries ,")
+                    #print("delimiter tries ,")
 
     except:     #this is to use the np.empty 8 of "normal" csv
         content_list = np.empty(8)
-        print(content_list)
+        #print(content_list)
         with open(file_name, 'r') as file:
             try: #Tries to first get 8 column with ; as delimiter
                 cmdCSV = csv.reader(file, delimiter=';')
-                print(cmdCSV)
+                #print(cmdCSV)
                 for cmdRow in cmdCSV:
-                    print(cmdRow)
+                    #print(cmdRow)
                     content_list = np.vstack([content_list, cmdRow])
-                    print("delimiter tries ;")
+                    #print("delimiter tries ;")
             except: #if ; doesnt work it will try it with , as delimiter
                 cmdCSV = csv.reader(file,delimiter=',')
                 for cmdRow in cmdCSV:
                     content_list = np.vstack([content_list, cmdRow])
-                    print("delimiter tries ,") 
+                    #print("delimiter tries ,") 
         
     #Find starting point of amount list and command list
     indices = []
@@ -119,19 +119,22 @@ def ReadCSV_Dat(file_name):
 
 def Update_Source(amt_list, cmd_line, source_well, current_transAmt):
     #get tube location
-
     tube_loc = [(x[0]==cmd_line[0] and x[1]==source_well) for x in amt_list]
     tube_loc = [i for i, x in enumerate(tube_loc) if x]
+
     #get source amount after dispensed
-    amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) - current_transAmt
-    
+    if('eservoir' in amt_list[tube_loc[0]][4]):
+        amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) - current_transAmt*8
+    else:
+        amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) - current_transAmt
+    print(amt_list[tube_loc[0]][3])
     return(amt_list)
 
 def Update_Target(amt_list, cmd_line, target_well, deck_map, current_transAmt):
     #get tube location
     tube_loc = [(x[0]==cmd_line[2] and x[1]==target_well) for x in amt_list]
     tube_loc = [i for i, x in enumerate(tube_loc) if x]
-
+    #print(tube_loc)
 #if tube is not yet registered
     if(len(tube_loc)==0):
         #check target ware type
@@ -156,6 +159,8 @@ def Update_Target(amt_list, cmd_line, target_well, deck_map, current_transAmt):
                    type_target] #type of well/slot
         #append
         amt_list.append(regItem)
+        #print(amt_list.append(regItem))
+   
     else:
         #get source amount after dispensed
         amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) + current_transAmt   
@@ -170,15 +175,17 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
     
     #get source amount after aspirated
     src_amt = float(solutions_map[tube_loc[0]][3])
-    
+        
+    #print(tube_type)
     #if not 96 well plate
-    if("50" in tube_type, "15" in tube_type, "1,5" in tube_type):
+    if(("50" in tube_type, "15" in tube_type, "1,5" in tube_type) and ("eservoir" not in tube_type)):
         #get dimensions
         if("50" in tube_type):
             h_bot = 15.88 #mm
             r = 28.14/2 #mm
             minH = 5 #mm
             stab = 7 #mm
+       
         elif("15" in tube_type):
             h_bot = 23.36 #mm
             r = 15.62/2 #mm
@@ -213,10 +220,13 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
         
     #if source is a nest reservoir
     elif( "eservoir" in tube_type):
-        h_tip = src_amt /8.2/71.2 - 2 #volume with a 2mm stap
-        h_tip = max(h_tip,2) #max tip hover
-     
-    
+        h_tip = src_amt /8.2/73.2 #volume with a mm stap
+        stab = 10
+        minH = 2
+        #h_tip = 10
+        #print("Patrick was here")
+        #print(src_amt)
+        #print(h_tip)  
     else:
     #deep well dimensions
         h_bot = 0
@@ -268,7 +278,7 @@ def CalTip_Dispense(solutions_map, cmd_line, target):
         else:
             h_tip = ((3*src_amt*h_bot**2)/(pi*r**2))**(1/3)
     
-    #if source is a 96-well plate
+    #if ource is a 96-well plate
     else:
         #on top of well
         h_tip = 6 #mm
@@ -285,9 +295,9 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
     tube_loc = [i for i, x in enumerate(tube_loc) if x]
     tube_type = solutions_map[tube_loc[0]][4]
 
-
     #get source amount after aspirated
     src_amt = float(solutions_map[tube_loc[0]][3])
+    
     return src_amt
 
 #METADATA----------
@@ -308,7 +318,7 @@ def run(protocol: protocol_api.ProtocolContext):
         os.chdir('/var/lib/jupyter/notebooks/User Inputs')
         
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-
+    #print(amtList)
 ##############################  SETTINGS  ##############################
     dBottom = 4
     dTop = 2
@@ -318,7 +328,7 @@ def run(protocol: protocol_api.ProtocolContext):
     tipLocs_300s = []
     tipLocs_300m = []
     tipLocs_1000 = []
-    print(deckMap)
+    #print(deckMap)
     for i in range(11):
         #load labware
         labware_name = deckMap["labware_"+str(i+1)]
@@ -380,10 +390,10 @@ def run(protocol: protocol_api.ProtocolContext):
         #get tube type
         if('50ml' in deckMap[amtList[i][0]]):
             amtList[i] = np.append(amtList[i], '50ml_falcon')
-        elif('15ml' in deckMap[amtList[i][0]]):
-            amtList[i] = np.append(amtList[i], '15ml_falcon')
         elif('eservoir' in deckMap[amtList[i][0]]):
             amtList[i] = np.append(amtList[i], 'reservoir')
+        elif('15ml' in deckMap[amtList[i][0]]):
+            amtList[i] = np.append(amtList[i], '15ml_falcon')
         else:
             amtList[i] = np.append(amtList[i], '1.5ml_eppendorf')
 
@@ -412,17 +422,21 @@ def run(protocol: protocol_api.ProtocolContext):
         tipID = int(cmdRow[6])
         
         #choose pipette
-        print(deckMap[source_ware])
+        #print(deckMap[source_ware])
         if((pipl == '300m' and (len(target_well)==8 and len(source_well)==8)) or (pipl == '300m' and ('eservoir' in deckMap[source_ware]) and len(target_well) == 8)): #(still only when source_well and target well are 8 not when reservoir)
             #operations for multichannel pipette
             pipette = "left_pipette"
-            print("multichannel L")
+            #print("multichannel L")
             cur_source_well = source_well[0] #select only the first source
             #pick up tip if needed
             if(tipID != current_tipID):
                 left_pipette.pick_up_tip() #pick up tip if tipID changes
                 current_tipID = tipID #update tip id
-              
+            
+            #itteration of get scrvolume
+            if(mix_amt>0):
+                mix_amt = min(GetSrcVolume(amtList, cmdRow, cur_source_well), 300)
+                
             #Main Transfers
             remV = transfer_amt
             while(remV>0):
@@ -439,7 +453,8 @@ def run(protocol: protocol_api.ProtocolContext):
                 #calculate aspirate and dispense height
                 aspH = CalTip_Aspirate(amtList, cmdRow, cur_source_well)
                 dspH = CalTip_Dispense(amtList, cmdRow, target_well[0])
-                    
+                
+                #print(cur_source_well)
                 #Mix boolean
                 if(mix_amt==0):
                     #if no mix
@@ -447,12 +462,14 @@ def run(protocol: protocol_api.ProtocolContext):
                                           globals()[source_ware].wells_by_name()[cur_source_well].bottom(aspH),
                                           globals()[target_ware].wells_by_name()[target_well[0]].bottom(dspH),
                                           new_tip='never', disposal_volume=0)
+
                 else:
                     #if mix
                     left_pipette.transfer(cur_transfer,
                                           globals()[source_ware].wells_by_name()[cur_source_well].bottom(aspH),
                                           globals()[target_ware].wells_by_name()[target_well[0]].bottom(dspH),
                                           new_tip='never', mix_before = (3, cur_transfer), disposal_volume=0)
+
                 #blow out on top of the current slot
                 left_pipette.blow_out(globals()[target_ware].wells_by_name()[target_well[0]].bottom(dspH))     
                     
@@ -646,7 +663,7 @@ def run(protocol: protocol_api.ProtocolContext):
 # bep = simulate.get_protocol_api('2.12')
 # bep.home()
 # run(bep)
-# for line in bep.commands():
-#     print(line)
+# #for line in bep.commands():
+#    # print(line)
+# 
 # =============================================================================
-
