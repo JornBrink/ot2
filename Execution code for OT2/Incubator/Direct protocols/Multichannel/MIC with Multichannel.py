@@ -1,13 +1,5 @@
 #INPUTS------------Do not touch ANYTHING but the mainInput and pipr/pipl(if needed)
-mainwd = '/var/lib/jupyter/notebooks/Development/User Inputs'
-# =============================================================================
-#mainwd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel"
-
-#input file name here
-mainInput = "CommandList_PMID-_EXPID--_..csv"
-
-#filename input do not touch 
-fileName = mainwd+"\\"+mainInput
+fileName = "TryThis.csv"
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300) 
 #Note do not change to 1000 unless you want the p1000 to be used (tips not sterile yet)
@@ -22,10 +14,11 @@ import csv
 import numpy as np
 from math import pi
 from opentrons import protocol_api
+import os
+import opentrons.execute
 
 ####### CUSTOM LIBRARY #########
 def ReadCSV_Dat(file_name):
-    
     #save all read info into the variable: command_list
     #possible that for "normal" operation (with normal csv)
     
@@ -217,11 +210,12 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
         r = 6.45/2 #mm
         minH = 2 #mm
         h_tip = src_amt/(pi*r**2) 
-
+        
+    #if source is a nest reservoir
     elif( "eservoir" in tube_type):
-        h_tip = src_amt /8.2/71.2 - 5 #volume with a 5mm stap
+        h_tip = src_amt /8.2/71.2 - 2 #volume with a 5mm stap
         h_tip = max(h_tip,2) #max tip hover
-
+     
     else:
     #deep well dimensions
         h_bot = 0
@@ -307,8 +301,11 @@ metadata = {
 def run(protocol: protocol_api.ProtocolContext):
     global fileName #calling from global
     #search for where the user input it. Possible to use for jupyter. not really nessesary to use
-    #os.chdir('/var/lib/jupyter/notebooks/User Inputs')
-    #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+    try:
+        os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+    except:
+        os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+        
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
 
 ##############################  SETTINGS  ##############################
@@ -424,11 +421,7 @@ def run(protocol: protocol_api.ProtocolContext):
             if(tipID != current_tipID):
                 left_pipette.pick_up_tip() #pick up tip if tipID changes
                 current_tipID = tipID #update tip id
-
-            #iterate through all target wells
-            if(mix_amt>0):
-                mix_amt = min(GetSrcVolume(amtList, cmdRow, cur_source_well), 300)
-                
+              
             #Main Transfers
             remV = transfer_amt
             while(remV>0):
@@ -654,5 +647,5 @@ def run(protocol: protocol_api.ProtocolContext):
 # run(bep)
 # for line in bep.commands():
 #     print(line)
+# 
 # =============================================================================
-

@@ -1,5 +1,5 @@
 #INPUT FILE NAME---------------------
-fileName = "CommandList_PMID-_EXPID--_..csv"
+fileName = "CommandList_PMID-01_EXPID-LUM_LEV_EDNA-05_Verdonk.Luuk.csv"
 
 #IMPORTS---------
 import csv
@@ -96,9 +96,7 @@ def Update_Target(amt_list, cmd_line, target_well, deck_map, current_transAmt):
         amt_list.append(regItem)
     else:
         #get source amount after dispensed
-        amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) + current_transAmt
-    
-    
+        amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) + float(current_transAmt)
     return(amt_list)
 
 def CalTip_Aspirate(solutions_map, cmd_line, source_well):
@@ -122,7 +120,7 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
             h_bot = 23.36 #mm
             r = 15.62/2 #mm
             minH = 5 #mm
-            stab = 5 #mm changed from 5 to 3
+            stab = 5 #mm
         elif("1.5" in tube_type):
             #Tube Dimensions - Eppendorf
             h_bot = 38.3-20 #mm -- bot cone 17.8 (-20); h 37.8
@@ -141,12 +139,12 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
         
         if(src_amt>Vmax_bot):
             if(src_amt > (Vmax_bot + 50) and ("1.5" in tube_type)):
-                h_tip = 17 # hard-code location for eppendorfs
+                h_tip = 1 # hard-code location for eppendorfs
             else:
                 h_tip = h_bot + (src_amt - Vmax_bot)/(pi*r**2)
         else:
             if("1.5" in tube_type):
-                h_tip = 5 # hard-code location for eppendorfs
+                h_tip = 0.1 # hard-code location for eppendorfs
             else:
                 h_tip = ((3*src_amt*h_bot**2)/(pi*r**2))**(1/3)
     
@@ -224,13 +222,13 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 
 ##############################   METADATA   ##############################
 metadata = {
-    'protocolName': 'OT2_CommandExecuter_P300_protocol_20220713',
-    'author': 'Sebastian T. Tandar <sebastian.tandar@gmail.com> Jorn Brink <brinkj@vuw.leidenuniv.nl>',
-    'description': 'MultiplateMIC translator to Python 2.12 API__patch 20220725',
+    'protocolName': 'OT2_CommandExecuter_Checkerboard',
+    'author': 'Sebastian T. Tandar <sebastian.tandar@gmail.com>',
+    'description': 'MultiplateMIC translator to Python 2.12 API__patch 20220713',
     'apiLevel': '2.12'
 }
-#updated API level to 2.12 from 2.2
 
+#api level 2.12 from 2.2
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     #READ
@@ -239,7 +237,6 @@ def run(protocol: protocol_api.ProtocolContext):
         os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
     except:
         os.chdir('/var/lib/jupyter/notebooks/User Inputs')
-    
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
     dBottom = 4
@@ -405,6 +402,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
             #iterate through all target wells
             for j in range(len(target_well)):
+                
                 if(mix_amt>0):
                     mix_amt = min(GetSrcVolume(amtList, cmdRow, cur_source_well), 300)
                 
@@ -420,9 +418,9 @@ def run(protocol: protocol_api.ProtocolContext):
                     #update solutions map
                     amtList = Update_Source(amtList, cmdRow, cur_source_well, cur_transfer)
                     amtList = Update_Target(amtList, cmdRow, target_well[j], deckMap, cur_transfer)
-
+                    
                     #calculate aspirate and dispense height
-                    aspH = CalTip_Aspirate(amtList, cmdRow, cur_source_well)
+                    aspH = CalTip_Aspirate(amtList, cmdRow, cur_source_well) # ERR
                     dspH = CalTip_Dispense(amtList, cmdRow, target_well[j])
                     
                     #Mix boolean
@@ -449,3 +447,9 @@ def run(protocol: protocol_api.ProtocolContext):
             elif(int(cmdRow[6]) != int(cmdList[i+1][6])):
                 #drop if different tip id is detected
                 right_pipette.drop_tip()
+
+######### SIMULATION ############
+#from opentrons import simulate
+#bep = simulate.get_protocol_api('2.10')
+#bep.home()
+#run(bep)
