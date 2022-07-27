@@ -1,5 +1,5 @@
 #INPUTS------------Do not touch ANYTHING but the mainInput and pipr/pipl(if needed)
-fileName = "TryThisToo.csv"
+fileName = "CommandList_PMID-_EXPID--test_..csv"
 
 #this is configured for the 2018 OT2 --> please change if needed (right is pipr = 1000, pipl = 300) 
 #Note do not change to 1000 unless you want the p1000 to be used (tips not sterile yet)
@@ -7,7 +7,7 @@ pipr = '300'
 pipl = '300m'
 # =============================================================================
 
-#update: 20/07/2022
+#update: 27/07/2022
 
 #IMPORTS---------
 import csv
@@ -86,9 +86,10 @@ def ReadCSV_Dat(file_name):
                 fill[i] = "greinerbioone677102_48_wellplate_1000ul"
             else:
                 fill[i] = "greiner_384_wellplate_115ul"
-
+                
         elif('15' in fill[i]):
             fill[i] = "opentrons_15_tuberack_falcon_15ml_conical"
+            
         elif('50' in fill[i] or "olvent" in fill[i] or "nno" in fill[i] or "SOLVENT" in fill[i] or "eservoir" in fill[i]):
             if('50' in fill[i] or "olvent" in fill[i] or "nno" in fill[i] or "SOLVENT" in fill[i]):
                 fill[i] = "opentrons_6_tuberack_falcon_50ml_conical"
@@ -106,12 +107,12 @@ def ReadCSV_Dat(file_name):
         else:
             if("1000" in fill[i]):
                 fill[i] = "opentrons_96_tiprack_1000ul"
-            elif("300s" in fill[i]):
+            elif("300m" in fill[i]):
                 #tiprack_300s = "opentrons_96_tiprack_300ul"
-                fill[i] = "tiprack_300s"
+                fill[i] = "tiprack_300m"
             else:
                 #tiprack_300m = "opentrons_96_tiprack_300ul"
-                fill[i]= "tiprack_300m"
+                fill[i]= "tiprack_300s"
 
         deck_map[deck_loc[i]] = fill[i]
         
@@ -127,7 +128,6 @@ def Update_Source(amt_list, cmd_line, source_well, current_transAmt):
         amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) - current_transAmt*8
     else:
         amt_list[tube_loc[0]][3] = float(amt_list[tube_loc[0]][3]) - current_transAmt
-    print(amt_list[tube_loc[0]][3])
     return(amt_list)
 
 def Update_Target(amt_list, cmd_line, target_well, deck_map, current_transAmt):
@@ -220,13 +220,10 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
         
     #if source is a nest reservoir
     elif( "eservoir" in tube_type):
-        h_tip = src_amt /8.2/73.2 #volume with a mm stap
+        h_tip = src_amt /8.2/73.2
         stab = 10
         minH = 2
-        #h_tip = 10
-        #print("Patrick was here")
-        #print(src_amt)
-        #print(h_tip)  
+ 
     else:
     #deep well dimensions
         h_bot = 0
@@ -657,13 +654,11 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-# =============================================================================
-# from opentrons import simulate
-# amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-# bep = simulate.get_protocol_api('2.12')
-# bep.home()
-# run(bep)
-# #for line in bep.commands():
-#    # print(line)
-# 
-# =============================================================================
+from opentrons import simulate
+amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+bep = simulate.get_protocol_api('2.12')
+bep.home()
+run(bep)
+#for line in bep.commands():
+   # print(line)
+
