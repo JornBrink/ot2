@@ -141,12 +141,12 @@ def CalTip_Aspirate(solutions_map, cmd_line, source_well):
         
         if(src_amt>Vmax_bot):
             if(src_amt > (Vmax_bot + 50) and ("1.5" in tube_type)):
-                h_tip = 17 # hard-code location for eppendorfs
+                h_tip = 1 # hard-code location for eppendorfs
             else:
                 h_tip = h_bot + (src_amt - Vmax_bot)/(pi*r**2)
         else:
             if("1.5" in tube_type):
-                h_tip = 5 # hard-code location for eppendorfs
+                h_tip = 0.1 # hard-code location for eppendorfs
             else:
                 h_tip = ((3*src_amt*h_bot**2)/(pi*r**2))**(1/3)
     
