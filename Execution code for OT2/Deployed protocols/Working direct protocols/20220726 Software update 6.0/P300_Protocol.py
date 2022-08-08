@@ -236,9 +236,12 @@ def run(protocol: protocol_api.ProtocolContext):
     #READ
     global fileName #calling from global
     try:
-        os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs" )
+        #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+        print("fucking hell werk")
     except:
-        os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+        os.chdir(r'/var/lib/jupyter/notebooks/User Inputs')
+        print("doe wat je klere ding")
     
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
@@ -449,3 +452,14 @@ def run(protocol: protocol_api.ProtocolContext):
             elif(int(cmdRow[6]) != int(cmdList[i+1][6])):
                 #drop if different tip id is detected
                 right_pipette.drop_tip()
+                
+######### SIMULATION ############
+# =============================================================================
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.12')
+bep.home()
+run(bep)
+#amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+# for line in bep.commands():
+#    print(line)
+# =============================================================================

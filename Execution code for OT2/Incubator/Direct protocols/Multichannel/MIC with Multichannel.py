@@ -654,13 +654,11 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-# =============================================================================
-# from opentrons import simulate
-# amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-# bep = simulate.get_protocol_api('2.12')
-# bep.home()
-# run(bep)
-# #for line in bep.commands():
-#    # print(line)
-# =============================================================================
+from opentrons import simulate
+amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+bep = simulate.get_protocol_api('2.12')
+bep.home()
+run(bep)
+#for line in bep.commands():
+   # print(line)
 

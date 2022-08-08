@@ -73,17 +73,17 @@ create_commandList_solventDistribution <- function(solution_list, solvent_map){
   initial_solvent_dil <- lapply(unique(initial_solvent_dil$Solvent), function(x){
     current_set <- subset(initial_solvent_dil, Solvent==x)
     if(sum(current_set$V_solvent<100)>0){
-      current_set$pipette="p300"
-    }else{current_set$pipette="p1000"}
+      current_set$Pipette="p300"
+    }else{current_set$Pipette="p1000"}
     return(current_set)}) %>% list.rbind()
   
   #set aspiration set for each solvent
   running_aspID <- 1
   running_aspV <- initial_solvent_dil$V_solvent[1]
-  initial_solvent_dil$asp_set <- 1
+  initial_solvent_dil$AspSp <- 1
   for(i in c(2:nrow(initial_solvent_dil))){
     #set current threshold
-    current_threshold <- if(initial_solvent_dil$pipette[i]=="p1000"){1000}else{300}
+    current_threshold <- if(initial_solvent_dil$Pipette[i]=="p1000"){1000}else{300}
     
     #check if space is still available in the current aspirate set
     if(initial_solvent_dil$Solvent[i]==initial_solvent_dil$Solvent[i-1] & 
@@ -93,28 +93,38 @@ create_commandList_solventDistribution <- function(solution_list, solvent_map){
       running_aspV <- running_aspV + initial_solvent_dil$V_solvent[i]
       
       # set aspirate ID to the current  row
-      initial_solvent_dil$asp_set[i] <- running_aspID
+      initial_solvent_dil$AspSp[i] <- running_aspID
       
     }else{
       # execute if current aspirate set is full
       running_aspID <- running_aspID + 1 #update running aspirate ID
       running_aspV <- initial_solvent_dil$V_solvent[i] #update running aspirate volume
-      initial_solvent_dil$asp_set[i] <- running_aspID
+      initial_solvent_dil$AspSp[i] <- running_aspID
     }
   }
   
-  cmd_list <- data.frame(from_deck = sapply(initial_solvent_dil$Solvent, 
+  cmd_list <<- data.frame(SourceLabware = sapply(initial_solvent_dil$Solvent, 
                                             function(x) solvent_map$deck[solvent_map$fill==x]),
-                         from_slot = sapply(initial_solvent_dil$Solvent, 
+                         SourceSlot = sapply(initial_solvent_dil$Solvent, 
                                             function(x) solvent_map$slot[solvent_map$fill==x]),
-                         to_deck = initial_solvent_dil$deck, to_slot = initial_solvent_dil$slot,
-                         amt = initial_solvent_dil$V_solvent, mix=0,
-                         tip_n = 1, asp_set = initial_solvent_dil$asp_set, 
-                         pipette=initial_solvent_dil$pipette, comment="initial solvent distribution")
+                         TargetLabware = initial_solvent_dil$deck, TargetSlot = initial_solvent_dil$slot,
+                         TransAmt = initial_solvent_dil$V_solvent, MixAmt=0,
+                         TipID = 1, AspSp = initial_solvent_dil$AspSp, 
+                         Pipette=initial_solvent_dil$Pipette, comment="initial solvent distribution")
+# #jorns stupid plan
+#   SourceLabware <<- SourceLabware = sapply(initial_solvent_dil$Solvent, 
+#                                                     function(x) solvent_map$deck[solvent_map$fill==x]),
+#   
+#                              SourceSlot = sapply(initial_solvent_dil$Solvent, 
+#                                                  function(x) solvent_map$slot[solvent_map$fill==x]),
+#                              TargetLabware = initial_solvent_dil$deck, TargetSlot = initial_solvent_dil$slot,
+#                              TransAmt = initial_solvent_dil$V_solvent, MixAmt=0,
+#                              TipID = 1, AspSp = initial_solvent_dil$AspSp, 
+#                              Pipette=initial_solvent_dil$Pipette, comment="initial solvent distribution")
   
   #setup tip counter
-  tip_counter <- unique(cmd_list$from_slot)
-  cmd_list$tip_n <- vapply(cmd_list$from_slot, FUN.VALUE=1, function(x) which(tip_counter==x))
+  tip_counter <- unique(cmd_list$SourceSlot)
+  cmd_list$TipID <- vapply(cmd_list$SourceSlot, FUN.VALUE=1, function(x) which(tip_counter==x))
   
   return(cmd_list)
 }
@@ -133,33 +143,33 @@ create_commandList_serialDilution <- function(command_list, current_id, sol_list
   
   colnames(current_cmd) <- colnames(command_list)
   
-  current_cmd$asp_set <- c((max(command_list$asp_set)+1):(max(command_list$asp_set)+nrow(current_cmd)))
+  current_cmd$AspSp <- c((max(command_list$AspSp)+1):(max(command_list$AspSp)+nrow(current_cmd)))
   return(current_cmd)
 }
 create_commandList_finalDistribution <- function(sol_list, gen_info, 
                                                  sol_map,plate_map, cmdList_serial, deck_map){
   cmdList_final_distribution <- lapply(sol_list$solutionID, function(x){
     lapply(paste0("384_", c(1:gen_info["nPlates"])), function(xi){
-      c(from_deck = sol_map$deck[which(sol_map$solutionID==x)],
-        from_slot = sol_map$slot[which(sol_map$solutionID==x)],
-        to_deck = which(deck_map$fill==xi), 
-        to_slot = paste(plate_map$Well[plate_map$solutionID==x], collapse=", "),
+      c(SourceLabware = sol_map$deck[which(sol_map$solutionID==x)],
+        SourceSlot = sol_map$slot[which(sol_map$solutionID==x)],
+        TargetLabware = which(deck_map$fill==xi), 
+        TargetSlot = paste(plate_map$Well[plate_map$solutionID==x], collapse=", "),
         amount = gen_info["Vtotal"]-gen_info["Vinoc"],
-        mix = 0, tip_n = -5, tipID=0,
-        pipette=if(gen_info["Vtotal"]-gen_info["Vinoc"] <= 300){"p300"}else{"p1000"},
+        MixAmt = 0, TipID = -5, tipID=0,
+        Pipette=if(gen_info["Vtotal"]-gen_info["Vinoc"] <= 300){"p300"}else{"p1000"},
         comment="Final distribution")
     }) %>% list.rbind()
   }) %>% list.rbind() %>% data.frame()
   
   #setup tip id
-  tip_setup <- dplyr::select(cmdList_final_distribution, from_deck, from_slot) %>% distinct()
-  tip_setup$tip_n <- c((max(cmdList_serial$tip_n)+1):(max(cmdList_serial$tip_n)+nrow(tip_setup)))
+  tip_setup <- dplyr::select(cmdList_final_distribution, SourceLabware, SourceSlot) %>% distinct()
+  tip_setup$TipID <- c((max(cmdList_serial$TipID)+1):(max(cmdList_serial$TipID)+nrow(tip_setup)))
   
-  cmdList_final_distribution$tip_n <- apply(cmdList_final_distribution, 1, function(x){
-    subset(tip_setup, from_deck==as.numeric(x["from_deck"]) & from_slot==x["from_slot"])$tip_n})
+  cmdList_final_distribution$TipID <- apply(cmdList_final_distribution, 1, function(x){
+    subset(tip_setup, SourceLabware==as.numeric(x["SourceLabware"]) & SourceSlot==x["SourceSlot"])$TipID})
   colnames(cmdList_final_distribution) <- colnames(cmdList_serial)
   
-  cmdList_final_distribution$asp_set <- c((max(cmdList_serial$asp_set)+1):(max(cmdList_serial$asp_set)+nrow(cmdList_final_distribution)))
+  cmdList_final_distribution$AspSp <- c((max(cmdList_serial$AspSp)+1):(max(cmdList_serial$AspSp)+nrow(cmdList_final_distribution)))
   
   return(cmdList_final_distribution)
 }
@@ -205,11 +215,11 @@ distribute_outerWells <- function(plate_info, cmd_list_checkpoint, solvent_map, 
       
       # assign current commands to current wells
       command_current_solvent <- rbind.data.frame(command_current_solvent,
-                                                  c(from_deck = deck_map$deck[which(deck_map$fill=="solvent")],
-                                                    from_slot = solvent_map$slot[which(solvent_map$fill==x)],
-                                                    to_deck = 1, 
-                                                    to_slot = paste(well_targets[start_index:end_index], collapse=", "),
-                                                    amt = general_info["Vtotal"], mix=0, tip_n=1, asp_set = i, pipette="p300", comment="Filling outer wells"))
+                                                  c(SourceLabware = deck_map$deck[which(deck_map$fill=="solvent")],
+                                                    SourceSlot = solvent_map$slot[which(solvent_map$fill==x)],
+                                                    TargetLabware = 1, 
+                                                    TargetSlot = paste(well_targets[start_index:end_index], collapse=", "),
+                                                    TransAmt = general_info["Vtotal"], MixAmt=0, TipID=1, AspSp = i, Pipette="p300", comment="Filling outer wells"))
     }
     
     #add column name
@@ -218,7 +228,7 @@ distribute_outerWells <- function(plate_info, cmd_list_checkpoint, solvent_map, 
     #replicate for each plates included
     command_current_solvent <- lapply(c(1:general_info["nPlates"]), function(x){
       add_current <- command_current_solvent
-      add_current[,colnames(cmd_list_checkpoint)=="to_deck"] <- deck_map$deck[which(deck_map$fill==paste0("384_", x))]
+      add_current[,colnames(cmd_list_checkpoint)=="TargetLabware"] <- deck_map$deck[which(deck_map$fill==paste0("384_", x))]
       return(add_current)
     }) %>% list.rbind()
     
@@ -226,17 +236,17 @@ distribute_outerWells <- function(plate_info, cmd_list_checkpoint, solvent_map, 
   
   
   #fix aspirate set counter
-  current_command$asp_set <- max(cmd_list_checkpoint$asp_set) + c(1:nrow(current_command))
+  current_command$AspSp <- max(cmd_list_checkpoint$AspSp) + c(1:nrow(current_command))
   
   #fix tip counter
   tip_counter_matrix <- data.frame(Solvent = unique(fill_wells$Solvent),
-                                   from_slot = sapply(unique(fill_wells$Solvent), function(xi) solvent_map$slot[which(solvent_map$fill==xi)]))
-  tip_counter_matrix$tip_n_true <- c(1:nrow(tip_counter_matrix)) + max(cmd_list_checkpoint$tip_n)
-  tip_counter_matrix <- dplyr::select(tip_counter_matrix, from_slot, tip_n_true)
+                                   SourceSlot = sapply(unique(fill_wells$Solvent), function(xi) solvent_map$slot[which(solvent_map$fill==xi)]))
+  tip_counter_matrix$TipID_true <- c(1:nrow(tip_counter_matrix)) + max(cmd_list_checkpoint$TipID)
+  tip_counter_matrix <- dplyr::select(tip_counter_matrix, SourceSlot, TipID_true)
   
   
-  current_command <- left_join(current_command, tip_counter_matrix, by="from_slot") %>%
-    mutate(tip_n = tip_n_true) %>% dplyr::select(-tip_n_true)
+  current_command <- left_join(current_command, tip_counter_matrix, by="SourceSlot") %>%
+    mutate(TipID = TipID_true) %>% dplyr::select(-TipID_true)
   
   #combine to cmd list
   cmd_list_checkpoint <- rbind.data.frame(cmd_list_checkpoint, current_command)
@@ -263,7 +273,7 @@ mainExec <- function(input_file_name, fill_outer){
   
   # C | Setup deck and dilution maps
   deckMap <- data.frame(deck=c(1:12),
-                        fill = c("solvent", "p1000", "p300", "dilution_96_A", "dilution_96_B", "dilution_15falcon_C",
+                        fill = c("solvent", "tiprack_p1000", "tiprack_p300", "dilution_96_A", "dilution_96_B", "dilution_15falcon_C",
                                  "384_3", "dilution_15falcon_D", "dilution_15falcon_E", "384_1", "384_2", "trash"))
   solutionMap_96 <-data.frame(slot = rep(sapply(c(1:8), function(x) paste0(LETTERS[x], c(1:12))), 
                                            length(which(grepl("dilution_96", deckMap$fill)))),
@@ -315,10 +325,10 @@ mainExec <- function(input_file_name, fill_outer){
   #   Serial Dilution
   cmdList_serialDilution <- lapply(unique(solList$dilutionID), function(x)
     create_commandList_serialDilution(cmdList_solventDistribution, x, solList, deckMap)) %>% list.rbind()
-  cmdList_serialDilution$tip_n <- c((max(cmdList_solventDistribution$tip_n)+1):
-                                      (max(cmdList_solventDistribution$tip_n)+nrow(cmdList_serialDilution)))
-  cmdList_serialDilution$asp_set <- c((max(cmdList_solventDistribution$asp_set)+1):
-                                        (max(cmdList_solventDistribution$asp_set)+nrow(cmdList_serialDilution)))
+  cmdList_serialDilution$TipID <- c((max(cmdList_solventDistribution$TipID)+1):
+                                      (max(cmdList_solventDistribution$TipID)+nrow(cmdList_serialDilution)))
+  cmdList_serialDilution$AspSp <- c((max(cmdList_solventDistribution$AspSp)+1):
+                                        (max(cmdList_solventDistribution$AspSp)+nrow(cmdList_serialDilution)))
   
   #   Final Distribution
   cmdList_finalDistribution <- create_commandList_finalDistribution(solList, generalInfo, solutionMap,
@@ -333,15 +343,15 @@ mainExec <- function(input_file_name, fill_outer){
   }
   
   # G | Calculate required solvent amounts
-  solvent_map_prep <- dplyr::select(solventMap, slot, fill) %>% rename(from_slot=slot)
-  solvent_commands <- subset(cmdList, from_deck==deckMap$deck[deckMap$fill=='solvent']) %>%
-    left_join(solvent_map_prep, by="from_slot")
-  solvent_operations <- data.frame(slot = unique(solvent_commands$from_slot),
-                                   volume = sapply(unique(solvent_commands$from_slot), 
+  solvent_map_prep <- dplyr::select(solventMap, slot, fill) %>% rename(SourceSlot=slot)
+  solvent_commands <- subset(cmdList, SourceLabware==deckMap$deck[deckMap$fill=='solvent']) %>%
+    left_join(solvent_map_prep, by="SourceSlot")
+  solvent_operations <- data.frame(slot = unique(solvent_commands$SourceSlot),
+                                   volume = sapply(unique(solvent_commands$SourceSlot), 
                                                    function(x){
-                                                     current_set <- subset(solvent_commands, from_slot==x)
-                                                     current_set$n_targets <- vapply(current_set$to_slot, FUN.VALUE=1, function(q) length(strsplit(q, split=", ")[[1]]))
-                                                     current_set$volumes <- current_set$n_targets * as.numeric(current_set$amt)
+                                                     current_set <- subset(solvent_commands, SourceSlot==x)
+                                                     current_set$n_targets <- vapply(current_set$TargetSlot, FUN.VALUE=1, function(q) length(strsplit(q, split=", ")[[1]]))
+                                                     current_set$volumes <- current_set$n_targets * as.numeric(current_set$TransAmt)
                                                      return(sum(current_set$volumes))})) %>%
     left_join(solventMap, by="slot")
   
@@ -354,33 +364,33 @@ mainExec <- function(input_file_name, fill_outer){
     overFilled <- solvent_operations[overFilled,]
     for(i in c(1:nrow(overFilled))){
       #iterate through all over-filled tubes
-      current_operations <- subset(cmdList, from_deck==deckMap$deck[deckMap$fill=="solvent"] & from_slot==overFilled$slot[i])
+      current_operations <- subset(cmdList, SourceLabware==deckMap$deck[deckMap$fill=="solvent"] & SourceSlot==overFilled$slot[i])
       
       #calculate cumulative amount
-      current_operations$actualAmt <- apply(current_operations, 1, function(x) as.numeric(x['amt']) * length(strsplit(x["target_slot"], split=", ")[[1]]))
-      current_operations$cumulativeAmount <- sapply(c(1:nrow(current_operations)), function(x) sum(current_operations$actualAmt[1:x]))
+      current_operations$actualTransAmt <- apply(current_operations, 1, function(x) as.numeric(x['TransAmt']) * length(strsplit(x["target_slot"], split=", ")[[1]]))
+      current_operations$cumulativeAmount <- sapply(c(1:nrow(current_operations)), function(x) sum(current_operations$actualTransAmt[1:x]))
       current_operations$effectiveCumulativeAmount <- round(current_operations$cumulativeAmount / 500) * 500 + 3000
       
       #separate to a different tube
       available_slot <- which(solventMap$fill=="") %>% min()
       solventMap$fill[available_slot] <- overFilled$fill[i]
-      current_operations$from_slot[current_operations$effectiveCumulativeAmount > 49000] <- solventMap$slot[available_slot]
+      current_operations$SourceSlot[current_operations$effectiveCumulativeAmount > 49000] <- solventMap$slot[available_slot]
       
       #push back to command list
-      cmdList$from_slot[cmdList$operationRowIndex %in% current_operations$operationRowIndex] <- current_operations$from_slot
+      cmdList$SourceSlot[cmdList$operationRowIndex %in% current_operations$operationRowIndex] <- current_operations$SourceSlot
     }
     
     # re-fix command list
     cmdList <- dplyr::select(cmdList, -operationRowIndex)
     
     # re-calculate required solvent amounts
-    solvent_map_prep <- dplyr::select(solventMap, slot, fill) %>% rename(from_slot=slot)
-    solvent_commands <- subset(cmdList, from_deck==deckMap$deck[deckMap$fill=='solvent']) %>%
-      left_join(solvent_map_prep, by="from_slot")
-    solvent_commands$actualAmt <- apply(solvent_commands, 1, function(x) as.numeric(x["amt"]) * length(strsplit(x["to_slot"], split=", ")[[1]]))
-    solvent_operations <- data.frame(slot = unique(solvent_commands$from_slot),
-                                     volume = sapply(unique(solvent_commands$from_slot), 
-                                                     function(x) sum(as.numeric(solvent_commands$amt[solvent_commands$from_slot==x])))) %>%
+    solvent_map_prep <- dplyr::select(solventMap, slot, fill) %>% rename(SourceSlot=slot)
+    solvent_commands <- subset(cmdList, SourceLabware==deckMap$deck[deckMap$fill=='solvent']) %>%
+      left_join(solvent_map_prep, by="SourceSlot")
+    solvent_commands$actualTransAmt <- apply(solvent_commands, 1, function(x) as.numeric(x["TransAmt"]) * length(strsplit(x["TargetSlot"], split=", ")[[1]]))
+    solvent_operations <- data.frame(slot = unique(solvent_commands$SourceSlot),
+                                     volume = sapply(unique(solvent_commands$SourceSlot), 
+                                                     function(x) sum(as.numeric(solvent_commands$TransAmt[solvent_commands$SourceSlot==x])))) %>%
       left_join(solventMap, by="slot")
     
     solvent_operations$volume <- round(solvent_operations$volume / 500) * 500 + 3000 #excess
@@ -408,8 +418,8 @@ mainExec <- function(input_file_name, fill_outer){
   colnames(prepared_solList_robot) <- colnames(cmdList)
   
   #update deck map
-  used <- c(cmdList$from_deck, cmdList$to_deck) %>% unique() %>% as.numeric()
-  deckMap$fill[!(deckMap$deck %in% used) & !(deckMap$fill %in% c("trash", "p300", "p1000"))] <- ""
+  used <- c(cmdList$SourceLabware, cmdList$TargetLabware) %>% unique() %>% as.numeric()
+  deckMap$fill[!(deckMap$deck %in% used) & !(deckMap$fill %in% c("trash", "tiprack_p300", "tiprack_p1000"))] <- ""
   
   #combine output
   deckMap <- cbind.data.frame(deckMap, replicate(8, rep("", 12)))
@@ -501,12 +511,12 @@ mainExec <- function(input_file_name, fill_outer){
 
 #TEST--------------
 # input 
-# fileName <- "20220301_MIC384_NM2_NM3_NM4_NM5_NM6_NM7_CIP (1).xlsx"
-# mainwd <- "C:\\Users\\sebas\\OneDrive\\Desktop\\Freelance\\Laura\\Conc_calc"
-# input_file_name <- paste0(mainwd, "\\", fileName)
-# 
-# output <- mainExec(input_file_name, T)
+fileName <- "384Well_InputTemplate.xlsx"
+mainwd <- "C://Users//jornb//Documents//GitHub//ot2new//upstream (R) processors//Plate384"
+input_file_name <- paste0(mainwd, "\\", fileName)
+#
+output <- mainExec(input_file_name, T)
 
 #write output
-#write.csv(output[[1]], paste0(mainwd, "/Halving_CommandList.csv"), row.names=F)
+write.csv(output[[1]], paste0(mainwd, "/Halving_CommandList.csv"), row.names=F)
 #write_xlsx(output[[2]], paste0(mainwd, "/Halving_UserGuide.xlsx"))

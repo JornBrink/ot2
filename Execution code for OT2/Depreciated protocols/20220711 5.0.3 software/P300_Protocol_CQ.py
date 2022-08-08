@@ -233,8 +233,8 @@ metadata = {
 def run(protocol: protocol_api.ProtocolContext):
     #READ
     global fileName #calling from global
-    os.chdir('/var/lib/jupyter/notebooks/User Inputs')
-    #os.chdir('C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\Incubator')
+    #os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+    os.chdir('C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\Execution code for OT2\\Incubator\\Test User inputs')
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
     dBottom = 4
@@ -447,7 +447,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-#from opentrons import simulate
-#bep = simulate.get_protocol_api('2.10')
-#bep.home()
-#run(bep)
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.10')
+bep.home()
+run(bep)

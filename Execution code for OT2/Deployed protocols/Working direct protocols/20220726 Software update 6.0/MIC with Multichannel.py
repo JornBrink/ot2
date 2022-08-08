@@ -311,9 +311,16 @@ metadata = {
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     global fileName #calling from global
+    import csv
+    import numpy as np
+    from math import pi
+    from opentrons import protocol_api
+    import os
+    import opentrons.execute
     #search for where the user input it. Possible to use for jupyter. not really nessesary to use
     try:
-        os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+        path ="C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\Execution code for OT2\\Incubator\\Test User inputs"
+        os.chdir(path)
     except:
         os.chdir('/var/lib/jupyter/notebooks/User Inputs')
         
@@ -657,13 +664,11 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
 
 ######### SIMULATION ############
-# =============================================================================
-# from opentrons import simulate
-# amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-# bep = simulate.get_protocol_api('2.12')
-# bep.home()
-# run(bep)
-# #for line in bep.commands():
-#    # print(line)
-# 
-# =============================================================================
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.12')
+bep.home()
+run(bep)
+#amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+#for line in bep.commands():
+   # print(line)
+

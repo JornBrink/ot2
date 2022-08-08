@@ -923,6 +923,8 @@ ConvertAmtList_MCtoMV <- function(new_allAmt){
 #MAIN---------
 main <- function(file_path, file_name=""){
   #READ PLATE------
+  fp <<- file_path
+  fln <<- file_name
   stockList <- tryCatch({
     GetStockList(file_path)
   },
@@ -1075,9 +1077,15 @@ main <- function(file_path, file_name=""){
     deckMap2 <- cbind(sapply(c(1:12), function(x) paste("labware_", toString(x), sep='')),
                       as.vector(deckMap))
     
-    adjustment <- cal_amtList_Excess(allAmt2, cmdList, deckMap2)
+    adjustment <<- cal_amtList_Excess(allAmt2, cmdList, deckMap2) # want change
+    adjustment[[1]]$AspSp <- 130
+    adjustment[[1]]$Pipette <- 'P300'
+    adjustment[[1]] <<- adjustment[[1]] %>% relocate(AspSp, .before = Comment)
+    adjustment[[1]] <- adjustment[[1]] %>% relocate(Pipette, .before = Comment)
+    
     allAmt <- ConvertAmtList_MCtoMV(adjustment[[2]])
     cmdList <<- adjustment[[1]]
+    
     #################
     #CREATING OUTPUT#
     #################
@@ -1104,7 +1112,7 @@ main <- function(file_path, file_name=""){
     
     #User Commands-----------
     #adjusting file name
-    allAmt <- rbind.data.frame(allAmt, dilTubes)
+    allAmt <<- rbind.data.frame(allAmt, dilTubes)
     usercmd_output <<- list(finDeck, allAmt)
   }else{
     allAmt <- errMessage
@@ -1114,7 +1122,13 @@ main <- function(file_path, file_name=""){
 }
 
 # #TROUBLESHOOTING---------
+# library(readxl)
+# library(writexl)
+# library(dplyr)
+# library(rlist)
+# # 
 # errMessage <<- ""
-# fpath <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\MVPlate"
-# dataName <- "20220307_EvolutionMIC_TOB_6.xlsx"
+# fpath <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\MVPlate"
+# dataName <- "MV_InputTemplate.xlsx"
 # dqs <- main(paste(fpath, dataName, sep="//"))
+# write.csv(cmdList_output, paste0(fpath, "/MVplatenewoutput.csv"), row.names=F)

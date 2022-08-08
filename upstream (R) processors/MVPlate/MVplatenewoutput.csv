@@ -1,0 +1,45 @@
+"SourceLabware","SourceSlot","TargetLabware","TargetSlot","TransAmt","MixAmt","TipID","Pipette","Comment","AspSp"
+"labware_11","A1","labware_9","A1","675","0","1","P300","Initial solvent distribution",130
+"labware_11","A1","labware_9","A2","1506.6","0","1","P300","Initial solvent distribution",130
+"labware_11","A1","labware_9","A3","669.7265625","0","1","P300","Initial solvent distribution",130
+"labware_11","A1","labware_9","A4","1510.5234375","0","1","P300","Initial solvent distribution",130
+"labware_11","A1","labware_9","A5","675","0","1","P300","Initial solvent distribution",130
+"labware_11","A1","labware_9","B1","1506.6","0","1","P300","Initial solvent distribution",130
+"labware_11","A1","labware_9","B2","675","0","1","P300","Initial solvent distribution",130
+"labware_11","A1","labware_9","B3","1506.6","0","1","P300","Initial solvent distribution",130
+"labware_10","A1","labware_9","A2","518.4","518.4","2","P300","Initial stock dilution",130
+"labware_10","A2","labware_9","A4","519.75","519.75","3","P300","Initial stock dilution",130
+"labware_10","A3","labware_9","B1","518.4","518.4","4","P300","Initial stock dilution",130
+"labware_10","A4","labware_9","B3","518.4","518.4","5","P300","Initial stock dilution",130
+"labware_9","A2","labware_9","A1","675","675","6","P300","Serially diluting to  AB1 64 Medium-A",130
+"labware_9","A4","labware_9","A3","680.2734375","680.2734375","7","P300","Serially diluting to  AB2 64.5 Medium-A",130
+"labware_9","B1","labware_9","A5","675","675","8","P300","Serially diluting to  AB3 64 Medium-A",130
+"labware_9","B3","labware_9","B2","675","675","9","P300","Serially diluting to  AB4 64 Medium-A",130
+"labware_9","A1","labware_4","B4, C4, D4, E4, F4, G4","100","0","10","P300","Distributing  AB1 64 Medium-A",130
+"labware_9","A1","labware_5","B4, C4, D4, E4, F4, G4","100","0","10","P300","Distributing  AB1 64 Medium-A",130
+"labware_9","A2","labware_4","B3, C3, D3, E3, F3, G3","100","0","11","P300","Distributing  AB1 128 Medium-A",130
+"labware_9","A2","labware_5","B3, C3, D3, E3, F3, G3","100","0","11","P300","Distributing  AB1 128 Medium-A",130
+"labware_9","A3","labware_4","B6, C6, D6, E6, F6, G6","100","0","12","P300","Distributing  AB2 64.5 Medium-A",130
+"labware_9","A3","labware_5","B6, C6, D6, E6, F6, G6","100","0","12","P300","Distributing  AB2 64.5 Medium-A",130
+"labware_9","A4","labware_4","B5, C5, D5, E5, F5, G5","100","0","13","P300","Distributing  AB2 128 Medium-A",130
+"labware_9","A4","labware_5","B5, C5, D5, E5, F5, G5","100","0","13","P300","Distributing  AB2 128 Medium-A",130
+"labware_9","A5","labware_4","B8, C8, D8, E8, F8, G8","100","0","14","P300","Distributing  AB3 64 Medium-A",130
+"labware_9","A5","labware_5","B8, C8, D8, E8, F8, G8","100","0","14","P300","Distributing  AB3 64 Medium-A",130
+"labware_9","B1","labware_4","B7, C7, D7, E7, F7, G7","100","0","15","P300","Distributing  AB3 128 Medium-A",130
+"labware_9","B1","labware_5","B7, C7, D7, E7, F7, G7","100","0","15","P300","Distributing  AB3 128 Medium-A",130
+"labware_9","B2","labware_4","B10, C10, D10, E10, F10, G10","100","0","16","P300","Distributing  AB4 64 Medium-A",130
+"labware_9","B2","labware_5","B10, C10, D10, E10, F10, G10","100","0","16","P300","Distributing  AB4 64 Medium-A",130
+"labware_9","B3","labware_4","B9, C9, D9, E9, F9, G9","100","0","17","P300","Distributing  AB4 128 Medium-A",130
+"labware_9","B3","labware_5","B9, C9, D9, E9, F9, G9","100","0","17","P300","Distributing  AB4 128 Medium-A",130
+"labware_11","A1","labware_4","A1, A2, A3, A4, A5, A6, A7, A8","200","0","18","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_4","A9, A10, A11, A12, B1, B2, B11, B12","200","0","19","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_4","C1, C2, C11, C12, D1, D2, D11, D12","200","0","20","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_4","E1, E2, E11, E12, F1, F2, F11, F12","200","0","21","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_4","G1, G2, G11, G12, H1, H2, H3, H4","200","0","22","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_4","H5, H6, H7, H8, H9, H10, H11, H12","200","0","23","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_5","A1, A2, A3, A4, A5, A6, A7, A8","200","0","24","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_5","A9, A10, A11, A12, B1, B2, B11, B12","200","0","25","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_5","C1, C2, C11, C12, D1, D2, D11, D12","200","0","26","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_5","E1, E2, E11, E12, F1, F2, F11, F12","200","0","27","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_5","G1, G2, G11, G12, H1, H2, H3, H4","200","0","28","P300","Filling outer wells with WATER",130
+"labware_11","A1","labware_5","H5, H6, H7, H8, H9, H10, H11, H12","200","0","29","P300","Filling outer wells with WATER",130
