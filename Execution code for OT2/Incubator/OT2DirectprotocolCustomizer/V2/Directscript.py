@@ -228,11 +228,9 @@ def run(protocol: protocol_api.ProtocolContext):
     try:
         os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs" )
         #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
-        print("fucking hell werk")
     except:
         os.chdir(r'/var/lib/jupyter/notebooks/User Inputs')
-        print("doe wat je klere ding")
-    
+
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
     dBottom = 4
