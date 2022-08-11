@@ -15,7 +15,7 @@ layout = [
 window = sg.Window("opentron direct protocol maker", layout)
 
 
-os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Possibly very stupid idea")
+os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V2")
 lines = []
 with open('Directscript.py') as f:
     lines = f.readlines()
