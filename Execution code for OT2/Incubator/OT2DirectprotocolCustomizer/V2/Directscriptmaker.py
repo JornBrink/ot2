@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 import os
 import subprocess
 
-# create the layout with buttons and text
+
 layout = [
     [sg.Text("Please provide information about the OT2 run you want to do")],
     [sg.Text('Name File (without .csv)', size=(18,1)), sg.InputText('')],                           #values0
@@ -17,7 +17,6 @@ layout = [
     [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")]
 ]
 
-# create popup that is to inform user
 def popup_connecting():
     clicked = sg.PopupOKCancel("This is going to take a bit (might not respond while sending file)\n",
              "Please press OK to continue")
@@ -27,27 +26,22 @@ def popup_connecting():
         window.close()
     
     return
-#starts the GUI
+
 window = sg.Window("Opentron direct protocol maker", layout)
 
-#Needs to store the Directscript into memory for later use
-os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V2")
+
+os.chdir("C://Users//cvhLa//OneDrive//Desktop//Direct Protocols")
 lines = []
 with open('Directscript.py') as f:
     lines = f.readlines()
-    
-#creates loop that activates the tracking of events and values in the gui
+
 while True:
     event, values = window.read()
     
-    #Stops everything when user uses the button cancle or closes the window
     if event =="Close" or event == sg.WIN_CLOSED:
         break
-    
-    #If user sets save the file is found and prepared for making the script
     if event == 'Save':
-        #put filename = into the script
-        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V2//New Direct scripts")
+        os.chdir("C://Users//cvhLa//OneDrive//Desktop//New Direct scripts")
         print(values)
         Direct_protocol_name= values[3]+values[2]+values[1]
         Truename= (Direct_protocol_name+ '.py')
@@ -55,8 +49,7 @@ while True:
             fh = open(Truename, 'r+')
         except FileNotFoundError:
             fh = open(Truename, 'w+')
-            
-        #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
+        
         if(values[6] == True ):
             active_pc ="Jorn"
         elif(values[7] == True):
@@ -64,7 +57,6 @@ while True:
         else:
             active_pc = "OT"
             
-        # For the metadata of the script added
         with open(Truename, 'w+') as file:
                 file.write('fileName =' + "\'" + values[0]  + '.csv'+ "\'" "\n" + "\n")
                 file.write('pc =' + "\'" +active_pc + "\'" + "\n" + "\n")
@@ -74,15 +66,12 @@ while True:
                                 "\'"+'author'"\'"+":" + "\'" +'Sebastian <sebastian.tandar@gmail.com>' +"\'" +"\'"+ 'Jorn <jornbrink@kpnmail.nl>' + "\'"+"," +"\n"+"\t"+
                                 "\'"+'description'"\'"+":" + "\'" +'96 wells plate MIC with p300 possibility'+"\'"+ "\'"+'Usercustomized'+"\'"+","+ "\n"+"\t"+
                                 "\'"+'apiLevel'"\'"+":"+"\'" +'2.12'+"\'"+ "\n"+'}\n')
-                #actually puts the script into the new file
                 for asd in lines:
                     file.write(asd)
-                    
-       #enables the send button
+        print(active_pc)
         window['Send'].update(disabled=False)
     
     if event == 'Send':
-        #when value 4 is true then the OT2L is selected and the script tries to send the csv to the jupyter
         if(values[4] == True):
             try:
                 popup_connecting()
@@ -97,12 +86,14 @@ while True:
                 Full_command = scp + OT2_key + file_path + path_robot
                 completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
                 print(completed)
-            except: #when it fails you get a popup saying there might not be connection
+            except:
+                file_name = values[0]
+                home = "C:/Users/jornb/Documents/GitHub/ot2new/Execution code for OT2/Incubator/OT2DirectprotocolCustomizer/V2/New Direct scripts/"
+                filepath = home + file_name+".csv"
                 sg.Popup("No connection to the robot (is it all just a simulation?)\n"
                          "Or the file was not send")
                  
         elif(values[5] == True):
-            #when value 4 is true then the OT2R is selected and the script tries to send the csv to the jupyter
             try:
                 popup_connecting()
                 fileName_direc = values[0]  + '.csv'+ '\'' + " "
@@ -116,7 +107,10 @@ while True:
                 Full_command = scp + OT2_key_right + file_path + path_robot
                 completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
                 print(completed)
-            except:#when it fails you get a popup saying there might not be connection NOTE: It might not give a vailure because it promps powershell correctly 
+            except:
+                file_name = values[0]
+                home = "C:/Users/jornb/Documents/GitHub/ot2new/Execution code for OT2/Incubator/OT2DirectprotocolCustomizer/V2/New Direct scripts/"
+                filepath = home + file_name+".csv"
                 sg.Popup("No connection to the robot (is it all just a simulation?)\n"
                          "Or the file was not send")
         else:
