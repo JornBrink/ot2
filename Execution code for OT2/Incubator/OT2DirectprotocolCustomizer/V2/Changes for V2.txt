@@ -1,0 +1,12 @@
+These are the changes happening in V2 of the direct script maker
+- 
+
+
+
+
+
+Planned:
+- Push file to OT2 
+- select which OT2 is going to do it
+- Select what computer is running the OT2
+- fancyness

@@ -1,16 +1,33 @@
 import PySimpleGUI as sg
 import os
+import subprocess
+
 
 layout = [
     [sg.Text("Please provide information about the OT2 run you want to do")],
-    [sg.Text('Name File', size=(15,1)), sg.InputText('Filename')],
-    [sg.Text('Experiment Name', size=(15,1)), sg.InputText('Experiment Name')],
-    [sg.Text('Your Name', size=(15, 1)), sg.InputText('Yourname')],
-    [sg.Text('Date', size=(15, 1)), sg.InputText('yymmdd')],
+    [sg.Text('Name File', size=(15,1)), sg.InputText('Filename without the csv')],                  #values0
+    [sg.Text('Experiment Name', size=(15,1)), sg.InputText('Experiment Name')],                     #values1
+    [sg.Text('Your Name', size=(15, 1)), sg.InputText('Yourname')],                                 #values2
+    [sg.Text('Date', size=(15, 1)), sg.InputText('yymmdd')],                                        #values3
+    [sg.Text('Which OT2 do you want to use?', size=(15, 1))],                       
+    [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values4&5
+    [sg.Text("What pc is it running on?", size=(15, 1))],
+    [sg.Radio('Jorn', "group 2"), 
+     sg.Radio('Sebastian', "group 2"), sg.Radio('OT', "group 2")],      #Values[6/7/8]
     [sg.Button("Save")],
+    [sg.Button("Send", disabled=True)],
     [sg.Button("Close")]
 ]
 
+def popup_connecting():
+    clicked = sg.PopupOKCancel("This is going to take a bit (might not respond while sending file)\n",
+             "Please press OK to continue")
+    if (clicked =="OK"):
+        return
+    else:
+        window.close()
+    
+    return
 
 window = sg.Window("opentron direct protocol maker", layout)
 
@@ -26,17 +43,25 @@ while True:
     if event =="Close" or event == sg.WIN_CLOSED:
         break
     if event == 'Save':
-        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Possibly very stupid idea//New Direct scripts")
-        #print(values)
+        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V2//New Direct scripts")
+        print(values)
         Direct_protocol_name= values[3]+values[2]+values[1]
         Truename= (Direct_protocol_name+ '.py')
         try:
             fh = open(Truename, 'r+')
         except FileNotFoundError:
             fh = open(Truename, 'w+')
+        
+        if(values[6] == True ):
+            active_pc ="Jorn"
+        elif(values[7] == True):
+            active_pc = "Sebastian"
+        else:
+            active_pc = "OT"
             
         with open(Truename, 'w+') as file:
-                file.write('fileName =' + "\'" + values[0]  + '.csv'+ "\'" "\n")
+                file.write('fileName =' + "\'" + values[0]  + '.csv'+ "\'" "\n" + "\n")
+                file.write('pc =' + "\'" +active_pc + "\'" + "\n" + "\n")
                 file.write('#METADATA----------' "\n" +
                             'metadata = {'+"\n"+"\t"+
                                 "\'"+ 'protocolName'"\'"+":"+  "\'" + Direct_protocol_name + "\'" +","+"\n"+"\t"+
@@ -45,8 +70,56 @@ while True:
                                 "\'"+'apiLevel'"\'"+":"+"\'" +'2.12'+"\'"+ "\n"+'}\n')
                 for asd in lines:
                     file.write(asd)
+        print(active_pc)
+        window['Send'].update(disabled=False)
+    
+    if event == 'Send':
+        if(values[4] == True):
+            try:
+                popup_connecting()
+                fileName_direc = values[0]  + '.csv'+ '\'' + " "
+                path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
+                file_path = path_to_file + fileName_direc
+                path_robot = "'root@169.254.212.60:/var/lib/jupyter/User Inputs'"
+                OT2_key = "C:/Users/cvhLa/ot2_ssh_key_OT2L "
+                scp = "scp -i "
                 
-        break
+                #scp -i C:/Users/cvhLa/ot2_ssh_key_OT2L 'C:/Users/cvhLa/OneDrive/Desktop/Direct Protocols/README.jpg' root@169.254.212.60:/var/lib/jupyter/notebooks
+                Full_command = scp + OT2_key + file_path + path_robot
+                completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
+                print(completed)
+            except:
+                file_name = values[0]
+                home = "C:/Users/jornb/Documents/GitHub/ot2new/Execution code for OT2/Incubator/OT2DirectprotocolCustomizer/V2/New Direct scripts/"
+                filepath = home + file_name+".csv"
+                sg.Popup("No connection to the robot (is it all just a simulation?)\n"
+                         "Or the file was not send")
+                 
+        elif(values[5] == True):
+            try:
+                popup_connecting()
+                fileName_direc = values[0]  + '.csv'+ '\'' + " "
+                path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
+                file_path = path_to_file + fileName_direc
+                path_robot = "'root@169.254.199.130:/var/lib/jupyter/notebooks/User Inputs'"
+                OT2_key_right = "C:/Users/cvhLa/ot2_ssh_key_OT2R "
+                scp = "scp -i "
+                
+                #scp -i C:/Users/cvhLa/ot2_ssh_key_OT2L 'C:/Users/cvhLa/OneDrive/Desktop/Direct Protocols/README.jpg' root@169.254.212.60:/var/lib/jupyter/notebooks
+                Full_command = scp + OT2_key_right + file_path + path_robot
+                completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
+                print(completed)
+            except:
+                file_name = values[0]
+                home = "C:/Users/jornb/Documents/GitHub/ot2new/Execution code for OT2/Incubator/OT2DirectprotocolCustomizer/V2/New Direct scripts/"
+                filepath = home + file_name+".csv"
+                sg.Popup("No connection to the robot (is it all just a simulation?)\n"
+                         "Or the file was not send")
+        else:
+            sg.Popup("Check one of the options", keep_on_top = True)
+
+
+            
 window.close()  
 
 

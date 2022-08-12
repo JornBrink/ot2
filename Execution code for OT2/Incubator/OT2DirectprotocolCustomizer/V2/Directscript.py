@@ -225,11 +225,16 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
 def run(protocol: protocol_api.ProtocolContext):
     #READ
     global fileName #calling from global
+    global pc
     try:
-        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs" )
-        #os.chdir('C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Direct protocols//Multichannel')
+        if(pc =="Jorn" or pc =="jorn"):
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs" )
+        elif(pc == "Sebastian" or pc== "sebastian"):
+            os.chdir("C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\DownstreamProcessors")
+        else:
+            os.chdir('C://Users//cvhLa//OneDrive//Desktop//User input (for direct)')
     except:
-        os.chdir(r'/var/lib/jupyter/notebooks/User Inputs')
+        os.chdir('/var/lib/jupyter/notebooks/User Inputs')
 
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
