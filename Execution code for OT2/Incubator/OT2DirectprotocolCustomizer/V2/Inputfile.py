@@ -89,7 +89,7 @@ while True:
                 fileName_direc = values[0]  + '.csv'+ '\'' + " "
                 path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
                 file_path = path_to_file + fileName_direc
-                path_robot = "'root@169.254.212.60:/var/lib/jupyter/User Inputs'"
+                path_robot = "'root@169.254.212.60:/var/lib/jupyter/notebooks/UserInputs'"
                 OT2_key = "C:/Users/cvhLa/ot2_ssh_key_OT2L "
                 scp = "scp -i "
                 
