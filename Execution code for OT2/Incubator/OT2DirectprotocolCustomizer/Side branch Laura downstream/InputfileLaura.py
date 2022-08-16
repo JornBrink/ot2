@@ -32,9 +32,9 @@ def popup_connecting():
 window = sg.Window("Opentron direct protocol maker", layout)
 
 #Needs to store the Directscript into memory for later use
-os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V3")
+os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Side branch Laura downstream")
 lines = []
-with open('Directscript.py') as f:
+with open('DirectscriptLaura.py') as f:
     lines = f.readlines()
 
 #FUNCTIONS----------
@@ -72,7 +72,7 @@ while True:
     #If user sets save the file is found and prepared for making the script
     if event == 'Save':
         #put filename = into the script
-        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V3//New Direct scripts")
+        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Side branch Laura downstream//New Direct scripts")
         print(values)
         Direct_protocol_name= values[3]+values[2]+values[1]
         Truename= (Direct_protocol_name+ '.py')
@@ -97,7 +97,7 @@ while True:
                             'metadata = {'+"\n"+"\t"+
                                 "\'"+ 'protocolName'"\'"+":"+  "\'" + Direct_protocol_name + "\'" +","+"\n"+"\t"+
                                 "\'"+'author'"\'"+":" + "\'" +'Sebastian <sebastian.tandar@gmail.com>' +"\'" +"\'"+ 'Jorn <jornbrink@kpnmail.nl>' + "\'"+"," +"\n"+"\t"+
-                                "\'"+'description'"\'"+":" + "\'" +'96 wells plate MIC with p300 possibility'+"\'"+ "\'"+'Usercustomized'+"\'"+","+ "\n"+"\t"+
+                                "\'"+'description'"\'"+":" + "\'" +'384-well MIC; pre-dilution required'+"\'"+ "\'"+'Usercustomized'+"\'"+","+ "\n"+"\t"+
                                 "\'"+'apiLevel'"\'"+":"+"\'" +'2.12'+"\'"+ "\n"+'}\n')
                 #actually puts the script into the new file
                 for asd in lines:

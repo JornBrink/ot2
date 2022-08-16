@@ -1,29 +1,23 @@
-options(stringsAsFactors = F)
+#LIBRARIES-----
 library(dplyr)
-library(rlist)
 library(readxl)
+
 #FUNCTIONS LIBRARY------------
-# read input
 GetStockList <- function(file_name){
   res <- read_xlsx(file_name, range="C1:M2") %>% data.frame() %>%
     select_if(function(x) any(!is.na(x)))
-  
   sl_res <- unlist(res)
-  if(is.character(sl_res[1])){
-    sl_res <- gsub(",", ".", sl_res) %>% as.numeric()
-  }
-  
   names(sl_res) <- colnames(res)
-  
-  return(sl_res)
+  return(res)
 }
 GetWellVols <- function(file_name){
   res <- read_xlsx(file_name, sheet=1, range="C5:C6", col_names=F) %>% unlist()
   names(res) <- c("TotalVol", "FillVol")
   return(res)
 }
-Get_nPlate <- function(file_name){
-  res <- read_xlsx(file_name, sheet=1, range="F6", col_names=F) %>% unlist()
+GetInocBool <- function(file_name){
+  res <- read_xlsx(file_name, sheet=1, range='F6', col_names=F)
+  res <- toString(unlist(res))
   return(res)
 }
 GetPlateMap <- function(file_name){
@@ -83,33 +77,42 @@ GetPlateMap <- function(file_name){
   colnames(fin_map) <- c('Well', 'fillID', 'solID', 'DrugType', 'DrugConc', 'Solvent', 'Inoc')
   fin_map$Inoc[is.na(fin_map$Inoc)] <- "NA"
   
-  #expecting dot/comma decimal separator
-  if(is.character(fin_map$DrugConc[1])){
-    fin_map$DrugConc <- gsub(",", ".", fin_map$DrugConc) %>% as.numeric()
-  }
-  
   #dropping factor
   fin_map[] <- lapply(fin_map, as.character)
   return(fin_map)
 }
-
-#preparation
-CreateSolList <- function(plate_map, total_vol_well, inoc_vol, stock_list, n_plate){
-  plate_map$solID <- gsub(",", ".", plate_map$solID)
+CreateSolList <- function(plate_map, total_vol_well, inoc_vol, stock_list){
+  plate_map$solID <- sapply(plate_map$solID, function(x) gsub(",", ".", x))
+  sol_list <- unique(plate_map$solID)
+  sol_list <- sol_list[!grepl("FILL", sol_list)]
   
   #get occurence
   occ <- table(plate_map$solID)
-  occurences <- cbind.data.frame(names(occ), as.numeric(occ)* as.numeric(n_plate)) 
-  colnames(occurences) <- c("solID", "Occ")
+  occurences <- as.numeric(occ)
+  names(occurences) <- names(occ)
   
-  #combine data frames
-  fin_list <- plate_map[,c(3:6)] %>% distinct() %>% left_join(occurences, by="solID") %>% filter(solID!="FILL")
+  fin_list <- c()
+  parsed_names <- sapply(sol_list, function(x) strsplit(toString(x), ' ', fixed=T))
+  
+  #iterate through all listed drug concentrations
+  for(i in c(1:length(parsed_names))){
+    nex_info <- c(parsed_names[[i]][1], #drug name
+                  parsed_names[[i]][2], #concentration
+                  parsed_names[[i]][3], #solvent
+                  occurences[sol_list[i]]) #occurence
+    
+    fin_list <- rbind(fin_list, nex_info)
+  }
+  rownames(fin_list) <- c()
+  
+  #final combining
+  fin_list <- cbind.data.frame(sol_list, fin_list)
   colnames(fin_list) <- c('SolID', 'DrugType', 'DrugConc', 'Solvent', 'Occurence')
-  fin_list[] <- lapply(fin_list, as.character) #convert to character
-  
-  #calculating required dilution volume
+  fin_list[] <- lapply(fin_list, as.character)
+  #creating numerics
   fin_list$Occurence <- as.numeric(fin_list$Occurence)
   fin_list$DrugConc <- as.numeric(fin_list$DrugConc)
+  
   fin_list <- CalculateDilVolume(fin_list, total_vol_well, inoc_vol, stock_list)
   
   #dropping factors
@@ -124,11 +127,7 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
   sol_list <- cbind.data.frame(sol_list, solAmt)
   
   #recalculate amount to adjust with the incoming inoculum
-  sol_list$DrugConc <- as.numeric(sol_list$DrugConc) * 
-    total_vol_well / (total_vol_well - inoc_vol)
-  
-  #remove no-drug solutions from the list
-  sol_list <- sol_list[(sol_list$DrugType != ""),]
+  sol_list$DrugConc <- as.numeric(sol_list$DrugConc) * total_vol_well / (total_vol_well - inoc_vol)
   
   #initiate new list
   new_solList <- c()
@@ -137,14 +136,12 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
   drugs <- unique(sol_list$DrugType)
   
   for(i in c(1:length(solvents))){
-   
     for(j in c(1:length(drugs))){
       
       #subset the current drug type
       curList <- subset(sol_list, DrugType==drugs[j] & Solvent==solvents[i])
-      
       #perform following actions only if not null
-      if(nrow(curList)>0){
+      if(length(curList[,1])>0){
         #order according to concentration
         curList <- curList[order(as.numeric(curList$DrugConc)),]
         
@@ -178,10 +175,9 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
               #update the item list
               nex_newCurList$DrugConc <- conc_hi/10
               nex_newCurList$Occurence <- 0
-              nex_newCurList$SolID <- paste(nex_newCurList$DrugType, 
-                                            nex_newCurList$DrugConc, 
-                                            nex_newCurList$Solvent,
+              nex_newCurList$SolID <- paste(nex_newCurList$DrugType, nex_newCurList$DrugConc, nex_newCurList$Solvent,
                                             sep=' ')
+              nex_newCurList$solAmt <- 150 
               
               #concatenate dilution to list
               new_curList <- rbind.data.frame(new_curList, nex_newCurList)
@@ -255,11 +251,9 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
   solventAmt <- as.numeric(new_solList$solAmt) - as.numeric(new_solList$AmtHi)
   
   #check required tube size
-  reqTube <- replicate(length(new_solList[,1]), "15_Falcon")
-  if(max(new_solList$solAmt) >= 14*1000){
-    createNull <- T
-  }else{createNull <- F}
-  
+  reqTube <- replicate(length(new_solList[,1]), "1.5_Eppendorf")
+  reqTube[new_solList$solAmt > 1.2*1000] <- "15_Falcon"
+  reqTube[new_solList$solAmt > 13*1000] <- "50_Falcon"
   
   #concatenate Info
   new_solList <- cbind.data.frame(new_solList, solventAmt, reqTube)
@@ -267,13 +261,9 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
   #dropping factor
   new_solList[] <- lapply(new_solList, as.character)
   
-  if(createNull){
-    new_solList <- NULL
-    errMessage <<- "OVER CAPACITY!"
-  }
   return(new_solList)
 }
-CreateDilMap <- function(sol_list, deckMap, stock_list){
+CreateDilMap <- function(sol_list, deckMap){
   #initiate map
   small_coords <- c(1, 1)
   large_coords <- c(1, 1)
@@ -283,20 +273,11 @@ CreateDilMap <- function(sol_list, deckMap, stock_list){
   large_dilMap <- cbind()
   spare_dilMap <- cbind()
   
-  #pre-filling small coordinates
-  for(i in c(1:length(stock_list))){
-    small_coords[2] <- small_coords[2] + 1
-    if(small_coords[2]>5){ #is a falcon tube rack (15 mL)
-      small_coords[1] <- small_coords[1] + 1
-      small_coords[2] <- 1
-    }
-  } 
-  
   #iterate through all items in solution list
-  for(i in c(1:nrow(sol_list))){
+  for(i in c(1:length(sol_list[,1]))){
     if(as.numeric(sol_list$solAmt[i])<=1300){
       #check if the main rack is full
-      if(small_coords[1]<3){
+      if(small_coords[1]<5){
         #if the main rack is still available
         nexItem <- c(paste(LETTERS[small_coords[1]], toString(small_coords[2]), sep=''),
                      toString(sol_list$SolID[i]))
@@ -305,7 +286,7 @@ CreateDilMap <- function(sol_list, deckMap, stock_list){
         
         #update coordinates
         small_coords[2] <- small_coords[2]+1
-        if(small_coords[2]>5){
+        if(small_coords[2]>6){
           small_coords[2] <- 1
           small_coords[1] <- small_coords[1] + 1
         }
@@ -360,7 +341,7 @@ CreateDilMap <- function(sol_list, deckMap, stock_list){
   
   #get labware locations
   small_dilMap <- cbind(small_dilMap, replicate(length(small_dilMap[,1]),
-                                                names(deckMap)[match("15ml_Falcon_stock", deckMap)]))
+                                                names(deckMap)[match("1.5_Eppendorf", deckMap)]))
   spare_dilMap <- cbind(spare_dilMap, replicate(length(spare_dilMap[,1]),
                                                 names(deckMap)[match("15_Falcon_spare", deckMap)]))
   large_dilMap <- cbind(large_dilMap, replicate(length(large_dilMap[,1]),
@@ -437,7 +418,7 @@ Cmd_HiDrug <- function(cmd_list, sol_list, stock_map, deck_map, dil_map){
       curSolList <- subset(curSolList, DrugConc==max(as.numeric(curSolList$DrugConc)))
       
       #create command
-      nexCmd <- c(names(deck_map)[match("15ml_Falcon_stock", deck_map)], #source ware = stock rack
+      nexCmd <- c(names(deck_map)[match("Stock", deck_map)], #source ware = stock rack
                   stock_map[stock_map[,2]==curSolList$DrugType[1],1], #source slot = solvent tube
                   dil_map$Labware[dil_map$Fill==curSolList$SolID[1]], #target ware = dilution rack
                   dil_map$Slot[dil_map$Fill==curSolList$SolID[1]], #target slot = dilution tube
@@ -487,7 +468,7 @@ Cmd_SerialDil <- function(cmd_list, sol_list, dil_map){
   }
   return(cmd_list)
 }
-Cmd_DrugSolDist <- function(cmd_list, dil_map, plate_map, deck_map, well_info, n_plates){
+Cmd_DrugSolDist <- function(cmd_list, dil_map, plate_map, deck_map, well_info){
   tipID <- max(as.numeric(cmd_list[,7]), na.rm=T) + 1
   transV <- well_info[1] - well_info[2]
   
@@ -495,32 +476,70 @@ Cmd_DrugSolDist <- function(cmd_list, dil_map, plate_map, deck_map, well_info, n
   plate_map$solID <- sapply(plate_map$solID, function(x) gsub(",", ".", x))
   dil_map$Fill <- sapply(dil_map$Fill, function(x) gsub(",", ".", x))
   
-  #get plate names
-  plates <- sapply(LETTERS[c(1:n_plates)], function(x) paste("96-well", x, sep="_"))
-  
   #iterate through all items in the dilution map
   for(i in c(1:length(dil_map[,1]))){
     target_wells <- plate_map$Well[plate_map$solID==dil_map$Fill[i]]
-    
-    #iterate through all target plates
-    for(j in c(1:length(plates))){
-      nexCmd <- c(dil_map$Labware[i],
-                  dil_map$Slot[i],
-                  names(deck_map)[match(plates[j], deck_map)],
-                  paste(target_wells, collapse=', '),
-                  transV, 0, tipID, paste('Distributing ', dil_map$Fill[i]))
-      #concatenate result
-      cmd_list <- rbind(cmd_list, nexCmd)
-    }
-    
-    
-    #update tip ID only at the end of the current solution
+    nexCmd <- c(dil_map$Labware[i],
+                dil_map$Slot[i],
+                names(deck_map)[match('96-well', deck_map)],
+                paste(target_wells, collapse=', '),
+                transV, 0, tipID, paste('Distributing ', dil_map$Fill[i]))
+    #concatenate result
+    cmd_list <- rbind(cmd_list, nexCmd)
+    #update tip ID
     tipID <- tipID + 1
+  }
+  return(cmd_list)
+}
+Cmd_Inoculate <- function(plate_map, inoc_map, well_info, cmd_list, deck_map, solvent_map){
+  tipID <- max(as.numeric(cmd_list[,7]), na.rm=T) + 1
+  
+  #1. Filling drug-containing no-strain controls
+  specialCases <- subset(plate_map, solID != 'FILL' & Inoc == 'NA')
+  #iterate through all filled with identical solvent
+  solTypes <- unique(specialCases$Solvent)
+  for(i in c(1:length(solTypes))){
+    curSpec_Case <- subset(specialCases, Solvent==solTypes[i])
+    target_wells <- curSpec_Case$Well
+    #creating command line
+    nexCmd <- c(names(deck_map)[match('Solvent', deck_map)],
+                solvent_map[solvent_map[,2]==curSpec_Case$Solvent[1],1],
+                names(deck_map)[match('96-well', deck_map)],
+                paste(target_wells, collapse=', '),
+                well_info[2], 0, tipID, 'Adding blank medium')
+    #concatenate command
+    cmd_list <- rbind(cmd_list, nexCmd)
+    #update tip ID
+    tipID <- tipID + 1
+  }
+  inoc_map <- inoc_map
+  plate_map <- plate_map
+  specialCases <- subset(plate_map, Inoc != 'NA')
+  drugTypes <- unique(specialCases$DrugType)
+  
+  
+  #iterate through all inoculum types
+  for(i in c(1:length(inoc_map[,1]))){
+    for(j in c(1:length(drugTypes))){
+      cur_platemap <- subset(specialCases, DrugType==drugTypes[j])
+      #get target wells
+      target_wells <- cur_platemap$Well[cur_platemap$Inoc==inoc_map[i,2]]
+      #create command list
+      nexCmd <- c(names(deck_map)[match('Inno', deck_map)],
+                  inoc_map[i,1],
+                  names(deck_map)[match('96-well', deck_map)],
+                  paste(target_wells, collapse=', '),
+                  well_info[2], well_info[2], tipID, paste('Inoculating: ', inoc_map[i,2]))
+      #concatenate command
+      cmd_list <- rbind(cmd_list, nexCmd)
+      #update tip ID
+      tipID <- tipID + 1
+    }
   }
   
   return(cmd_list)
 }
-Cmd_FillOuter <- function(plate_map, deck_map, solvent_map, well_info, cmd_list, n_plates){
+Cmd_FillOuter <- function(plate_map, deck_map, solvent_map, well_info, cmd_list){
   tipID <- max(as.numeric(cmd_list[,7]), na.rm=T) + 1
   
   #rename water if needed
@@ -528,31 +547,21 @@ Cmd_FillOuter <- function(plate_map, deck_map, solvent_map, well_info, cmd_list,
   
   #subset current plate map
   cur_plate_map <- subset(plate_map, solID=='FILL')
-  
-  #get plate names
-  plates <- sapply(LETTERS[c(1:n_plates)], function(x) paste("96-well", x, sep="_"))
-  
   #iterate through all solvent types
   solvents <- unique(solvent_map[,2])
   for(i in c(1:length(solvents))){
     #select targets
     target_wells <- paste(cur_plate_map$Well[cur_plate_map$Solvent==solvents[i]], collapse=', ')
     
-    #iterate through all target plates
-    for(j in c(1:length(plates))){
-      #creating command list
-      nexCmd <- c(names(deck_map)[match('Solvent', deck_map)],
-                  solvent_map[solvent_map[,2]==solvents[i],1],
-                  names(deck_map)[match(plates[j], deck_map)],
-                  target_wells,
-                  well_info[1], 0, tipID, 'Filling outer wells with WATER')
-      
-      #concatenate result
-      cmd_list <- rbind(cmd_list, nexCmd)
-      
-      #update tip after every plate
-      tipID <- tipID + 1
-    }
+    #creating command list
+    nexCmd <- c(names(deck_map)[match('Solvent', deck_map)],
+                solvent_map[solvent_map[,2]==solvents[i],1],
+                names(deck_map)[match('96-well', deck_map)],
+                target_wells,
+                well_info[1], 0, tipID, 'Filling outer wells with WATER')
+    
+    #concatenate result
+    cmd_list <- rbind(cmd_list, nexCmd)
   }
   
   return(cmd_list)
@@ -597,7 +606,8 @@ Cal_SolAmt <- function(deck_map, solvent_map, cmd_list){
     relCmdList <- subset(cmd_list, SourceLabware==rack_position & SourceSlot==solvent_map[i,1])
     
     #get number of target wells per-row
-    n_well <- unlist(sapply(relCmdList$TargetSlot, function(x) length(strsplit(x, split=', ', fixed=T)[[1]])))
+    n_well <- unlist(sapply(relCmdList$TargetSlot, 
+                            function(x) length(strsplit(x, split=', ', fixed=T)[[1]])))
     
     #calculate required amount
     solvent_amt <- sum(as.numeric(relCmdList$TransAmt) * n_well)
@@ -606,8 +616,8 @@ Cal_SolAmt <- function(deck_map, solvent_map, cmd_list){
     req_amt <- c(req_amt, solvent_amt)
   }
   
-  #put excess of 2 mL
-  req_amt <- req_amt + 2000
+  #put excess of 4 mL
+  req_amt <- req_amt + 4000
   #place minimum of 10 mL
   req_amt[req_amt<10000] <- 10000
   #translate to mL
@@ -648,7 +658,7 @@ Cal_StockAmt <- function(sol_list, stock_list, stock_map, deck_map){
     for(j in c(1:length(solvents))){
       #subset
       curList <- subset(sol_list, DrugType==drugs[i] & Solvent==solvents[j])
-      
+      curList <<- curList
       #perform if not null
       if(length(curList)>0){
         #get required amount
@@ -666,9 +676,9 @@ Cal_StockAmt <- function(sol_list, stock_list, stock_map, deck_map){
   rownames(stock_list) <- c()
   
   #add excess
-  stock_list$RequiredAmount <- as.numeric(stock_list$RequiredAmount) + 300
+  stock_list$RequiredAmount <- as.numeric(stock_list$RequiredAmount) + 150
   #place minimum
-  stock_list$RequiredAmount[as.numeric(stock_list$RequiredAmount)<700] <- 700
+  stock_list$RequiredAmount[as.numeric(stock_list$RequiredAmount)<300] <- 300
   #round up
   stock_list$RequiredAmount <- ceiling(as.numeric(stock_list$RequiredAmount)/100)*100
   
@@ -679,9 +689,9 @@ Cal_StockAmt <- function(sol_list, stock_list, stock_map, deck_map){
   stock_map <- stock_map[,c(1, 2, 4)]
   
   #additional informations
-  Labware <- replicate(length(stock_map[,1]), names(deck_map)[match("15ml_Falcon_stock", deck_map)])
+  Labware <- replicate(length(stock_map[,1]), names(deck_map)[match('Stock', deck_map)])
   Unit <- replicate(length(stock_map[,1]), "uL")
-  Type <- replicate(length(stock_map[,1]), "15 mL Falcon Tube")
+  Type <- replicate(length(stock_map[,1]), "1.5 mL Eppendorf Tube")
   Category <- replicate(length(stock_map[,1]), "DRUG STOCK")
   
   #integrate results
@@ -693,12 +703,58 @@ Cal_StockAmt <- function(sol_list, stock_list, stock_map, deck_map){
   
   return(stock_map)
 }
+Cal_InocAmt <- function(inoc_map, cmd_list, deck_map){
+  #initiate volume list
+  volList <- c()
+  #get inoculum position
+  inoc_position <- names(deck_map)[match('Inno', deck_map)]
+  #iterate through all inoculum types
+  for(i in c(1:length(inoc_map[,1]))){
+    #get target wells
+    selectedRows <- subset(cmd_list, SourceLabware==inoc_position & SourceSlot==inoc_map[i,1])
+    #count number of target wells
+    n_wells <- unlist(sapply(selectedRows$TargetSlot, function(x) length(strsplit(x, ', ', fixed=T)[[1]])))
+    
+    #calculate required amount
+    req_amt <- sum(n_wells * as.numeric(selectedRows$TransAmt))
+    
+    #concatenate to list
+    volList <- c(volList, req_amt)
+  }
+  #integrate matrix
+  inoc_map <- data.frame(cbind(inoc_map, volList))
+  inoc_map[,3] <- as.numeric(inoc_map[,3])
+  #get names
+  colnames(inoc_map) <- c('Slot', 'Name', 'RequiredAmount')
+  
+  #add excess 3 mL
+  inoc_map$RequiredAmount <- inoc_map$RequiredAmount + 3000
+  #place minimum amount
+  inoc_map$RequiredAmount[inoc_map$RequiredAmount<5000] <- 5000
+  #round up
+  inoc_map$RequiredAmount <- ceiling(inoc_map$RequiredAmount/1000) #convert to mL
+  
+  #additional informations
+  Labware <- replicate(length(inoc_map[,1]), names(deck_map)[match('Inno', deck_map)])
+  Unit <- replicate(length(inoc_map[,1]), "mL")
+  Type <- replicate(length(inoc_map[,1]), "15 mL Falcon Tube")
+  Category <- replicate(length(inoc_map[,1]), "INOCULUM")
+  
+  #integrate results
+  inoc_map <- cbind.data.frame(Category, Labware, Type, inoc_map, Unit)
+  rownames(inoc_map) <- c()
+  
+  #removing factors
+  inoc_map[] <- lapply(inoc_map, as.character)
+  
+  return(inoc_map)
+}
 Cal_DilTubes <- function(dil_map){
   #get number of occurence
   occs <- table(dil_map$Labware)
   
   outputMap <- cbind(names(occs), occs, replicate(length(occs), '15_Falcon'))
-  #outputMap[outputMap[,1]=='labware_5',3] <- '1.5_Eppendorf' #removed in this version (MV plate)
+  outputMap[outputMap[,1]=='labware_5',3] <- '1.5_Eppendorf'
   outputMap <- data.frame(outputMap)
   colnames(outputMap) <- c('Labware', 'RequiredAmount', 'Name')
   rownames(outputMap) <- c()
@@ -715,8 +771,7 @@ Cal_DilTubes <- function(dil_map){
   colnames(outputMap) <- c('Category', 'Labware', 'Type', 'Slot', 'Name', 'RequiredAmount', 'Unit')
   return(outputMap)
 }
-Cal_DeckAdjustment <- function(cmd_list, deck_map, dil_tubes, n_plate){
-  dil_tubes <- dil_tubes
+Cal_DeckAdjustment <- function(cmd_list, deck_map, dil_tubes){
   deck <- matrix(as.character(c(12:1)), ncol=3, byrow=T)
   deck <- deck[,c(3, 2, 1)]
   deck_map <- matrix(deck_map, ncol=3, byrow=T)
@@ -726,32 +781,34 @@ Cal_DeckAdjustment <- function(cmd_list, deck_map, dil_tubes, n_plate){
     fin_deck <- rbind(fin_deck, deck[i,], deck_map[(length(deck_map[,1])-i+1),])
   }
   
+  needed <- max(as.numeric(cmd_list$TipID), na.rm=T)
+  nbox <- ceiling(needed/96)
+  if(nbox<3){
+    fin_deck[2,1] <- '(empty)'
+    if(nbox<2){
+      fin_deck[4,1] <- '(empty)'
+    }
+  }
   
-  #check if spare tube rack was required
+  #check if tube racks required
+  if(!('labware_4' %in% dil_tubes$Labware)){
+    fin_deck[6,1] <- '(empty)'
+  }
+  if(!('labware_5' %in% dil_tubes$Labware)){
+    fin_deck[6,2] <- '(empty)'
+  }
   if(!('labware_8' %in% dil_tubes$Labware)){
     fin_deck[4,2] <- '(empty)'
   }
   
-  #check if plates required
-  if(n_plate < 6){
-    fin_deck[8,3] <- "(empty)"
-    if(n_plate < 5){
-      fin_deck[8,2] <- "(empty)"
-      if(n_plate < 4){
-        fin_deck[8,1] <- "(empty)"
-        if(n_plate < 3){
-          fin_deck[6,3] <- "(empty)"
-          if(n_plate < 2){
-            fin_deck[6,2] <- "(empty)"
-          }
-        }
-      }
-    }
-  } 
+  #check if inoculum rack required
+  if(!('labware_3' %in% cmd_list[,1])){
+    fin_deck[8,3] <- '(empty)'
+  }
   return(fin_deck)
 }
 Int_CreateCmdList <- function(deck_map, sol_list, solvent_map, inoc_map,
-                              dil_map, stock_map, well_info, plate_map, n_plate){
+                              dil_map, stock_map, well_info, plate_map, inoc_bool){
   
   #1. DISTRIBUTE SOLVENT
   cmdlist <- tryCatch({
@@ -788,7 +845,7 @@ Int_CreateCmdList <- function(deck_map, sol_list, solvent_map, inoc_map,
   
   #4. DISTRIBUTING DRUG SOLUTION
   cmdlist <- tryCatch({
-    Cmd_DrugSolDist(cmdlist, dil_map, plate_map, deck_map, well_info, n_plate)
+    Cmd_DrugSolDist(cmdlist, dil_map, plate_map, deck_map, well_info)
   },
   error = function(cond){
     if(errMessage == ""){
@@ -799,7 +856,7 @@ Int_CreateCmdList <- function(deck_map, sol_list, solvent_map, inoc_map,
   
   #5. FILLING OUTER WELLS
   cmdlist <- tryCatch({
-    Cmd_FillOuter(plate_map, deck_map, solvent_map, well_info, cmdlist, n_plate)
+    Cmd_FillOuter(plate_map, deck_map, solvent_map, well_info, cmdlist)
   },
   error = function(cond){
     if(errMessage == ""){
@@ -808,6 +865,19 @@ Int_CreateCmdList <- function(deck_map, sol_list, solvent_map, inoc_map,
     return(NA)
   })
   
+  #6. INOCULATION
+  if(inoc_bool=="Yes"){
+    cmdlist <- tryCatch({
+      Cmd_Inoculate(plate_map, inoc_map, well_info, 
+                    cmdlist, deck_map, solvent_map)
+    },
+    error = function(cond){
+      if(errMessage == ""){
+        errMessage <<- "Plate inoculation failed"
+      }
+      return(NA)
+    })
+  }
   
   #NAMING
   cmdlist <- data.frame(cmdlist)
@@ -817,110 +887,6 @@ Int_CreateCmdList <- function(deck_map, sol_list, solvent_map, inoc_map,
   #removing factors
   cmdlist[] <- lapply(cmdlist, as.character)
   return(cmdlist)
-}
-
-#adjustments
-ConvertAmtList_MVtoMC <- function(amt_list){
-  new_amtList <- cbind.data.frame(amt_list$Labware, amt_list$Slot, amt_list$Name,
-                                  replicate(length(amt_list[,1]), 0), amt_list$RequiredAmount)
-  colnames(new_amtList) <- c('Labware', 'Slot', 'Fill', 'Conc', 'Vol')
-  return(new_amtList)
-}
-cal_amtList_Excess <- function(amt_list, cmd_list, deck_map){
-  tubes <- amt_list
-  tubes$Vol <- 0
-  
-  for(i in c(1:length(cmd_list[,1]))){
-    #if current tube+slot is sourced
-    if(cmd_list$SourceLabware[i] %in% tubes$Labware){
-      if(cmd_list$SourceSlot[i] %in% tubes$Slot[tubes$Labware == cmd_list$SourceLabware[i]]){
-        #check volume used after transfer
-        volUsed_after <- tubes$Vol[tubes$Labware == cmd_list$SourceLabware[i] & tubes$Slot == cmd_list$SourceSlot[i]] + 
-          as.numeric(cmd_list$TransAmt[i])*length(strsplit(cmd_list$TargetSlot[i], split=', ')[[1]])
-        
-        deltaV <- as.numeric(cmd_list$TransAmt[i])*length(strsplit(cmd_list$TargetSlot[i], split=', ')[[1]])
-        
-        if((volUsed_after <= 45000 &  #switch limit to 45000 so that maximum + excess is 48 mL
-            cmd_list$SourceLabware[i] == 'labware_11') | 
-           (volUsed_after <= 14000 & 
-            cmd_list$SourceLabware[i] == 'labware_10')){
-          #if volume is still acceptable
-          #calculate volume
-          tubes$Vol[tubes$Labware == cmd_list$SourceLabware[i] & tubes$Slot == cmd_list$SourceSlot[i]] <- tubes$Vol[tubes$Labware == cmd_list$SourceLabware[i] & tubes$Slot == cmd_list$SourceSlot[i]] + 
-            as.numeric(cmd_list$TransAmt[i])*length(strsplit(cmd_list$TargetSlot[i], split=', ')[[1]])
-        }else{
-          #if volume exceeded limit
-          #place new tube
-          if(cmd_list$SourceLabware[i] == 'labware_11'){
-            sol_or_stock <- 'olvent'
-          }else{
-            sol_or_stock <- 'tock'
-          }
-          
-          #get last filled tube
-          solvent_map <- subset(tubes, Labware==toString(deck_map[grepl(sol_or_stock, deck_map[,2]),1]))
-          last_filled <- solvent_map$Slot[length(solvent_map[,1])]
-          
-          #assign new slot
-          new_slot <- c(substring(last_filled, 1, 1), substring(last_filled, 2, 2))
-          new_slot[2] <- as.numeric(new_slot[2])+1
-          if(as.numeric(new_slot[2])>3){
-            new_slot[1] <- LETTERS[which(LETTERS==new_slot[1])+1]
-            new_slot[2] <- 1
-          }
-          new_slot <- paste(new_slot, collapse='')
-          
-          #assign new tube in 'tubes' and 'solvent_map'
-          nexDat <- cbind.data.frame(cmd_list$SourceLabware[i], 
-                                     new_slot,
-                                     tubes$Fill[tubes$Labware==cmd_list$SourceLabware[i] & tubes$Slot==cmd_list$SourceSlot[i]],
-                                     tubes$Conc[tubes$Labware==cmd_list$SourceLabware[i] & tubes$Slot==cmd_list$SourceSlot[i]],
-                                     deltaV, stringsAsFactors=F)
-          colnames(nexDat) <- colnames(tubes)
-          tubes <- rbind.data.frame(tubes, nexDat, stringsAsFactors=F)
-          
-          #update command lines
-          old_slots <- cmd_list[c(i:length(cmd_list[,1])),]
-          
-          new_slots <- old_slots
-          new_slots$SourceSlot[old_slots$SourceLabware == cmd_list$SourceLabware[i] &
-                                 old_slots$SourceSlot == cmd_list$SourceSlot[i]] <- new_slot
-          cmd_list$SourceSlot[c(i:length(cmd_list[,1]))] <- new_slots$SourceSlot
-        }
-      }
-    }
-  }
-  
-  #order items
-  amt_list <- tubes[order(tubes$Labware),]
-  
-  for(i in c(1:length(amt_list[,1]))){
-    
-  }
-  #round up; add excess
-  amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('olvent',deck_map[,2]),1])] <- ceiling(amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('olvent',deck_map[,2]),1])]/1000) + 3 #3 mL excess
-  amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('olvent',deck_map[,2]),1])] <- sapply(amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('olvent',deck_map[,2]),1])], function(x) max(x, 5)) #5 mL minimum
-  amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('olvent',deck_map[,2]),1])] <- sapply(amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('olvent',deck_map[,2]),1])], function(x) min(x, 48))
-  
-  amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('tock',deck_map[,2]),1])] <- ceiling(amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('tock',deck_map[,2]),1])]/100)*100 + 300
-  amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('tock',deck_map[,2]),1])] <- sapply(amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('tock',deck_map[,2]),1])], function(x) max(x, 700)) #placing a minimum of 700 uL
-  amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('tock',deck_map[,2]),1])] <- sapply(amt_list$Vol[amt_list$Labware==toString(deck_map[grepl('tock',deck_map[,2]),1])], function(x) min(x, 14000))
-  
-  #return result
-  res <- list(cmd_list, amt_list)
-  return(res)
-}
-ConvertAmtList_MCtoMV <- function(new_allAmt){
-  Category <- sapply(new_allAmt$Labware, function(x) if(x=='labware_11'){"SOLVENT"}else{"STOCK"})
-  
-  Type <- sapply(new_allAmt$Labware, 
-                 function(x) if(x=='labware_11'){"50 mL Falcon Tube"}else{"15 mL Falcon Tube"})
-  Unit <- sapply(new_allAmt$Labware, function(x) if(x=='labware_11'){"mL"}else{"uL"})
-  
-  fin_allAmt <- cbind.data.frame(Category, new_allAmt$Labware, Type,
-                                 new_allAmt$Slot, new_allAmt$Fill, new_allAmt$Vol, Unit)
-  colnames(fin_allAmt) <- c('Category', 'Labware', 'Type', 'Slot', 'Name', 'RequiredAmount', 'Unit')
-  return(fin_allAmt)
 }
 
 #MAIN---------
@@ -940,6 +906,7 @@ main <- function(file_path, file_name=""){
     GetWellVols(file_path)
   },
   error = function(cond){
+    print("WellInfo")
     if(errMessage == ""){
       errMessage <<- "Input file error - wellInfo"
     }
@@ -955,20 +922,20 @@ main <- function(file_path, file_name=""){
     }
     return(NA)
   })
- 
-  plateNum <- tryCatch({
-    Get_nPlate(file_path)
+    
+  inocBool <- tryCatch({
+    GetInocBool(file_path)
   },
   error = function(cond){
     if(errMessage == ""){
-      errMessage <<- "Input file error - plate number"
+      errMessage <<- "Input file error - inocBool"
     }
     return(NA)
   })
   
   #GET SOLUTION LIST AND DILUTION SCHEME-----------
   solList <- tryCatch({
-    CreateSolList(plateMap, wellInfo["TotalVol"], wellInfo["FillVol"], stockList, plateNum)
+    CreateSolList(plateMap, wellInfo["TotalVol"], wellInfo["FillVol"], stockList)
   },
   error = function(cond){
     if(errMessage == ""){
@@ -976,16 +943,15 @@ main <- function(file_path, file_name=""){
     }
     return(NA)
   })
- 
+  
   #-1. LOADING DECK MAP-----------
   ## error not expected
   if(errMessage==""){
-    deckMap <- c('96-well_D', '96-well_E', '96-well_F',
-                 '96-well_A', '96-well_B', '96-well_C',
-                 'tip', '15_Falcon_spare', '15_Falcon_main',
-                 '15ml_Falcon_stock', 'Solvent', 'TRASH')
+    deckMap <- c('tip', '96-well', 'Inno',
+                 '15_Falcon_main', '1.5_Eppendorf', 'Solvent',
+                 'tip', '15_Falcon_spare', 'Stock',
+                 'tip', '(empty)', 'TRASH')
     names(deckMap) <- sapply(c(1:12), function(x) paste('labware', toString(x), sep='_'))
-    
     # 0. LOAD LABWARES--------
     #solvents
     #initiate map
@@ -1019,7 +985,7 @@ main <- function(file_path, file_name=""){
       
       #update fill coordinates
       coords[2] <- coords[2]+1
-      if(coords[2]>5){ #as 15 mL Falcon tube racks
+      if(coords[2]>6){
         coords[2] <- 1
         coords[1] <- coords[1] + 1
       }
@@ -1027,8 +993,8 @@ main <- function(file_path, file_name=""){
   }
   
   #assign slots for diluted solutions
-  dilMap <- tryCatch({
-    CreateDilMap(solList, deckMap, stockList)
+  dilMap <<- tryCatch({
+    CreateDilMap(solList, deckMap)
   },
   error = function(cond){
     if(errMessage == ""){
@@ -1056,41 +1022,38 @@ main <- function(file_path, file_name=""){
       }
     }
     
-    cmdList <- Int_CreateCmdList(deckMap, solList, solventMap, inocMap,
-                                  dilMap, stockMap, wellInfo, plateMap, plateNum)
-    
+    cmdList <<- Int_CreateCmdList(deckMap, solList, solventMap, inocMap,
+                                  dilMap, stockMap, wellInfo, plateMap, inocBool)
     cmdList <- Cmd_SeparateLong(cmdList)
     cmdList[] <- lapply(cmdList, as.character)
   }
-  
   # 2. BUNDLING OUTPUT-------
   if(errMessage==""){
-    allAmt <- rbind.data.frame(Cal_SolAmt(deckMap, solventMap, cmdList),
-                               Cal_StockAmt(solList, stockList, stockMap, deckMap))
+    if(inocBool=='Yes'){
+      allAmt <- rbind.data.frame(Cal_SolAmt(deckMap, solventMap, cmdList),
+                                 Cal_StockAmt(solList, stockList, stockMap, deckMap),
+                                 Cal_InocAmt(inocMap, cmdList, deckMap))
+    }else{
+      allAmt <- rbind.data.frame(Cal_SolAmt(deckMap, solventMap, cmdList),
+                                 Cal_StockAmt(solList, stockList, stockMap, deckMap))
+    }
+    
     allAmt[] <- lapply(allAmt, as.character)
     
     # 3. CALCULATE REQUIRED NUMBER OF ITEMS--------
     dilTubes <- Cal_DilTubes(dilMap) #error not expected?
     
     # 4. DECK LAYOUT FOR USER---------
-    finDeck <- Cal_DeckAdjustment(cmdList, deckMap, dilTubes, plateNum) #error not expected?
+    finDeck <- Cal_DeckAdjustment(cmdList, deckMap, dilTubes) #error not expected?
     
-    # 5. Adjusting Required Volume Amounts
-    allAmt2 <- ConvertAmtList_MVtoMC(allAmt)
-    deckMap2 <- cbind(sapply(c(1:12), function(x) paste("labware_", toString(x), sep='')),
-                      as.vector(deckMap))
-    
-    adjustment <- cal_amtList_Excess(allAmt2, cmdList, deckMap2)
-    allAmt <- ConvertAmtList_MCtoMV(adjustment[[2]])
-    cmdList <<- adjustment[[1]]
     #################
     #CREATING OUTPUT#
     #################
     
-    
     #Command List-------
-    dis <- replicate(length(allAmt[,1]), "NA")
-    all_amt <- cbind.data.frame(allAmt[,c(2, 4, 5)], dis, allAmt[,6], dis, dis, dis, stringsAsFactors=F)
+    filler <- replicate(length(allAmt[,1]), "NA")
+    all_amt <- cbind.data.frame(allAmt[,c(2, 4, 5)], filler, allAmt[,6], 
+                                filler, filler, filler, stringsAsFactors=F)
     colnames(all_amt) <- colnames(cmdList)
     
     ware_num <- unlist(finDeck[c(1, 3, 5, 7),])
@@ -1098,13 +1061,10 @@ main <- function(file_path, file_name=""){
     ware_fil <- ware_fil[order(as.numeric(ware_num))]
     ware_num <- ware_num[order(as.numeric(ware_num))]
     ware_num <- sapply(ware_num, function(x) paste('labware_', toString(x), sep=''))
-    
-    dis <- replicate(length(ware_num), "NA")
     fin_deck <- cbind.data.frame(ware_num, ware_fil, 
-                                 dis, dis, dis, dis, dis, dis)
-    
+                                 filler, filler, filler, filler, filler, filler)
     cmdList_output <<- list(c(">Amount List"), all_amt,
-                            c('>CommandLines'), adjustment[[1]],
+                            c('>CommandLines'), cmdList,
                             c(">PlateMap"), fin_deck)
     
     #User Commands-----------
@@ -1118,8 +1078,7 @@ main <- function(file_path, file_name=""){
   return(allAmt)
 }
 
-# #TROUBLESHOOTING---------
-# errMessage <<- ""
-# fpath <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\MVPlate"
-# dataName <- "MV_Wasser.xlsx"
-# dqs <- main(paste(fpath, dataName, sep="//"))
+#TROUBLESHOOTING---------------------
+errMessage <- ""
+fpath <- "C://Users//jornb//Documents//GitHub//ot2new//upstream (R) processors//Rscript development//SingleMICplate script water problem//20220811_MK03_E01_PMAPID1_AZT_CEF.xlsx"
+main(fpath)

@@ -657,7 +657,7 @@ mainExec <- function(file_name){
   #E. Initiate Deck Map
   deckMap <- c("96-well_D", "96-well_E", "96-well_F",
                "96-well_A", "96-well_B", "96-well_C",
-               "tiprack", "Rack_50_Solvent", "Rack_15",  
+               "tip", "Rack_50_Solvent", "Rack_15",  
                "Rack_15_B", "Rack_1.5_Stock", "TRASH")
   deckMap <- cbind.data.frame(sapply(c(1:12), function(x) paste("labware_", x, sep="")),
                               deckMap)
@@ -690,9 +690,7 @@ mainExec <- function(file_name){
   # ---------- SECTION D - Output Preparations -------------
   #q1. Calculate Required Solvent Amount
   rackMap <- Calculate_SolventAmt(rackMap, cmdList) #pool
-  cmdList <<- rackMap[[2]] #extract command list
-  cmdList$AspSp <- 130
-  cmdList$Pipette <- "p300"
+  cmdList <- rackMap[[2]] #extract command list
   rackMap <- rackMap[[1]] #extract rack map info
   
   #q2. Solutions and Tubes to Prepare
@@ -722,9 +720,7 @@ mainExec <- function(file_name){
                                    replicate(length(prepSols[,1]), ""),
                                    replicate(length(prepSols[,1]), ""),
                                    replicate(length(prepSols[,1]), ""))
-  robotAmtList <<- rbind(c(">AmountList", replicate(length(cmdList[1,])-1, "")), robotAmtList)
-  robotAmtList[, "Pipette"] <- ""
-  robotAmtList[, "AspSp"] <- ""
+  robotAmtList <- rbind(c(">AmountList", replicate(length(cmdList[1,])-1, "")), robotAmtList)
   colnames(robotAmtList) <- colnames(cmdList)
   
   #q5. Main for Robot Handler
@@ -738,10 +734,8 @@ mainExec <- function(file_name){
                           replicate(length(deckMap[,1]), ""),
                           replicate(length(deckMap[,1]), ""),
                           replicate(length(deckMap[,1]), ""))
-  robot_deckMap <<- rbind(c(">PlateMap", replicate(length(cmdList[1,])-1, "")),
+  robot_deckMap <- rbind(c(">PlateMap", replicate(length(cmdList[1,])-1, "")),
                          robot_deckMap)
-  robot_deckMap[, "Pipette"] <- ""
-  robot_deckMap[, "AspSp"] <- ""
   colnames(robot_deckMap) <- colnames(cmdList)
   
   #q7. Integrate robot commands
@@ -749,10 +743,6 @@ mainExec <- function(file_name){
                                     c(">CommandLines", replicate(length(cmdList[1,])-1, "")),
                                     cmdList,
                                     robot_deckMap)
-  # robotCommands$AspSp <- 130
-  # robotCommands$Pipette <- 'p300'
-  robotCommands <- robotCommands %>% relocate(AspSp, .before = Comment)
-  robotCommands <- robotCommands %>% relocate(Pipette, .before = Comment)
   
   #q8. Remove row names
   rownames(robotHandler) <- c()
@@ -766,8 +756,8 @@ mainExec <- function(file_name){
 }
 
 #TROUBLESHOOTING--------------
-mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\CQ_Plate"
-inputFile <- "CQ_InputTemplate.xlsx"
-dqs <- mainExec(paste(mainwd, inputFile, sep="\\"))
+# mainwd <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\CQ_Plate"
+# inputFile <- "KJ_MER_MUC.xlsx"
+# dqs <- mainExec(paste(mainwd, inputFile, sep="\\"))
 
-write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
+#write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
