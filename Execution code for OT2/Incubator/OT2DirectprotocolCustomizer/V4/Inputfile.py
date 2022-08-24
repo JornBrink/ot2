@@ -21,7 +21,7 @@ def Mainwindow():
     # create the layout with buttons and text
     if (simulation == "1"):
         layout = [
-            [sg.Button("Make command list")],
+            #[sg.Button("Make command list")],
             [sg.Text("Please provide information about the OT2 run you want to do")],
             [sg.Text('Name File (without .csv)', size=(18,1)), sg.InputText('')],                           #values0
             [sg.Text('Experiment Name', size=(18,1)), sg.InputText('')],                                    #values1
@@ -44,8 +44,9 @@ def Mainwindow():
             [sg.Text('Which OT2 do you want to use?')],                       
             [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values4&5
             [sg.Text("What pc is it running on?")],
-            [sg.Radio('OT', "group 2", default = True)],                                                    #Values[6]
-            [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")]
+            [sg.Radio('Jorn', "group 2", disabled = True), 
+             sg.Radio('Sebastian', "group 2", disabled = True), sg.Radio('OT', "group 2")],                                                    #Values[6]
+            [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")],
             ]
     return sg.Window("Opentron direct protocol maker", layout, finalize = True), simulation
 
@@ -57,7 +58,7 @@ def Webinteraction():
         ]
     return sg.Window('Webdriver', layout, finalize = True)
 
-
+values = []
 window1, window2 = Mainwindow(), None
 
     # create popup that is to inform user
@@ -71,6 +72,7 @@ def popup_connecting():
     return
 
 listofusers = os.listdir('C://Users')
+values = []
 if ("cvhLa" in listofusers):
     print("nonsimulation mode")
     simulation = "0"
@@ -79,7 +81,10 @@ else:
     print("simulation mode active")
 
 #Needs to store the Directscript into memory for later use
-os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V3")
+if(simulation == "1"):    
+    os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V4")
+else:
+    os.chdir("C://Users//cvhLa//OneDrive//Desktop//Direct Protocols")
 lines = []
 with open('Directscript.py') as f:
     lines = f.readlines()
@@ -88,7 +93,10 @@ with open('Directscript.py') as f:
 
 def getIPs():
     # load data
-    f = open('C://Users//jornb//AppData//Roaming//Opentrons//discovery.json')
+    if (simulation == "1"):
+        f = open('C://Users//jornb//AppData//Roaming//Opentrons//discovery.json')
+    else:
+        f = open('C://Users//cvhLa//AppData//Roaming//Opentrons//discovery.json')
     json_data = json.load(f)['robots']
     
     # initiate loop
@@ -129,7 +137,12 @@ while True:
     #If user sets save the file is found and prepared for making the script
     if event == 'Save':
         #put filename = into the script
-        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V4//New Direct scripts")
+        if(simulation == "1" and values[6] == True):
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V4//New Direct scripts")
+        elif(simulation == "1" and values[7] == True): #change This @sebastian
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V4//New Direct scripts")
+        else:
+            os.chdir("C://Users//cvhLa//OneDrive//Desktop//New Direct scripts")
         print(values)
         if(values[0] == "" or values[1]== "" or values[2]== "" or values[3]== ""):
             sg.Popup("Fill all fields and options", keep_on_top = True)
@@ -169,7 +182,7 @@ while True:
                                    "bep = simulate.get_protocol_api('2.12')" + "\n" + 
                                    "bep.home()" + "\n" + "run(bep)")
                     else:
-                        print ("Simulation mode not available")
+                        print ("Simulation mode active")
                     
            #enables the send button
             window['Send'].update(disabled=False)
