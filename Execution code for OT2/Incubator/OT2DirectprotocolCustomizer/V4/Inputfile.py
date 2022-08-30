@@ -3,8 +3,6 @@ import os
 import subprocess
 import json
 
-
-
 #BIG EXPLANATION: Somehow do i have save the input from the main window but the childwindow(network driver) is not yet saved (i have no clue how i did it)
 #I have the feeling window.close is the reason but i am not entirely sure
 
@@ -45,7 +43,7 @@ def Mainwindow():
             [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values4&5
             [sg.Text("What pc is it running on?")],
             [sg.Radio('Jorn', "group 2", disabled = True), 
-             sg.Radio('Sebastian', "group 2", disabled = True), sg.Radio('OT', "group 2")],                                                    #Values[6]
+             sg.Radio('Sebastian', "group 2", disabled = True), sg.Radio('OT', "group 2", default = True)],                                                    #Values[6]
             [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")],
             ]
     return sg.Window("Opentron direct protocol maker", layout, finalize = True), simulation
@@ -58,7 +56,7 @@ def Webinteraction():
         ]
     return sg.Window('Webdriver', layout, finalize = True)
 
-values = []
+
 window1, window2 = Mainwindow(), None
 
     # create popup that is to inform user
@@ -74,11 +72,9 @@ def popup_connecting():
 listofusers = os.listdir('C://Users')
 values = []
 if ("cvhLa" in listofusers):
-    print("nonsimulation mode")
     simulation = "0"
 else:
     simulation = "1"
-    print("simulation mode active")
 
 #Needs to store the Directscript into memory for later use
 if(simulation == "1"):    
@@ -120,7 +116,7 @@ def getIPs():
 while True:
     window, event, values = sg.read_all_windows()
     
-    #Stops everything when user uses the button cancle or closes the window
+    #Stops everything when user uses the button cancel or closes the window
     if event =="Close" or event == sg.WIN_CLOSED:
         window.close()
         if window == window2:
@@ -148,8 +144,8 @@ while True:
             sg.Popup("Fill all fields and options", keep_on_top = True)
             break #tempuary measure to break
         else:
-            Direct_protocol_name= values[3]+values[2]+values[1]
-            Truename= (Direct_protocol_name+ '.py')
+            Direct_protocol_name = values[3]+values[2]+values[1]
+            Truename = (Direct_protocol_name+ '.py')
             try:
                 fh = open(Truename, 'r+')
             except FileNotFoundError:
@@ -182,7 +178,7 @@ while True:
                                    "bep = simulate.get_protocol_api('2.12')" + "\n" + 
                                    "bep.home()" + "\n" + "run(bep)")
                     else:
-                        print ("Simulation mode active")
+                        print ("Simulation mode inactive")
                     
            #enables the send button
             window['Send'].update(disabled=False)
