@@ -18,13 +18,13 @@ str(x)
 def Mainwindow():
     listofusers = os.listdir('C://Users')
     global x
-    print(listofusers)
+    #print(listofusers)
     if ("cvhLa" in listofusers):
-            print("nonsimulation mode")
+            #print("nonsimulation mode")
             simulation = "0"
     else:
             simulation = "1"
-            print("simulation mode active")
+            #print("simulation mode active")
     
     # create the layout with buttons and text
     if (simulation == "1"):
@@ -47,16 +47,20 @@ def Mainwindow():
         ]
     else:
         layout = [
+            [sg.Button("Make command list")],
+            [sg.Button("Refresh")],
             [sg.Text("Please provide information about the OT2 run you want to do")],
-            [sg.Text('Name File (without .csv)', size=(18,1)), sg.InputText('')],                           #values0
-            [sg.Text('Experiment Name', size=(18,1)), sg.InputText('')],                                    #values1
-            [sg.Text('Your Name', size=(18, 1)), sg.InputText('')],                                         #values2
-            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('')],                                     #values3
+            [sg.Text('Select a file', size=(18,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),))],  #Browse
+            [sg.Text('Or use the one you just send'), sg.Text(str(x), key='-importfilename-')],
+            [sg.Radio("Selected", "group 3", key="Miep1", default = True), sg.Radio("Made", "group 3", key= "Miep2")],            
+            [sg.Text('Experiment Name', size=(18,1)), sg.InputText('')],                                    #values0
+            [sg.Text('Your Name', size=(18, 1)), sg.InputText('')],                                         #values1
+            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('')],                                     #values2
             [sg.Text('Which OT2 do you want to use?')],                       
-            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values4&5
+            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values3&4
             [sg.Text("What pc is it running on?")],
             [sg.Radio('Jorn', "group 2", disabled = True), 
-             sg.Radio('Sebastian', "group 2", disabled = True), sg.Radio('OT', "group 2", default = True)],                                                    #Values[6]
+             sg.Radio('Sebastian', "group 2", disabled = True), sg.Radio('OT', "group 2", default = True)], #Values5
             [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")],
             ]
     return sg.Window("Opentron direct protocol maker", layout, finalize = True), simulation
@@ -90,11 +94,9 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
     Experiment_name_file = driver.find_element(By.ID, "exp_name").send_keys(Experiment_name)
     Experiment_num_file = driver.find_element(By.ID, "exp_num").send_keys(Experiment_num)
     #these sleeptimers are so it doesnt just try to download or click something while this is not possible or might give some problems
-    time.sleep(5)
-    
+    time.sleep(2)
     confirmupload = driver.find_element(By.ID, "do").click()
     time.sleep(3)
-    
     textFromDiv = driver.find_element(By.XPATH, "//div[@class='shiny-text-output shiny-bound-output']").text
     file_name = "CommandList_" + textFromDiv + ".csv"
     
@@ -130,12 +132,15 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
         elif(check3 == False):
             DownloadSetup = driver.find_element(By.ID, "guide").click()
         else:
-            new_pathRSP = "C://Users//jornb//Downloads//" + RSP
-            os.replace(path_to_RSP, new_pathRSP)
-            sg.Popup("Files should be downloaded(click OK when ready to close browser and continue)", keep_on_top = True)
-            global x
-            x = "CommandList_" + textFromDiv
-            driver.close()
+            if(simulation == "1"):
+                new_pathRSP = "C://Users//jornb//Downloads//" + RSP
+            else:
+                new_pathRSP = "C://Users//cvhLa//Downloads//" + RSP
+        os.replace(path_to_RSP, new_pathRSP)
+        sg.Popup("Files should be downloaded(click OK when ready to close browser and continue)", keep_on_top = True)
+        global x
+        x = "CommandList_" + textFromDiv
+        driver.close()
     return
 
 def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation):
@@ -146,17 +151,16 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
     else:
         print("no outerwell will be filled by OT") 
     
+    fileinput = driver.find_element(By.ID, "file").send_keys(fullpath)
     Plate_Map_ID = driver.find_element(By.ID, "pmid").send_keys(values[0])
     Firstname_file = driver.find_element(By.ID, "f_name").send_keys(Firstname)
     Lastname_file = driver.find_element(By.ID, "l_name").send_keys(Lastname)
     Experiment_name_file = driver.find_element(By.ID, "exp_name").send_keys(Experiment_name)
     Experiment_num_file = driver.find_element(By.ID, "exp_num").send_keys(Experiment_num)
     #these sleeptimers are so it doesnt just try to download or click something while this is not possible or might give some problems
-    time.sleep(5)
-    
+    time.sleep(2)
     confirmupload = driver.find_element(By.ID, "do").click()
     time.sleep(3)
-    
     textFromDiv = driver.find_element(By.XPATH, "//div[@class='shiny-text-output shiny-bound-output']").text
     file_name = "CommandList_" + textFromDiv + ".csv"
     
@@ -192,10 +196,15 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
         elif(check3 == False):
             DownloadSetup = driver.find_element(By.ID, "guide").click()
         else:
-            new_pathRSP = "C://Users//jornb//Downloads//" + RSP
-            os.replace(path_to_RSP, new_pathRSP)
-            sg.Popup("Files should be downloaded(click OK when ready to close browser and continue)", keep_on_top = True)
-            driver.close()
+            if(simulation == "1"):
+                new_pathRSP = "C://Users//jornb//Downloads//" + RSP
+            else:
+                new_pathRSP = "C://Users//cvhLa//Downloads//" + RSP
+        os.replace(path_to_RSP, new_pathRSP)
+        sg.Popup("Files should be downloaded(click OK when ready to close browser and continue)", keep_on_top = True)
+        global x
+        x = "CommandList_" + textFromDiv
+        driver.close()
     return
 
 
@@ -344,7 +353,7 @@ while True:
     
     if event == 'Send':
         #when value 4 is true then the OT2L is selected and the script tries to send the csv to the jupyter
-        if(values[4] == True):
+        if(values[3] == True):
             try:
                 popup_connecting()
                 fileName_direc = file_name_meta  + '.csv'+ '\'' + " "
@@ -365,7 +374,7 @@ while True:
                 sg.Popup("No connection to the robot (is it all just a simulation?)\n"
                          "Or the file was not send")
                  
-        elif(values[5] == True):
+        elif(values[4] == True):
             #when value 4 is true then the OT2R is selected and the script tries to send the csv to the jupyter
             try:
                 popup_connecting()
@@ -415,7 +424,7 @@ while True:
                     service = Service(executable_path='C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox webdriver//geckodriver')
                 else:
                     options.set_preference("browser.download.dir", r"C:\Users\cvhLa\Onedrive\Desktop\User input (for direct)")
-                    service = Service(executable_path='C://Users//cvhLa//OneDriv//Desktop//DO NOT TOUCH THIS FOLDER (webdriver)//geckodriver')
+                    service = Service(executable_path='C://Users//cvhLa//OneDrive//Desktop//DO NOT TOUCH THIS FOLDER (webdriver)//geckodriver')
                 options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/x-gzip")
                 
                 
