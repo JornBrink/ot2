@@ -2,6 +2,7 @@ options(stringsAsFactors = F)
 library(dplyr)
 library(rlist)
 library(readxl)
+library(readr)
 #FUNCTIONS LIBRARY------------
 # read input
 GetStockList <- function(file_name){
@@ -1100,7 +1101,7 @@ main <- function(file_path, file_name=""){
     ware_num <- sapply(ware_num, function(x) paste('labware_', toString(x), sep=''))
     
     dis <- replicate(length(ware_num), "NA")
-    fin_deck <- cbind.data.frame(ware_num, ware_fil, 
+    fin_deck <<- cbind.data.frame(ware_num, ware_fil, 
                                  dis, dis, dis, dis, dis, dis)
     
     cmdList_output <<- list(c(">Amount List"), all_amt,
@@ -1109,8 +1110,9 @@ main <- function(file_path, file_name=""){
     
     #User Commands-----------
     #adjusting file name
-    allAmt <- rbind.data.frame(allAmt, dilTubes)
+    allAmt <<- rbind.data.frame(allAmt, dilTubes)
     usercmd_output <<- list(finDeck, allAmt)
+    
   }else{
     allAmt <- errMessage
   }
@@ -1120,6 +1122,11 @@ main <- function(file_path, file_name=""){
 
 # #TROUBLESHOOTING---------
 # errMessage <<- ""
-# fpath <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\MVPlate"
-# dataName <- "MV_Wasser.xlsx"
+# fpath <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik"
+# dataName <- "MV_InputTemplate.xlsx"
 # dqs <- main(paste(fpath, dataName, sep="//"))
+# 
+# asd <<- cmdList
+# rownames(asd) <- NULL
+# asd$'' <- NULL
+# write.csv(asd, "C:\\Users\\jornb\\OneDrive\\Work\\Maik\\Commands.csv", row.names = FALSE)

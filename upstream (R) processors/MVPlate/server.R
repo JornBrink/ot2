@@ -13,15 +13,15 @@ options(stringsAsFactors = F)
 #SERVER MAIN------------
 shinyServer(function(input, output) {
   #defining directory-------
-  #outputDir_cmdline <-  "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\Incubator"
-  #outputDir_usrGuide <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\Incubator"
-  #inputTemplate <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\MVPlate\\MV_InputTemplate.xlsx" 
-  #sourceDir <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\MVPlate\\MVsourceFunctions.R"
+  outputDir_cmdline <-  "C:\\Users\\jornb\\OneDrive\\Work\\Maik"
+  outputDir_usrGuide <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik"
+  inputTemplate <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik\\MV_InputTemplate.xlsx" 
+  sourceDir <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\MVPlate\\MVsourceFunctions.R"
   
-  outputDir_cmdline <- "/srv/shiny-server/files/Output_CmdList"
-  outputDir_usrGuide <- "/srv/shiny-server/files/Output_UsrGuide"
-  inputTemplate <- "/srv/shiny-server/ot2/MVPlate/MV_InputTemplate.xlsx" 
-  sourceDir <- "/srv/shiny-server/ot2/MVPlate/MVsourceFunctions.R" 
+  #outputDir_cmdline <- "/srv/shiny-server/files/Output_CmdList"
+  #outputDir_usrGuide <- "/srv/shiny-server/files/Output_UsrGuide"
+  #inputTemplate <- "/srv/shiny-server/ot2/MVPlate/MV_InputTemplate.xlsx" 
+  #sourceDir <- "/srv/shiny-server/ot2/MVPlate/MVsourceFunctions.R" 
   
   #outputDir_cmdline <- "/home/sebastian/MVplate"
   #outputDir_usrGuide <- "/home/sebastian/MVplate"
