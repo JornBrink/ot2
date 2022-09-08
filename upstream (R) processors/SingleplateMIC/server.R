@@ -9,15 +9,15 @@ options(stringsAsFactors = F)
 #SERVER MAIN------------
 shinyServer(function(input, output) {
   #defining directory-------
-  outputDir_cmdline <- "/srv/shiny-server/files/Output_CmdList"
-  outputDir_usrGuide <- "/srv/shiny-server/files/Output_UsrGuide"
-  inputTemplate <- "/srv/shiny-server/ot2/SingleplateMIC/MIC_InputTemplate.xlsx"  
-  sourceDir <- "/srv/shiny-server/ot2/SingleplateMIC"
+  #outputDir_cmdline <- "/srv/shiny-server/files/Output_CmdList"
+  #outputDir_usrGuide <- "/srv/shiny-server/files/Output_UsrGuide"
+  #inputTemplate <- "/srv/shiny-server/ot2/SingleplateMIC/MIC_InputTemplate.xlsx"  
+  #sourceDir <- "/srv/shiny-server/ot2/SingleplateMIC"
   
-  #outputDir_cmdline <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC"
-  #outputDir_usrGuide <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC"
-  #inputTemplate <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC\\MIC_InputTemplate.xlsx"  
-  #sourceDir <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC"
+  outputDir_cmdline <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik"
+  outputDir_usrGuide <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik"
+  inputTemplate <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik\\MIC_InputTemplate.xlsx"  
+  sourceDir <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\SingleplateMIC"
   
   #loading functions--------
   setwd(sourceDir)
