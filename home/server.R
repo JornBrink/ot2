@@ -1,4 +1,4 @@
-shinyServer(function(input, output) {
+ shinyServer(function(input, output) {
   #setup directories
   robotGuideDir <- "/srv/shiny-server/ot2/home/2021-03-05_OT2 General Guideline and Maintenance.pdf" 
   robotQuickGuideDir <- "/srv/shiny-server/ot2/home/2021-08-31_OT2QuickGuide.pdf"
