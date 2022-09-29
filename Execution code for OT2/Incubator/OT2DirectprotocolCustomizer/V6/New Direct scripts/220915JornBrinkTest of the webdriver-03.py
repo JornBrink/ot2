@@ -1,10 +1,10 @@
-fileName ='CommandList_PMID-2_EXPID-Test-1_Brink.Jorn.csv'
+fileName ='CommandList_PMID-02_EXPID-Test of the webdriver-03_Brink.Jorn.csv'
 
 pc ='Jorn'
 
 #METADATA----------
 metadata = {
-	'protocolName':'220830Jorn BrinkTest of the scriptmaker',
+	'protocolName':'220915JornBrinkTest of the webdriver-03',
 	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
 	'description':'96 wells plate MIC with p300 possibility''Usercustomized',
 	'apiLevel':'2.12'

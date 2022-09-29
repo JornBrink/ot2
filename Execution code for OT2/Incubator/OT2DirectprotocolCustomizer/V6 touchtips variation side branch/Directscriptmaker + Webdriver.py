@@ -43,6 +43,8 @@ def Mainwindow():
             [sg.Text("What pc is it running on?")],
             [sg.Radio('Jorn', "group 2"), 
              sg.Radio('Sebastian', "group 2"), sg.Radio('OT', "group 2")],                                                      #Values[2/3/4]
+            [sg.Text("Do you want to use touchtips? (run will be longer)")],
+            [sg.Radio('Yes', 'group3'), sg.Radio('No', 'group3')],                                                              #Values[5/6]
             [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")]
         ]
     else:
@@ -61,6 +63,8 @@ def Mainwindow():
             [sg.Text("What pc is it running on?")],
             [sg.Radio('Jorn', "group 2", disabled = True), 
              sg.Radio('Sebastian', "group 2", disabled = True), sg.Radio('OT', "group 2", default = True)], #Values4
+            [sg.Text("Do you want to use touchtips? (run will be longer)")],
+            [sg.Radio('Yes', 'group3'), sg.Radio('No', 'group3')],                                                              #Values[5/6]
             [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")],
             ]
     return sg.Window("Opentron direct protocol maker", layout, finalize = True), simulation
@@ -230,7 +234,7 @@ else:
 
 #Needs to store the Directscript into memory for later use
 if(simulation == "1"):    
-    os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V5 with webdriver")
+    os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6 touchtips variation side branch")
 else:
     os.chdir("C://Users//cvhLa//OneDrive//Desktop//Direct Protocols")
 lines = []
@@ -318,9 +322,9 @@ while True:
     if event == 'Save':
         #put filename = into the script
         if(simulation == "1" and values[2] == True):
-            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V5 with webdriver//New Direct scripts")
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6 touchtips variation side branch//New Direct scripts")
         elif(simulation == "1" and values[3] == True): #change This @sebastian
-            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V5 with webdriver//New Direct scripts")
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6 touchtips variation side branch//New Direct scripts")
         else:
             os.chdir("C://Users//cvhLa//OneDrive//Desktop//New Direct scripts")
         print(values)
@@ -354,10 +358,15 @@ while True:
             else:
                 active_pc = "OT"
                 
+            if(values[5] == True):
+                touchtips = "Yes"
+            else:
+                touchipts = "No"
             # For the metadata of the script added
             with open(Truename, 'w+') as file:
                     file.write('fileName =' + "\'" + file_name_meta  + '.csv'+ "\'" "\n" + "\n")
                     file.write('pc =' + "\'" +active_pc + "\'" + "\n" + "\n")
+                    file.write('touch_tips =' + "\'" + touchtips + "\'" + "\n" + "\n")
                     file.write('#METADATA----------' "\n" +
                                 'metadata = {'+"\n"+"\t"+
                                     "\'"+ 'protocolName'"\'"+":"+  "\'" + Direct_protocol_name + "\'" +","+"\n"+"\t"+

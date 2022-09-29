@@ -35,14 +35,14 @@ def Mainwindow():
             [sg.Text('Select a file', size=(18,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),))],                      #Browse
             [sg.Text('Or use the one you just send'), sg.Text(str(x), key='-importfilename-')],
             [sg.Radio("Selected", "group 3", key="Miep1", default = True), sg.Radio("Made", "group 3", key= "Miep2")],
-            [sg.Text('Experiment Name', size=(18,1)), sg.InputText('', key='-expname-')],                                       #expname
-            [sg.Text('Your Name', size=(18, 1)), sg.InputText('', key='-name-')],                                               #name
-            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('', key='-date-')],                                           #date
+            [sg.Text('Experiment Name', size=(18,1)), sg.Input(key='expname')],                                                        
+            [sg.Text('Your Name', size=(18, 1)), sg.Input(key='name')],                                                            
+            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('')],                                                         #values[0]
             [sg.Text('Which OT2 do you want to use?')],                       
-            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                                         #Values0&1
+            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                                         #Values1&2
             [sg.Text("What pc is it running on?")],
             [sg.Radio('Jorn', "group 2"), 
-             sg.Radio('Sebastian', "group 2"), sg.Radio('OT', "group 2")],                                                      #Values[2/3/4]
+             sg.Radio('Sebastian', "group 2"), sg.Radio('OT', "group 2")],                                                      #Values[3/4/5]
             [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")]
         ]
     else:
@@ -53,14 +53,14 @@ def Mainwindow():
             [sg.Text('Select a file', size=(18,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),))],  #Browse
             [sg.Text('Or use the one you just send'), sg.Text(str(x), key='-importfilename-')],
             [sg.Radio("Selected", "group 3", key="Miep1", default = True), sg.Radio("Made", "group 3", key= "Miep2")],            
-            [sg.Text('Experiment Name', size=(18,1)), sg.InputText('', key='-expname-')],                   #expname
-            [sg.Text('Your Name', size=(18, 1)), sg.InputText('', key='-name-')],                           #name
-            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('', key='-date-')],                       #date
+            [sg.Text('Experiment Name', size=(18,1)), sg.Input(key = 'expname')],
+            [sg.Text('Your Name', size=(18, 1)), sg.Input(key = 'name')],                        
+            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('')],                                     #values0
             [sg.Text('Which OT2 do you want to use?')],                       
-            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values0&1
+            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values1&2
             [sg.Text("What pc is it running on?")],
-            [sg.Radio('Jorn', "group 2", disabled = True), 
-             sg.Radio('Sebastian', "group 2", disabled = True), sg.Radio('OT', "group 2", default = True)], #Values4
+            [sg.Radio('Jorn', "group 2", disabled = True, default = False), 
+             sg.Radio('Sebastian', "group 2", disabled = True, default = False), sg.Radio('OT', "group 2", default = True)], #Values3/4/5
             [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")],
             ]
     return sg.Window("Opentron direct protocol maker", layout, finalize = True), simulation
@@ -71,7 +71,7 @@ def Webinteraction():
         [sg.Text("Choose your file: "), sg.FileBrowse()],                                                   #values['Browse']
         [sg.Text("Platemap PMID"), sg.InputText('')],                                                       #values[0]
         [sg.Text("Your name (First Last)"), sg.InputText('')],                                              #values[1]
-        [sg.Text("Experiment Name (dont use _ as spacer)"), sg.InputText('')],                               #values[2]
+        [sg.Text("Experiment Name"), sg.InputText('')],                                                     #values[2]
         [sg.Text("Experiment number"), sg.InputText('')],                                                   #values[3]
         [sg.Text("What type of experiment are you going to do?")],
         [sg.Radio("Checkerboard", "group1"), 
@@ -230,7 +230,7 @@ else:
 
 #Needs to store the Directscript into memory for later use
 if(simulation == "1"):    
-    os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V5 with webdriver")
+    os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6")
 else:
     os.chdir("C://Users//cvhLa//OneDrive//Desktop//Direct Protocols")
 lines = []
@@ -278,6 +278,7 @@ while True:
         #small little problem --> this will break everything and stop it from reacting but its the best i can do for now
         
     if event == 'Refresh':
+        try:
             if(values['Miep1']== True and str(x) == "NA"):
                 ok = sg.PopupOKCancel("This function does not do anything when you havent made a command list through this program or you havent selected made" '\n' "(underneath the browse button)")
                 if(ok =="OK"):
@@ -306,9 +307,11 @@ while True:
                     namestr = longstring[3]
                     namestr = namestr.split('.')
                     namestr = namestr[1] + namestr[0]
-                    
-                window['-expname-'].update(str(expnamestr))
-                window['-name-'].update(str(namestr))
+
+                window['expname'].update(expnamestr)
+                window['name'].update(namestr)
+        except:
+            ok = sg.PopupOKCancel("This function does not do anything when you havent made a command list through this program or you havent selected made" '\n' "(underneath the browse button)")
             
     #If user wants to make a commandlist open new window
     if event == 'Make command list':
@@ -317,45 +320,53 @@ while True:
     #If user sets save the file is found and prepared for making the script
     if event == 'Save':
         #put filename = into the script
-        if(simulation == "1" and values[2] == True):
-            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V5 with webdriver//New Direct scripts")
-        elif(simulation == "1" and values[3] == True): #change This @sebastian
-            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V5 with webdriver//New Direct scripts")
+        if(simulation == "1"): #and values[3] == True):
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6//New Direct scripts")
+        elif(simulation == "1" and values[4] == True): #change This @sebastian
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6//New Direct scripts")
         else:
             os.chdir("C://Users//cvhLa//OneDrive//Desktop//New Direct scripts")
         print(values)
-        
-        if(values['-expname-'] == "" or values['-date-']== "" or values[0]== "" or values['Browse'] == "" and 'Miep1' == True):
+        if(values[0] == "" or values['expname']== "" or values['name']== "" or values['Browse'] == "" and 'Miep1' == True):
             sg.Popup("Fill all fields and options", keep_on_top = True)
             break #tempuary measure to break
         else:
-            Direct_protocol_name = values['-date-']+values['-name-']+values['-expname-']
-            Truename = (Direct_protocol_name+ '.py')
+            if (values[1] == True):
+                activeOT2 = "OT2L"
+            else:
+                activeOT2 = "OT2R"
+            Direct_protocol_name = values[0]+values['name']+values['expname']+ activeOT2
+            Truename = values[0]+values['name']+values['expname']
+            Truename = (Truename+ '.py')
             try:
                 fh = open(Truename, 'r+')
             except FileNotFoundError:
                 fh = open(Truename, 'w+')
             
-            #pull the files appart to make sure that we get the expected values for the metadata
-            if('Miep 1' == True):
+            #pull the files apart to make sure that we get the expected values for the metadata
+            if(values['Miep2'] == True):
+                file_name_meta = x
+            else:
                 file_name_meta = values['Browse']
                 file_name_meta= Path(file_name_meta)
                 file_name_meta = file_name_meta.name
                 file_name_meta = file_name_meta.split(".")
+                file_name_metabeta = file_name_meta
                 file_name_meta = file_name_meta[0]
-            else:
-                file_name_meta = x
                 
             #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
-            if(values[2] == True and simulation == "1" ):
+            if(values[3] == True and simulation == "1" ):
                 active_pc ="Jorn"
-            elif(values[3] == True and simulation == "1"):
+            elif(values[4] == True and simulation == "1"):
                 active_pc = "Sebastian"
             else:
                 active_pc = "OT"
+            
+
                 
             # For the metadata of the script added
             with open(Truename, 'w+') as file:
+                    file.write("#" + 'This protocol is made for'+ " " + activeOT2 + "\n")
                     file.write('fileName =' + "\'" + file_name_meta  + '.csv'+ "\'" "\n" + "\n")
                     file.write('pc =' + "\'" +active_pc + "\'" + "\n" + "\n")
                     file.write('#METADATA----------' "\n" +
@@ -383,7 +394,7 @@ while True:
     
     if event == 'Send':
         #when value 4 is true then the OT2L is selected and the script tries to send the csv to the jupyter
-        if(values[0] == True):
+        if(values[1] == True):
             try:
                 popup_connecting()
                 fileName_direc = file_name_meta  + '.csv'+ '\'' + " "
@@ -404,7 +415,7 @@ while True:
                 sg.Popup("No connection to the robot (is it all just a simulation?)\n"
                          "Or the file was not send")
                  
-        elif(values[1] == True):
+        elif(values[2] == True):
             #when value 4 is true then the OT2R is selected and the script tries to send the csv to the jupyter
             try:
                 popup_connecting()
