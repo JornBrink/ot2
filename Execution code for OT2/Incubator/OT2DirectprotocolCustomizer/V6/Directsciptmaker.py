@@ -83,7 +83,8 @@ def Webinteraction():
         [sg.Radio("Checkerboard", "group1"), 
          sg.Radio("Multiplate MIC", "group1"), 
          sg.Radio("384 well plate", "group1"), 
-         sg.Radio("M9MixR", "group1")],                                                                     #values4/5/6/7/8
+         sg.Radio("M9MixR", "group1"),
+         sg.Radio("SplateMIC", "group1")],                                                                     #values4/5/6/7/8
         [sg.Text("Do you want to fill outer wells in robot? (384 plate only)")],
         [sg.Radio("Yes", "group2"), sg.Radio("No", "group2")],                                              #values9/10
         [sg.Button("Save User Inputs"), sg.Button("Send to Server", disabled = True) , sg.Button("Close")]
@@ -135,8 +136,16 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
         check3 = os.path.isfile(path_to_RSP)
         if(check2 == False):
             DownloadRobot = driver.find_element(By.ID, "d_OT2").click()
+            if(simulation == "1"):
+                new_pathRSP = "C://Users//jornb//Downloads//" + RSP
+            else:
+                new_pathRSP = "C://Users//cvhLa//Downloads//" + RSP
         elif(check3 == False):
             DownloadSetup = driver.find_element(By.ID, "guide").click()
+            if(simulation == "1"):
+                new_pathRSP = "C://Users//jornb//Downloads//" + RSP
+            else:
+                new_pathRSP = "C://Users//cvhLa//Downloads//" + RSP
         else:
             if(simulation == "1"):
                 new_pathRSP = "C://Users//jornb//Downloads//" + RSP
@@ -521,9 +530,9 @@ while True:
                 
                 
                 
-                if(values[6] == True and values[9] == False and values[8] == False):
+                if(values[6] == True and values[9] == False and values[10] == False):
                     sg.Popup("Please make sure you select if you want to have the robot fill the wells for you")
-                elif(values[6] == False and values[7] == False and values[4] == False and values[5] == False):
+                elif(values[6] == False and values[7] == False and values[4] == False and values[5] == False and values[8] == False):
                     sg.Popup("You seem to have not selected the method")            
                 else:
                     sg.Popup("Make sure your platemap is correct")
@@ -563,7 +572,7 @@ while True:
         elif(values[8]== True):
             driver = webdriver.Firefox(service = service)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/SingleplateMIC/")
-            assert "Singleplate MIC"
+            assert "Singleplate MIC - OT2 Commander.title"
             filesending = Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
             
         else:
