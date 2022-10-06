@@ -29,39 +29,45 @@ def Mainwindow():
     # create the layout with buttons and text
     if (simulation == "1"):
         layout = [
-            [sg.Button("Make command list")],
-            [sg.Button("Refresh")],
-            [sg.Text("Please provide information about the OT2 run you want to do")],
-            [sg.Text('Select a file', size=(18,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),))],                      #Browse
-            [sg.Text('Or use the one you just send'), sg.Text(str(x), key='-importfilename-')],
-            [sg.Radio("Selected", "group 3", key="Miep1", default = True), sg.Radio("Made", "group 3", key= "Miep2")],
-            [sg.Text('Experiment Name', size=(18,1)), sg.Input(key='expname')],                                                        
-            [sg.Text('Your Name', size=(18, 1)), sg.Input(key='name')],                                                            
-            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('')],                                                         #values[0]
-            [sg.Text('Which OT2 do you want to use?')],                       
-            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                                         #Values1&2
-            [sg.Text("What pc is it running on?")],
-            [sg.Radio('Jorn', "group 2"), 
-             sg.Radio('Sebastian', "group 2"), sg.Radio('OT', "group 2")],                                                      #Values[3/4/5]
-            [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")]
+            [sg.B("Make command list"), sg.Button("Refresh")],
+            [sg.T("Please provide information about the OT2 run you want to do")],
+            [sg.T('Select a file', size=(10,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),)), 
+            sg.T('Or use the one you just send'), sg.T(str(x), key='-importfilename-')],                                    #Browse #values[importfilename]
+            [sg.R("Selected", "group 3", key="Miep1", default = True), sg.R("Made", "group 3", key= "Miep2")],              #values[Miep & Miep2]
+            [sg.T('Experiment Name', size=(15,1)), sg.I(key='expname')],                                                    #values[expname]       
+            [sg.T('Your Name', size=(15, 1)), sg.I(key='name')],                                                            #values[name]   
+            [sg.T('Date (yymmdd)', size=(15, 1)), sg.I('', key='-date-')],                                                  #values[date]
+            [sg.T('Which OT2 do you want to use?')],                       
+            [sg.R('OT2L', "group 1"), sg.R('OT2R', "group 1"), sg.R('Both OT2', "group 1", key='-both OT2s-')],             #Values0&1
+            [sg.T("What pc is it running on?")],
+            [sg.R('Jorn', "group 2"), 
+             sg.R('Sebastian', "group 2"), sg.R('OT', "group 2")],                                                          #Values[2/3/4]
+            [sg.T("Do you want to use touchtips? (run will be longer)")],
+            [sg.R('Yes', 'group3'), sg.R('No', 'group3')],                                                                  #Values[5/6]
+            [sg.T("384 wells? (not in V6)")],
+            [sg.R('Yes', 'group4'), sg.R('No', 'group4', default=True)],                                                    #Values[7/8]
+            [sg.B("Save", s=16), sg.B("Send", disabled=True, s=16), sg.Push(), sg.B("Close", s= 16, button_color = "tomato")]
         ]
     else:
         layout = [
-            [sg.Button("Make command list")],
-            [sg.Button("Refresh")],
+            [sg.B("Make command list"), sg.Button("Refresh")],
             [sg.Text("Please provide information about the OT2 run you want to do")],
-            [sg.Text('Select a file', size=(18,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),))],  #Browse
-            [sg.Text('Or use the one you just send'), sg.Text(str(x), key='-importfilename-')],
-            [sg.Radio("Selected", "group 3", key="Miep1", default = True), sg.Radio("Made", "group 3", key= "Miep2")],            
-            [sg.Text('Experiment Name', size=(18,1)), sg.Input(key = 'expname')],
-            [sg.Text('Your Name', size=(18, 1)), sg.Input(key = 'name')],                        
-            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('')],                                     #values0
+            [sg.Text('Select a file', size=(18,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),))],                  #Browse
+            [sg.Text('Or use the one you just send'), sg.Text(str(x), key='-importfilename-')],                             #importfilename
+            [sg.Radio("Selected", "group 3", key="Miep1", default = True), sg.Radio("Made", "group 3", key= "Miep2")],      #miep1&2
+            [sg.Text('Experiment Name', size=(18,1)), sg.Input(key = 'expname')],                                           #Expname
+            [sg.Text('Your Name', size=(18, 1)), sg.Input(key = 'name')],                                                   #Name
+            [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('', key='-date-')],                                       #values[date]
             [sg.Text('Which OT2 do you want to use?')],                       
-            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                     #Values1&2
+            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                                     #Values0&1
             [sg.Text("What pc is it running on?")],
-            [sg.Radio('Jorn', "group 2", disabled = True, default = False), 
-             sg.Radio('Sebastian', "group 2", disabled = True, default = False), sg.Radio('OT', "group 2", default = True)], #Values3/4/5
-            [sg.Button("Save"),sg.Button("Send", disabled=True), sg.Button("Close")],
+            [sg.R('Jorn', "group 2", disabled = True, default = False), 
+             sg.R('Sebastian', "group 2", disabled = True, default = False), sg.R('OT', "group 2", default = True)],        #Values2/3/4
+            [sg.Text("Do you want to use touchtips? (run will be longer)")],
+            [sg.Radio('Yes', 'group3', disabled = True), sg.Radio('No', 'group3', default = True, disabled = True)],        #Values[5/6]
+            [sg.Text("384 wells? (not in V6)")],
+            [sg.Radio('Yes', 'group4', disabled=True), sg.Radio('No', 'group4', disabled=True, default = True)],             #Values[7/8]   
+            [sg.Button("Save", s=16), sg.Button("Send", disabled=True, s=16), sg.Push(), sg.Button("Close", s= 16, button_color = "tomato")]
             ]
     return sg.Window("Opentron direct protocol maker", layout, finalize = True), simulation
 
@@ -77,9 +83,9 @@ def Webinteraction():
         [sg.Radio("Checkerboard", "group1"), 
          sg.Radio("Multiplate MIC", "group1"), 
          sg.Radio("384 well plate", "group1"), 
-         sg.Radio("M9MixR", "group1")],                                                                     #values4/5/6/7
+         sg.Radio("M9MixR", "group1")],                                                                     #values4/5/6/7/8
         [sg.Text("Do you want to fill outer wells in robot? (384 plate only)")],
-        [sg.Radio("Yes", "group2"), sg.Radio("No", "group2")],                                              #values8/9
+        [sg.Radio("Yes", "group2"), sg.Radio("No", "group2")],                                              #values9/10
         [sg.Button("Save User Inputs"), sg.Button("Send to Server", disabled = True) , sg.Button("Close")]
         ]
     return sg.Window("Webdriver", layout, finalize= True)
@@ -157,6 +163,7 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
     Lastname_file = driver.find_element(By.ID, "l_name").send_keys(Lastname)
     Experiment_name_file = driver.find_element(By.ID, "exp_name").send_keys(Experiment_name)
     Experiment_num_file = driver.find_element(By.ID, "exp_num").send_keys(Experiment_num)
+    
     #these sleeptimers are so it doesnt just try to download or click something while this is not possible or might give some problems
     time.sleep(2)
     confirmupload = driver.find_element(By.ID, "do").click()
@@ -320,23 +327,26 @@ while True:
     #If user sets save the file is found and prepared for making the script
     if event == 'Save':
         #put filename = into the script
-        if(simulation == "1"): #and values[3] == True):
+        if(simulation == "1"): #and values[2] == True):
             os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6//New Direct scripts")
-        elif(simulation == "1" and values[4] == True): #change This @sebastian
+        elif(simulation == "1" and values[3] == True): #change This @sebastian
             os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V6//New Direct scripts")
         else:
             os.chdir("C://Users//cvhLa//OneDrive//Desktop//New Direct scripts")
         print(values)
-        if(values[0] == "" or values['expname']== "" or values['name']== "" or values['Browse'] == "" and 'Miep1' == True):
+        if(values['-date-'] == "" or values['expname']== "" or values['name']== "" or values['Browse'] == "" and 'Miep1' == True):
             sg.Popup("Fill all fields and options", keep_on_top = True)
             break #tempuary measure to break
         else:
-            if (values[1] == True):
+            if (values[0] == True):
                 activeOT2 = "OT2L"
+            elif(values['-both OT2s-']):
+                activeOT2 = "both OT2s"
             else:
                 activeOT2 = "OT2R"
-            Direct_protocol_name = values[0]+values['name']+values['expname']+ activeOT2
-            Truename = values[0]+values['name']+values['expname']
+                
+            Direct_protocol_name = values['-date-']+values['name']+values['expname']+ activeOT2
+            Truename = values['-date-']+values['name']+values['expname']
             Truename = (Truename+ '.py')
             try:
                 fh = open(Truename, 'r+')
@@ -355,9 +365,9 @@ while True:
                 file_name_meta = file_name_meta[0]
                 
             #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
-            if(values[3] == True and simulation == "1" ):
+            if(values[2] == True and simulation == "1" ):
                 active_pc ="Jorn"
-            elif(values[4] == True and simulation == "1"):
+            elif(values[3] == True and simulation == "1"):
                 active_pc = "Sebastian"
             else:
                 active_pc = "OT"
@@ -394,7 +404,7 @@ while True:
     
     if event == 'Send':
         #when value 4 is true then the OT2L is selected and the script tries to send the csv to the jupyter
-        if(values[1] == True):
+        if(values[0] == True):
             try:
                 popup_connecting()
                 fileName_direc = file_name_meta  + '.csv'+ '\'' + " "
@@ -415,7 +425,7 @@ while True:
                 sg.Popup("No connection to the robot (is it all just a simulation?)\n"
                          "Or the file was not send")
                  
-        elif(values[2] == True):
+        elif(values[1] == True):
             #when value 4 is true then the OT2R is selected and the script tries to send the csv to the jupyter
             try:
                 popup_connecting()
@@ -434,6 +444,47 @@ while True:
                 completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
                 print(completed)
             except:#when it fails you get a popup saying there might not be connection NOTE: It might not give a vailure because it promps powershell correctly 
+                sg.Popup("No connection to the robot (is it all just a simulation?)\n"
+                         "Or the file was not send")
+        
+        elif(values['-both OT2s-']):
+            try:
+                popup_connecting()
+                fileName_direc = file_name_meta + '.csv'+ '\'' + " "
+                path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
+                file_path = path_to_file + fileName_direc
+                robot_root = "'root@"
+                robot_ip = robot_ip["OT2R"]
+                robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
+                path_robot = robot_root+robot_ip+robot_rest
+                OT2_key_right = "C:/Users/cvhLa/ot2_ssh_key_OT2R "
+                scp = "scp -i "
+                
+                #scp -i C:/Users/cvhLa/ot2_ssh_key_OT2L 'C:/Users/cvhLa/OneDrive/Desktop/Direct Protocols/README.jpg' root@169.254.212.60:/var/lib/jupyter/notebooks
+                Full_command = scp + OT2_key_right + file_path + path_robot
+                completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
+                print(completed)
+                print('Right completed')
+                
+                time.sleep(3)
+           
+                fileName_direc = file_name_meta  + '.csv'+ '\'' + " "
+                path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
+                file_path = path_to_file + fileName_direc
+                robot_root = "'root@"
+                robot_ip = robot_ip["OT2L"]
+                robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
+                path_robot = robot_root+robot_ip+robot_rest
+                OT2_key = "C:/Users/cvhLa/ot2_ssh_key_OT2L "
+                scp = "scp -i "
+                
+                #scp -i C:/Users/cvhLa/ot2_ssh_key_OT2L 'C:/Users/cvhLa/OneDrive/Desktop/Direct Protocols/README.jpg' root@169.254.212.60:/var/lib/jupyter/notebooks
+                Full_command = scp + OT2_key + file_path + path_robot
+                completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
+                print(completed)
+                print('Job done, am I finished for today?')
+                
+            except:#when it fails you get a popup saying there might not be connection NOTE: It might not give a vailure because it promps powershell correctly
                 sg.Popup("No connection to the robot (is it all just a simulation?)\n"
                          "Or the file was not send")
         else:
@@ -499,14 +550,20 @@ while True:
             driver = webdriver.Firefox(service = service, options = options)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/Plate384/")
             assert "MIC - 384 Well Plate.title"
-            fillingrobot = values[8]
-            notfillingrobot = values[9]
+            fillingrobot = values[9]
+            notfillingrobot = values[10]
             filesending = Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
         
         elif(values[7]== True):
             driver = webdriver.Firefox(service = service)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/M9MixR/")
             assert "M9 MixR.title"
+            filesending = Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
+        
+        elif(values[8]== True):
+            driver = webdriver.Firefox(service = service)
+            driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/SingleplateMIC/")
+            assert "Singleplate MIC"
             filesending = Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
             
         else:
