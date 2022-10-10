@@ -59,7 +59,7 @@ def Mainwindow():
             [sg.Text('Your Name', size=(18, 1)), sg.Input(key = 'name')],                                                   #Name
             [sg.Text('Date (yymmdd)', size=(18, 1)), sg.InputText('', key='-date-')],                                       #values[date]
             [sg.Text('Which OT2 do you want to use?')],                       
-            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1")],                                                     #Values0&1
+            [sg.Radio('OT2L', "group 1"), sg.Radio('OT2R', "group 1"), sg.R('Both OT2', "group 1", key='-both OT2s-')],     #Values0&1
             [sg.Text("What pc is it running on?")],
             [sg.R('Jorn', "group 2", disabled = True, default = False), 
              sg.R('Sebastian', "group 2", disabled = True, default = False), sg.R('OT', "group 2", default = True)],        #Values2/3/4
@@ -365,13 +365,19 @@ while True:
             #pull the files apart to make sure that we get the expected values for the metadata
             if(values['Miep2'] == True):
                 file_name_meta = x
+                print(file_name_meta)
             else:
                 file_name_meta = values['Browse']
                 file_name_meta= Path(file_name_meta)
+                print(file_name_meta)
                 file_name_meta = file_name_meta.name
+                print(file_name_meta)
                 file_name_meta = file_name_meta.split(".")
+                print(file_name_meta)
                 file_name_metabeta = file_name_meta
-                file_name_meta = file_name_meta[0]
+                print(file_name_metabeta)
+                file_name_meta = file_name_meta[0]+"."+file_name_meta[1]
+                print(file_name_meta)
                 
             #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
             if(values[2] == True and simulation == "1" ):
@@ -416,6 +422,7 @@ while True:
         if(values[0] == True):
             try:
                 popup_connecting()
+                print(file_name_meta)
                 fileName_direc = file_name_meta  + '.csv'+ '\'' + " "
                 path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
                 file_path = path_to_file + fileName_direc
@@ -457,15 +464,14 @@ while True:
                          "Or the file was not send")
         
         elif(values['-both OT2s-']):
-            try:
                 popup_connecting()
                 fileName_direc = file_name_meta + '.csv'+ '\'' + " "
                 path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
                 file_path = path_to_file + fileName_direc
                 robot_root = "'root@"
-                robot_ip = robot_ip["OT2R"]
+                robot_ip_ot2r = robot_ip["OT2R"]
                 robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
-                path_robot = robot_root+robot_ip+robot_rest
+                path_robot = robot_root+robot_ip_ot2r+robot_rest
                 OT2_key_right = "C:/Users/cvhLa/ot2_ssh_key_OT2R "
                 scp = "scp -i "
                 
@@ -481,9 +487,9 @@ while True:
                 path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
                 file_path = path_to_file + fileName_direc
                 robot_root = "'root@"
-                robot_ip = robot_ip["OT2L"]
+                robot_ip_ot2l = robot_ip["OT2L"]
                 robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
-                path_robot = robot_root+robot_ip+robot_rest
+                path_robot = robot_root+robot_ip_ot2l+robot_rest
                 OT2_key = "C:/Users/cvhLa/ot2_ssh_key_OT2L "
                 scp = "scp -i "
                 
@@ -493,9 +499,9 @@ while True:
                 print(completed)
                 print('Job done, am I finished for today?')
                 
-            except:#when it fails you get a popup saying there might not be connection NOTE: It might not give a vailure because it promps powershell correctly
-                sg.Popup("No connection to the robot (is it all just a simulation?)\n"
-                         "Or the file was not send")
+            #except:#when it fails you get a popup saying there might not be connection NOTE: It might not give a vailure because it promps powershell correctly
+                #sg.Popup("No connection to the robot (is it all just a simulation?)\n"
+                         #"Or the file was not send")
         else:
             sg.Popup("Check one of the options", keep_on_top = True)
     

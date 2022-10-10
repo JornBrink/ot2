@@ -322,7 +322,7 @@ def run(protocol: protocol_api.ProtocolContext):
         path ="C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\Execution code for OT2\\Incubator\\Test User inputs"
         os.chdir(path)
     except:
-        os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+        os.chdir('/var/lib/jupyter/notebooks/UserInputs')
         
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     #print(amtList)

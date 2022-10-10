@@ -234,7 +234,7 @@ def run(protocol: protocol_api.ProtocolContext):
         else:
             os.chdir('C://Users//cvhLa//OneDrive//Desktop//User input (for direct)')
     except:
-        os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+        os.chdir('/var/lib/jupyter/notebooks/UserInputs')
 
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################

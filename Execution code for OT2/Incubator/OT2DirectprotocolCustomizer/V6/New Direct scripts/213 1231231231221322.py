@@ -1,5 +1,15 @@
-#INPUT FILE NAME---------------------
-fileName = "CommandList_PMID-_EXPID--_..csv"
+#This protocol is made for both OT2s
+fileName ='CommandList_PMID-01_EXPID-Tob_CSspecialisation-2_abbasi.csv'
+
+pc ='OT'
+
+#METADATA----------
+metadata = {
+	'protocolName':'213 1231231231221322both OT2s',
+	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
+	'description':'96 wells plate MIC with p300 possibility''Usercustomized',
+	'apiLevel':'2.12'
+}
 
 #IMPORTS---------
 import csv
@@ -222,27 +232,22 @@ def GetSrcVolume(solutions_map, cmd_line, source_well):
     src_amt = float(solutions_map[tube_loc[0]][3])
     return src_amt
 
-##############################   METADATA   ##############################
-metadata = {
-    'protocolName': 'OT2_CommandExecuter_P300_protocol_20220713',
-    'author': 'Sebastian T. Tandar <sebastian.tandar@gmail.com> Jorn Brink <brinkj@vuw.leidenuniv.nl>',
-    'description': 'MultiplateMIC translator to Python 2.12 API__patch 20220725',
-    'apiLevel': '2.12'
-}
-#updated API level to 2.12 from 2.2
 
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     #READ
     global fileName #calling from global
+    global pc
     try:
-        os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs" )
-        #os.chdir('C://Users//cvhLa//OneDrive//Desktop//User input (for direct)')
-        print("fucking hell werk")
+        if(pc =="Jorn" or pc =="jorn"):
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs" )
+        elif(pc == "Sebastian" or pc== "sebastian"):
+            os.chdir("C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\DownstreamProcessors")
+        else:
+            os.chdir('C://Users//cvhLa//OneDrive//Desktop//User input (for direct)')
     except:
-        os.chdir(r'/var/lib/jupyter/notebooks/UserInputs')
-        print("doe wat je klere ding")
-    
+        os.chdir('/var/lib/jupyter/notebooks/User Inputs')
+
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
     dBottom = 4
@@ -455,11 +460,15 @@ def run(protocol: protocol_api.ProtocolContext):
                 
 ######### SIMULATION ############
 # =============================================================================
-from opentrons import simulate
-bep = simulate.get_protocol_api('2.12')
-bep.home()
-run(bep)
+#from opentrons import simulate
+#bep = simulate.get_protocol_api('2.12')
+#bep.home()
+#run(bep)
 #amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
 # for line in bep.commands():
 #    print(line)
 # =============================================================================
+##########Simulation##########
+from opentrons import simulatebep = simulate.get_protocol_api('2.12')
+bep.home()
+run(bep)
