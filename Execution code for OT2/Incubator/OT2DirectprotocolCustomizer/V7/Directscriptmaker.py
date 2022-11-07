@@ -10,8 +10,6 @@ from selenium.webdriver.common.by import By
 import time
 from pathlib import Path
 
-#BIG EXPLANATION: Somehow do i have save the input from the main window but the childwindow(network driver) is not yet saved (i have no clue how i did it)
-#I have the feeling window.close is the reason but i am not entirely sure
 x = "NA"
 str(x)
 
@@ -63,7 +61,7 @@ def Mainwindow():
             [sg.Text("What pc is it running on?")],
             [sg.R('Jorn', "group 2", disabled = True, default = False), 
              sg.R('Sebastian', "group 2", disabled = True, default = False), sg.R('OT', "group 2", default = True)],        #Values2/3/4
-            [sg.Text("Do you want to use touchtips? (run will be longer)")],
+            [sg.Text("Do you want to use touchtips? (run will be longer (not entirely tested yet))")],
             [sg.Radio('Yes', 'group3', disabled = True), sg.Radio('No', 'group3', default = True, disabled = True)],        #Values[5/6]
             [sg.Text("384 wells?")],
             [sg.Radio('Yes', 'group4'), sg.Radio('No', 'group4', default = True)],                                          #Values[7/8]   
