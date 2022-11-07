@@ -3,9 +3,10 @@
 import csv
 import numpy as np
 from math import pi
-from opentrons import protocol_api
+from opentrons import protocol_api, types
 import os
 import opentrons.execute
+import subprocess
 
 ####### CUSTOM LIBRARY #########
 def ReadCSV_Dat(file_name):
@@ -99,6 +100,21 @@ def Update_Target(amt_list, cmd_line, target_well, deck_map, current_transAmt):
     
     return(amt_list)
 
+#aprilfirstprep
+def test_speaker():
+    print('Speaker')
+    print('Next\t--> CTRL-C')
+    AUDIO_FILE_PATH = '/var/lib/jupyter/notebooks/UserInputs/aprilfirst.mp3'
+    try:
+        run_quiet_process('mpg123{}'.format(AUDIO_FILE_PATH))
+    except KeyboardInterrupt:
+        pass
+        print()
+        
+def run_quiet_process(command):
+    subprocess.check_output('{} &> /dev/null'.format(command), shell=True)
+
+    
 def CalTip_Aspirate(solutions_map, cmd_line, source_well):
     #get tube type
     tube_loc = [(x[0]==cmd_line[0] and x[1]==source_well) for x in solutions_map]
@@ -235,6 +251,7 @@ def run(protocol: protocol_api.ProtocolContext):
             os.chdir('C://Users//cvhLa//OneDrive//Desktop//User input (for direct)')
     except:
         os.chdir('/var/lib/jupyter/notebooks/UserInputs')
+        aprilfirst = True
 
     amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
     ##############################  SETTINGS  ##############################
@@ -277,6 +294,8 @@ def run(protocol: protocol_api.ProtocolContext):
      
     ############ EXECUTE COMMANDS ############
     #iterate through all command lines
+    if(aprilfirst == True):
+        test_speaker()
     current_tipID = 0 #initiate tip ID
     iterateMarker = -1
     progressMax = len(cmdList)
