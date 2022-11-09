@@ -127,6 +127,13 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
         #checks another time if the command file exists.
         time.sleep(3)
         check2 = os.path.isfile(path_to_cmd)
+        oldpath = "C://Users//cvhLa//Downloads" + '//' + file_name
+        if (check2 == False):
+            try:
+                os.replace(oldpath, path_to_cmd)
+            except:
+                pass
+        
         RSP = "Robothandler_" + textFromDiv + ".xlsx"
         if(simulation == "1"):
             path_to_RSP = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + RSP
@@ -150,7 +157,11 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
                 new_pathRSP = "C://Users//jornb//Downloads//" + RSP
             else:
                 new_pathRSP = "C://Users//cvhLa//Downloads//" + RSP
-        os.replace(path_to_RSP, new_pathRSP)
+        try:
+            os.replace(path_to_RSP, new_pathRSP)
+        except:
+            pass
+        
         sg.Popup("Files should be downloaded(click OK when ready to close browser and continue)", keep_on_top = True)
         global x
         x = "CommandList_" + textFromDiv
@@ -200,6 +211,12 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
         #checks another time if the command file exists.
         time.sleep(3)
         check2 = os.path.isfile(path_to_cmd)
+        oldpath = "C://Users//cvhLa//Downloads" + '//' + file_name
+        if (check2 == False):
+            try:
+                os.replace(oldpath, path_to_cmd)
+            except:
+                pass
         RSP = "Robothandler_" + textFromDiv + ".xlsx"
         if(simulation == "1"):
             path_to_RSP = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + RSP
@@ -215,7 +232,12 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
                 new_pathRSP = "C://Users//jornb//Downloads//" + RSP
             else:
                 new_pathRSP = "C://Users//cvhLa//Downloads//" + RSP
-        os.replace(path_to_RSP, new_pathRSP)
+            
+        try:
+            os.replace(path_to_RSP, new_pathRSP)
+        except:
+            pass
+
         sg.Popup("Files should be downloaded(click OK when ready to close browser and continue)", keep_on_top = True)
         global x
         x = "CommandList_" + textFromDiv
@@ -527,7 +549,7 @@ while True:
                     options.set_preference("browser.download.dir", r"C:\Users\jornb\Documents\GitHub\ot2new\Execution code for OT2\Incubator\OT2DirectprotocolCustomizer\Webdriver\Firefox download test")
                     service = Service(executable_path='C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox webdriver//geckodriver')
                 else:
-                    options.set_preference("browser.download.dir", r"C:\Users\cvhLa\Onedrive\Desktop\User input (for direct)")
+                    options.set_preference("browser.download.dir", r"C:\Users\cvhLa\OneDrive\Desktop\User input (for direct)")
                     service = Service(executable_path='C://Users//cvhLa//OneDrive//Desktop//DO NOT TOUCH THIS FOLDER (webdriver)//geckodriver')
                 options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/x-gzip")
                 
@@ -567,13 +589,13 @@ while True:
             filesending = Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
         
         elif(values[7]== True):
-            driver = webdriver.Firefox(service = service)
+            driver = webdriver.Firefox(service = service, options = options)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/M9MixR/")
             assert "M9 MixR.title"
             filesending = Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
         
         elif(values[8]== True):
-            driver = webdriver.Firefox(service = service)
+            driver = webdriver.Firefox(service = service, options = options)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/SingleplateMIC/")
             assert "Singleplate MIC - OT2 Commander.title"
             filesending = Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
@@ -583,5 +605,3 @@ while True:
             window.close()
         
 window.close()  
-
-
