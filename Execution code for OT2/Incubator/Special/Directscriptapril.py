@@ -113,7 +113,6 @@ def test_speaker():
         
 def run_quiet_process(command):
     subprocess.check_output('{} &> /dev/null'.format(command), shell=True)
-
     
 def CalTip_Aspirate(solutions_map, cmd_line, source_well):
     #get tube type

@@ -29,8 +29,8 @@ def Mainwindow():
         layout = [
             [sg.B("Make command list"), sg.Button("Refresh")],
             [sg.T("Please provide information about the OT2 run you want to do")],
-            [sg.T('Select a file', size=(10,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),)), 
-            sg.T('Or use the one you just send'), sg.T(str(x), key='-importfilename-')],                                    #Browse #values[importfilename]
+            [sg.T('Select a file', size=(10,1)), sg.FileBrowse(file_types= (('CSV Files', '*.csv'),))], 
+            [sg.T('Or use the one you just send'), sg.T(str(x), key='-importfilename-')],                                   #Browse #values[importfilename]
             [sg.R("Selected", "group 3", key="Miep1", default = True), sg.R("Made", "group 3", key= "Miep2")],              #values[Miep & Miep2]
             [sg.T('Experiment Name', size=(15,1)), sg.I(key='expname')],                                                    #values[expname]       
             [sg.T('Your Name', size=(15, 1)), sg.I(key='name')],                                                            #values[name]   
@@ -371,9 +371,9 @@ while True:
         else:
             os.chdir("C://Users//cvhLa//OneDrive//Desktop//New Direct scripts")
         print(values)
+        
         if(values['-date-'] == "" or values['expname']== "" or values['name']== "" or values['Browse'] == "" and 'Miep1' == True):
             sg.Popup("Fill all fields and options", keep_on_top = True)
-            break #tempuary measure to break
         else:
             if (values[0] == True):
                 activeOT2 = "OT2L"
@@ -398,15 +398,22 @@ while True:
             else:
                 file_name_meta = values['Browse']
                 file_name_meta= Path(file_name_meta)
-                print(file_name_meta)
+                p = file_name_meta
+                print(p)
+                p = p.parent
+                print(p)
+                Miep = "C:\\Users\\cvhLa\\OneDrive\\Desktop\\User input (for direct)"
+                print(p == Miep)
+                if(p == Miep and simulation == "0"):
+                    print("getting there")
+                elif(simulation == "1"):
+                    print("simultation mode")
+                else:
+                    print("WTF")
                 file_name_meta = file_name_meta.name
-                print(file_name_meta)
                 file_name_meta = file_name_meta.split(".")
-                print(file_name_meta)
                 file_name_metabeta = file_name_meta
-                print(file_name_metabeta)
                 file_name_meta = file_name_meta[0]+"."+file_name_meta[1]
-                print(file_name_meta)
                 
             #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
             if(values[2] == True and simulation == "1" ):

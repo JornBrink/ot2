@@ -1,13 +1,15 @@
-#This protocol is made for OT2R
-fileName ='CommandList_PMID-Try_EXPID-the-xes_with.This.csv'
+#This protocol is made for OT2L
+fileName ='CommandList_PMID-dsfa_EXPID-sdfasdf-asdf_sdfa.sdfasdaf.csv'
 
 pc ='Jorn'
 
+touch_tips ='Yes'
+
 #METADATA----------
 metadata = {
-	'protocolName':'OnThis TryOT2R',
+	'protocolName':'asdfasdfasdfasdfasdfasdfsdafdasfOT2L',
 	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
-	'description':'96 wells plate MIC with p300 possibility''Usercustomized',
+	'description':'96 wells plate MIC with p300 possibility''User customized',
 	'apiLevel':'2.12'
 }
 
