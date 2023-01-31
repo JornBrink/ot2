@@ -394,27 +394,24 @@ while True:
             #pull the files apart to make sure that we get the expected values for the metadata
             if(values['Miep2'] == True):
                 file_name_meta = x
-                print(file_name_meta)
+
             else:
                 file_name_meta = values['Browse']
+                pathfile = file_name_meta
                 file_name_meta= Path(file_name_meta)
-                p = file_name_meta
-                print(p)
-                p = p.parent
-                print(p)
-                Miep = "C:\\Users\\cvhLa\\OneDrive\\Desktop\\User input (for direct)"
-                print(p == Miep)
-                if(p == Miep and simulation == "0"):
-                    print("getting there")
-                elif(simulation == "1"):
-                    print("simultation mode")
-                else:
-                    print("WTF")
                 file_name_meta = file_name_meta.name
                 file_name_meta = file_name_meta.split(".")
                 file_name_metabeta = file_name_meta
                 file_name_meta = file_name_meta[0]+"."+file_name_meta[1]
                 
+                #Move from USB or other spot to correct file spot
+                Miep = "C:\\Users\\cvhLa\\OneDrive\\Desktop\\User input (for direct)\\" + file_name_meta
+                check4 = os.path.isfile(Miep)
+                if(check4 == False and simulation == "0"):
+                    os.replace(pathfile, Miep)
+                else:
+                    print("simulation")
+
             #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
             if(values[2] == True and simulation == "1" ):
                 active_pc ="Jorn"
