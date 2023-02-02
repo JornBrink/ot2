@@ -10,15 +10,15 @@ options(stringsAsFactors = F)
 #SERVER MAIN------------
 shinyServer(function(input, output) {
   #defining directory-------
-  # outputDir_cmdline <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\CQ_Plate"
-  # outputDir_usrGuide <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\CQ_Plate"
-  # inputTemplate <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\CQ_Plate\\CQ_InputTemplate.xlsx"
-  # sourceDir <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\CQ_Plate\\ComboDrugs_source.R"
+  outputDir_cmdline <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\CQ_Plate"
+  outputDir_usrGuide <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\CQ_Plate"
+  inputTemplate <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\CQ_Plate\\CQ_InputTemplate.xlsx"
+  sourceDir <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\CQ_Plate\\ComboDrugs_source.R"
   
-  outputDir_cmdline <- "/srv/shiny-server/files/Output_CmdList"
-  outputDir_usrGuide <- "/srv/shiny-server/files/Output_UsrGuide"
-  inputTemplate <- "/srv/shiny-server/ot2/CQ_Plate/CQ_InputTemplate.xlsx"
-  sourceDir <- "/srv/shiny-server/ot2/CQ_Plate/ComboDrugs_source.R"
+  #outputDir_cmdline <- "/srv/shiny-server/files/Output_CmdList"
+  #outputDir_usrGuide <- "/srv/shiny-server/files/Output_UsrGuide"
+  #inputTemplate <- "/srv/shiny-server/ot2/CQ_Plate/CQ_InputTemplate.xlsx"
+  #sourceDir <- "/srv/shiny-server/ot2/CQ_Plate/ComboDrugs_source.R"
   
   #loading functions--------
   source(sourceDir)

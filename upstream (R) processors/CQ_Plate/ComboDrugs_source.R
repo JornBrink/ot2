@@ -166,14 +166,16 @@ CalculateStockAmt <- function(sol_list, stock_info){
   #calculate required stock amount
   reqStockAmt <- sapply(unique(sol_list$medDrugID), function(x) getHighestAmount(x, sol_list))
   drugnames <- sapply(names(reqStockAmt), function(x) strsplit(x, split="_")[[1]][2])
+  print(drugnames)
   
   #clump values per-drug type
   amounts <- sapply(unique(drugnames), function(x) max(ceiling(sum(reqStockAmt[drugnames==x])/100)*100, 300))
+  print(amounts)
   
   #concatenate results; create new stock list
   stock_info <- data.frame(DrugName = colnames(stock_info), StockConc=unlist(stock_info[1,]))
   stock_info$AmtRequired <- sapply(stock_info$DrugName, function(x) amounts[names(amounts)==x])
-  
+  print(stock_info) 
   return(stock_info)
 }
 
@@ -756,8 +758,8 @@ mainExec <- function(file_name){
 }
 
 #TROUBLESHOOTING--------------
-# mainwd <- "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\ot2\\CQ_Plate"
-# inputFile <- "KJ_MER_MUC.xlsx"
-# dqs <- mainExec(paste(mainwd, inputFile, sep="\\"))
+mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\CQ_Plate"
+inputFile <- "20230201_Checkerboard_SYT_PI_Full.xlsx"
+dqs <- mainExec(paste(mainwd, inputFile, sep="\\"))
 
-#write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
+write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)

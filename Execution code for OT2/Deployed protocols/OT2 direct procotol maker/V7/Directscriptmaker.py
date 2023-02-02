@@ -432,7 +432,7 @@ while True:
                                     "\'"+ 'protocolName'"\'"+":"+  "\'" + Direct_protocol_name + "\'" +","+"\n"+"\t"+
                                     "\'"+'author'"\'"+":" + "\'" +'Sebastian <sebastian.tandar@gmail.com>' +"\'" +"\'"+ 'Jorn <jornbrink@kpnmail.nl>' + "\'"+"," +"\n"+"\t"+
                                     "\'"+'description'"\'"+":" + "\'" +'96 wells plate MIC with p300 possibility'+"\'"+ "\'"+'User customized'+"\'"+","+ "\n"+"\t"+
-                                    "\'"+'apiLevel'"\'"+":"+"\'" +'2.12'+"\'"+ "\n"+'}\n')
+                                    "\'"+'apiLevel'"\'"+":"+"\'" +'2.13'+"\'"+ "\n"+'}\n')
                     #actually puts the script into the new file
                     for asd in lines:
                         file.write(asd)

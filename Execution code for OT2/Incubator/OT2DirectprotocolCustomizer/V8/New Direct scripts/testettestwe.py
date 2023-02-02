@@ -7,7 +7,7 @@ touch_tips ='Yes'
 
 #METADATA----------
 metadata = {
-	'protocolName':'asdfasdfasdfasdfasdfasdfsdafdasfOT2L',
+	'protocolName':'testettestweOT2L',
 	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
 	'description':'96 wells plate MIC with p300 possibility''User customized',
 	'apiLevel':'2.12'

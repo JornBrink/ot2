@@ -61,7 +61,7 @@ def Mainwindow():
             [sg.Text("What pc is it running on?")],
             [sg.R('Jorn', "group 2", disabled = True, default = False), 
              sg.R('Sebastian', "group 2", disabled = True, default = False), sg.R('OT', "group 2", default = True)],        #Values2/3/4
-            [sg.Text("Do you want to use touchtips? (run will be longer (not entirely tested yet))")],
+            [sg.Text("Do you want to use touchtips? (run will be longer (not entirely tested yet only active on 384))")],
             [sg.Radio('Yes', 'group3', disabled = True), sg.Radio('No', 'group3', default = True, disabled = True)],        #Values[5/6]
             [sg.Text("384 wells?")],
             [sg.Radio('Yes', 'group4'), sg.Radio('No', 'group4', default = True)],                                          #Values[7/8]   
@@ -446,7 +446,8 @@ while True:
                     if(simulation == "1"):
                         file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" +
                                    "bep = simulate.get_protocol_api('2.12')" + "\n" + 
-                                   "bep.home()" + "\n" + "run(bep)")
+                                   "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_dat(filename)" + "\n"+
+                                   "for line in bep.commands():" + "\n"+"    print(line)")
                     else:
                         print ("Simulation mode inactive")
                     
