@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import os
+import shutil
 import subprocess
 import json
 from selenium.webdriver.firefox.service import Service
@@ -408,7 +409,7 @@ while True:
                 Miep = "C:\\Users\\cvhLa\\OneDrive\\Desktop\\User input (for direct)\\" + file_name_meta
                 check4 = os.path.isfile(Miep)
                 if(check4 == False and simulation == "0"):
-                    os.replace(pathfile, Miep)
+                    shutil.copy(pathfile, Miep, follow_symlinks=True)
                 else:
                     print("simulation")
 
