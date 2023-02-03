@@ -406,10 +406,12 @@ while True:
                 file_name_meta = file_name_meta[0]+"."+file_name_meta[1]
                 
                 #Move from USB or other spot to correct file spot
-                Miep = "C:\\Users\\cvhLa\\OneDrive\\Desktop\\User input (for direct)\\" + file_name_meta
+                Miep = "C:\\Users\\cvhLa\\OneDrive\\Desktop\\User input (for direct)\\" + file_name_meta + ".csv"
                 check4 = os.path.isfile(Miep)
+                print(check4)
                 if(check4 == False and simulation == "0"):
                     shutil.copy(pathfile, Miep, follow_symlinks=True)
+                    print("print copy succes full")
                 else:
                     print("simulation")
 
