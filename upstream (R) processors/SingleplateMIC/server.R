@@ -9,15 +9,15 @@ options(stringsAsFactors = F)
 #SERVER MAIN------------
 shinyServer(function(input, output) {
   #defining directory-------
-  #outputDir_cmdline <- "/srv/shiny-server/files/Output_CmdList"
-  #outputDir_usrGuide <- "/srv/shiny-server/files/Output_UsrGuide"
-  #inputTemplate <- "/srv/shiny-server/ot2/SingleplateMIC/MIC_InputTemplate.xlsx"  
-  #sourceDir <- "/srv/shiny-server/ot2/SingleplateMIC"
+  outputDir_cmdline <- "/home/shiny-ot2/ShinyApps/outputs_cmdlist"
+  outputDir_usrGuide <- "/home/shiny-ot2/ShinyApps/outputs_usrguide"
+  inputTemplate <- "/home/shiny-ot2/ShinyApps/ot2/SingleplateMIC/MIC_InputTemplate.xlsx"  
+  sourceDir <- "/home/shiny-ot2/ShinyApps/ot2/SingleplateMIC"
   
-  outputDir_cmdline <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik"
-  outputDir_usrGuide <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik"
-  inputTemplate <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik\\MIC_InputTemplate.xlsx"  
-  sourceDir <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\SingleplateMIC"
+  #outputDir_cmdline <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC"
+  #outputDir_usrGuide <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC"
+  #inputTemplate <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC\\MIC_InputTemplate.xlsx"  
+  #sourceDir <- "C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\SingleplateMIC"
   
   #loading functions--------
   setwd(sourceDir)
@@ -187,7 +187,7 @@ shinyServer(function(input, output) {
     }
   )
   output$guide <- downloadHandler(
-    filename = function(){paste("RobotHandler_", new_name(), '.csv', sep='')},
+    filename = function(){paste("RobotHandler_", new_name(), '.xlsx', sep='')},
     content = function(file) {
       write_xlsx(new_userGuideOutput, file, col_names=T)
     }

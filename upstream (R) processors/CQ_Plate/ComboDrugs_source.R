@@ -166,16 +166,14 @@ CalculateStockAmt <- function(sol_list, stock_info){
   #calculate required stock amount
   reqStockAmt <- sapply(unique(sol_list$medDrugID), function(x) getHighestAmount(x, sol_list))
   drugnames <- sapply(names(reqStockAmt), function(x) strsplit(x, split="_")[[1]][2])
-  print(drugnames)
   
   #clump values per-drug type
   amounts <- sapply(unique(drugnames), function(x) max(ceiling(sum(reqStockAmt[drugnames==x])/100)*100, 300))
-  print(amounts)
   
   #concatenate results; create new stock list
   stock_info <- data.frame(DrugName = colnames(stock_info), StockConc=unlist(stock_info[1,]))
   stock_info$AmtRequired <- sapply(stock_info$DrugName, function(x) amounts[names(amounts)==x])
-  print(stock_info) 
+  
   return(stock_info)
 }
 
@@ -654,7 +652,7 @@ mainExec <- function(file_name){
   
   #D. Calculate required stock amounts
   stockInfo <- CalculateStockAmt(solList, stockInfo)
-    
+  
   # ---------- SECTION B - Deck Preparation -------------
   #E. Initiate Deck Map
   deckMap <- c("96-well_D", "96-well_E", "96-well_F",
@@ -730,12 +728,12 @@ mainExec <- function(file_name){
   
   #q6. Prepare deck map for robot input
   robot_deckMap <- cbind(deckMap,
-                          replicate(length(deckMap[,1]), ""),
-                          replicate(length(deckMap[,1]), ""),
-                          replicate(length(deckMap[,1]), ""),
-                          replicate(length(deckMap[,1]), ""),
-                          replicate(length(deckMap[,1]), ""),
-                          replicate(length(deckMap[,1]), ""))
+                         replicate(length(deckMap[,1]), ""),
+                         replicate(length(deckMap[,1]), ""),
+                         replicate(length(deckMap[,1]), ""),
+                         replicate(length(deckMap[,1]), ""),
+                         replicate(length(deckMap[,1]), ""),
+                         replicate(length(deckMap[,1]), ""))
   robot_deckMap <- rbind(c(">PlateMap", replicate(length(cmdList[1,])-1, "")),
                          robot_deckMap)
   colnames(robot_deckMap) <- colnames(cmdList)
@@ -758,8 +756,8 @@ mainExec <- function(file_name){
 }
 
 #TROUBLESHOOTING--------------
-mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\CQ_Plate"
-inputFile <- "20230201_Checkerboard_SYT_PI_Full.xlsx"
-dqs <- mainExec(paste(mainwd, inputFile, sep="\\"))
-
-write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
+# mainwd <- "C:\\Users\\sebas\\Desktop\\Freelance\\2023_Laura\\"
+# inputFile <- "20230203_Checkerboard_SYT_PI_Full .xlsx"
+# dqs <- mainExec(paste(mainwd, inputFile, sep="\\"))
+# 
+# write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
