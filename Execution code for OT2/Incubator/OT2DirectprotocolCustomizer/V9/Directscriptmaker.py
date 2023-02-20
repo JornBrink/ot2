@@ -387,7 +387,6 @@ while True:
             os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V9//New Direct scripts")
         else:
             os.chdir("C://Users//cvhLa//OneDrive//Desktop//New Direct scripts")
-        print(values)
         
         if(values['-date-'] == "" or values['expname']== "" or values['name']== "" or values['Browse'] == "" and 'Miep1' == True):
             sg.Popup("Fill all fields and options", keep_on_top = True)
@@ -427,9 +426,9 @@ while True:
                 print(check4)
                 if(check4 == False and simulation == "0"):
                     shutil.copy(pathfile, Miep, follow_symlinks=True)
-                    print("print copy succes full")
+                    print("Copy succesfull")
                 else:
-                    print("simulation")
+                    print("Simulation")
 
             #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
             if(values[2] == True and simulation == "1" ):
