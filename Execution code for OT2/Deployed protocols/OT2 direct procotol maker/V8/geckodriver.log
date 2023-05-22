@@ -325,3 +325,18 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 DevTools listening on ws://127.0.0.1:52373/devtools/browser/940d76c4-820c-4aab-a109-0e0569d8e959
 1665409794095	Marionette	INFO	Stopped listening on port 52400
 console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1682494087762	geckodriver	INFO	Listening on 127.0.0.1:60836
+1682494090800	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "60837" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\jornb\\AppData\\Local\\Temp\\rust_mozprofileUy6xmb"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1682494091136	Marionette	INFO	Marionette enabled
+Dynamically enable window occlusion 0
+1682494091140	Marionette	INFO	Listening on port 60847
+WebDriver BiDi listening on ws://127.0.0.1:60837
+Read port: 60847
+1682494091393	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\jornb\\AppData\\Local\\Temp\\rust_mozprofileUy6xmb\\search.json.mozlz4", (void 0)))
+[ERROR glean_core] Error setting metrics feature config: Json(Error("EOF while parsing a value", line: 1, column: 0))
+DevTools listening on ws://127.0.0.1:60837/devtools/browser/c1a833fd-78db-4c6b-98e1-237960b43e77
+1682494108074	Marionette	INFO	Stopped listening on port 60847
+Dynamically enable window occlusion 1
