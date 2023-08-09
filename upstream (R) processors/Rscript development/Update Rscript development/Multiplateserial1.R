@@ -3,7 +3,7 @@ library(rlist)
 library(readxl)
 library(readr)
 #testing purposes
-Filename <- "C:\\Users\\jornb\\OneDrive\\Work\\Maik\\MV_InputTemplate.xlsx"
+Filename <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\Rscript development\\Update Rscript development\\MV_InputTemplate.xlsx"
 
 #Get the filename and parse it into seperate parts
 main<- read_xlsx(Filename)
