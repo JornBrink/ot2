@@ -70,7 +70,7 @@ def Mainwindow():
             [sg.Button("Save", s=16), sg.Button("Send", disabled=True, s=16), sg.Push(), sg.Button("Close", s= 16, button_color = "tomato")]
             ]
         
-    return sg.Window("Opentron direct protocol maker", layout, finalize = True), simulation
+    return sg.Window("Opentron direct protocol maker", layout, finalize = True)
 
 def Webinteraction():
     layout = [
@@ -108,7 +108,7 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
     textFromDiv = driver.find_element(By.XPATH, "//div[@class='shiny-text-output shiny-bound-output']").text
     file_name = "CommandList_" + textFromDiv + ".csv"
     
-    if(simulation == "1"):
+    if(simulation== "1"):
         path_to_cmd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + file_name
     else:
         path_to_cmd = "C://Users//cvhLa//Onedrive//Desktop//User input (for direct)" + '//' + file_name
@@ -254,8 +254,7 @@ def test_internet():
     except:
         return False
 
-#activate first window
-window1, window2 = Mainwindow(), None
+
 
     # create popup that is to inform user
 def popup_connecting():
@@ -301,18 +300,21 @@ def getIPs():
     
     return robot_ip_list
         
+#activate first window
+window1, window2 = None, None
+window1 = Mainwindow()
+
 #creates loop that activates the tracking of events and values in the gui
 while True:
     window, event, values = sg.read_all_windows()
     
     #Stops everything when user uses the button cancel or closes the window
-    if event =="Close" or event == sg.WIN_CLOSED:
-        window.close()
+    if event == 'Close' or  event == sg.WIN_CLOSED:
         if window == window2:
-            window2 == None
-        elif window == window1:
+            window.close()
+        if window == window1:
+            window.close()
             break
-        #small little problem --> this will break everything and stop it from reacting but its the best i can do for now
         
     if event == 'Refresh':
         try:
