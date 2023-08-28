@@ -254,8 +254,6 @@ def test_internet():
     except:
         return False
 
-
-
     # create popup that is to inform user
 def popup_connecting():
     clicked = sg.PopupOKCancel("This is going to take a bit (might not respond while sending file)\n",
@@ -383,7 +381,7 @@ while True:
 
             
         #put filename = into the script
-        if(simulation == "1"): #and values[2] == True):
+        if(simulation == "1"):
             os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V9//New Direct scripts")
         elif(simulation == "1" and values[3] == True): #change This @sebastian
             os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//V9//New Direct scripts")
@@ -594,7 +592,7 @@ while True:
         
         
     elif(event == "Send to Server"):
-        #service path is for the gecko executable (needs changed if used on the real pc)
+        #Start webdriver with the executable_paths. If the computer changes then you need to change this in the service section and the options values
         if(values[4] == True):
             driver = webdriver.Firefox(service = service, options = options)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/CQ_Plate/")
