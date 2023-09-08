@@ -231,7 +231,7 @@ def run(protocol: protocol_api.ProtocolContext):
     except:
         os.chdir('/var/lib/jupyter/notebooks/UserInputs')
         
-    amtList, cmdList, deckMap = ReadCSV_input(mainInput)
+    amtList, cmdList, deckMap = ReadCSV_input(fileName)
     ############ LOAD LABWARES ############
     tipLocs_300 = []
     tipLocs_1000 = []
