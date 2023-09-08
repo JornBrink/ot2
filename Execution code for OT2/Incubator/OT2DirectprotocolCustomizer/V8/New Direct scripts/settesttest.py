@@ -1,5 +1,5 @@
 #This protocol is made for OT2R
-fileName ='CommandList_PMID-test_EXPID-384w.csv'
+fileName ='CommandList_PMID-test_EXPID-48w.csv'
 
 pc ='Jorn'
 
