@@ -36,7 +36,7 @@ def Mainwindow(simulation, x):
             [sg.R('Jorn', 'group3', key = 'PCJ'), sg.R('Sebastian', 'group3', key= 'PCS'), sg.R('OT', 'group3', key= 'PCOT')],
             [sg.T("Do you want to use touchtip? (run will take longer)")],
             [sg.R('Yes', 'group4', key = 'TTy'), sg.R('No', 'group4', key = 'TTn')],
-            [sg.T('384 wells?')],
+            [sg.T('384 wells / 48 wells?')],
             [sg.R('Yes', 'group5', key = '384wy'), sg.R('No', 'group5', key='384wn', default = True)],
             [sg.B('Save', s= 16, button_color = 'black on yellow'), sg.B('Send', disabled = True, s= 16), sg.P(), sg.B('Close', s=16, button_color = 'tomato')],
         ]
@@ -56,7 +56,7 @@ def Mainwindow(simulation, x):
             [sg.R('Jorn', 'group3', key = 'PCJ', disabled = True), sg.R('Sebastian', 'group3', key= 'PCS', disabled = True), sg.R('OT', 'group3', key= 'PCOT', default = True, disabled = True)],
             [sg.T("Do you want to use touchtip? (run will take longer)")],
             [sg.R('Yes', 'group4', key = 'TTy', disabled = True), sg.R('No', 'group4', key = 'TTn', disabled = True, default = True)],
-            [sg.T('384 wells?')],
+            [sg.T('384 wells / 48 wells?')],
             [sg.R('Yes', 'group5', key = '384wy', disabled = True), sg.R('No', 'group5', key='384wn', disabled = True, default = True)],
             [sg.B('Save', s= 16, button_color = 'black on yellow'), sg.B('Send', disabled = True, s= 16), sg.P(), sg.B('Close', s=16, button_color = 'tomato')],
             ]
@@ -69,7 +69,7 @@ def Webdriver():
         [sg.Text("Please provide all information below")],
         [sg.Text("Choose your file: "), sg.FileBrowse(key = 'Browse')],                                                   
         [sg.Text("Platemap PMID"), sg.InputText('', size=(56, 1), key = 'PMID')],                                         
-        [sg.Text("Your name (First AND Lastname)"), sg.InputText('', size=(50, 1), key = 'Firstlast')],                  
+        [sg.Text("Your name (First AND Lastname)"), sg.InputText('', size=(41, 1), key = 'Firstlast')],                  
         [sg.Text("Experiment Name"), sg.InputText('', size=(54, 1), key = 'EXPname')],                                       
         [sg.Text("Experiment number"), sg.InputText('', size=(53, 1), key = 'EXPnum')],                                    
         [sg.Text("What type of experiment are you going to do?")],
@@ -77,6 +77,7 @@ def Webdriver():
          sg.Radio("Multiplate MIC", "group1", key = 'MVP'), 
          sg.Radio("384 well plate", "group1", key = '384p'), 
          sg.Radio("M9MixR", "group1", key = 'M9MixR'),
+         sg.Radio("48 Well plate", "group1", key = '48w'),
          sg.Radio("SingleplateMIC", "group1", key= 'Sp')],                                                             
         [sg.Text("Do you want to fill outer wells in robot? (384 plate only)")],
         [sg.Radio("Yes", "group2", key = 'Fill'), sg.Radio("No", "group2", key = 'nFill')],
@@ -430,9 +431,10 @@ while True:
                 #Move from USB or other spot to correct file spot
                 filecheck1 = livepath + '//' + "User input (for direct)//" + file_name_meta + ".csv"
                 check4 = os.path.isfile(filecheck1)
+                filemove = livepath + '//' + "User input (for direct)//" + file_name_meta
                 print(check4)
                 if(filecheck1 == False and simulation == "0"):
-                    shutil.copy(pathfile, filecheck1, follow_symlinks=True)
+                    shutil.copy(pathfile, filemove, follow_symlinks=True)
                     print("Copy succesfull")
                 elif(filecheck1 == True and simulation == "0"):
                     print("Check complete :)")
@@ -457,7 +459,7 @@ while True:
             # For the metadata of the script added
             with open(Truename, 'w+') as file:
                     file.write("#" + 'This protocol is made for'+ " " + activeOT2 + "\n")
-                    file.write('fileName =' + "\'" + file_name_meta  + '.csv'+ "\'" "\n" + "\n")
+                    file.write('fileName =' + "\'" + file_name_meta + "\'" "\n" + "\n")
                     file.write('pc =' + "\'" +active_pc + "\'" + "\n" + "\n")
                     file.write('touch_tips =' + "\'" + touch_tips + "\'" + "\n" + "\n")
                     file.write('#METADATA----------' "\n" +
@@ -470,10 +472,15 @@ while True:
                     for asd in lines:
                         file.write(asd)
                         
-                    if(simulation == "1"):
+                    if(simulation == "1" and values['384wn'] == True):
                         file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
                                    "bep = simulate.get_protocol_api('2.12')" + "\n" + 
                                    "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_dat(filename)" + "\n"+
+                                   "for line in bep.commands():" + "\n"+"    print(line)")
+                    elif(simulation == "1" and values['384wy'] == True):
+                        file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
+                                   "bep = simulate.get_protocol_api('2.12')" + "\n" + 
+                                   "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_input(fileName)" + "\n"+
                                    "for line in bep.commands():" + "\n"+"    print(line)")
                     else:
                         print ("Simulation mode inactive")
@@ -593,9 +600,9 @@ while True:
                 
                 
                 
-                if(values['384p'] == True and values['Fill'] == False and values['nFill'] == False):
+                if(values['384p'] == True or values['48w'] == True and values['Fill'] == False and values['nFill'] == False):
                     sg.Popup("Please make sure you select if you want to have the robot fill the wells for you")
-                elif(values['384p'] == False and values['MVP'] == False and values['M9MixR'] == False and values['Checker'] == False and values['Sp'] == False):
+                elif(values['384p'] == False and values['48w'] == False and values['MVP'] == False and values['M9MixR'] == False and values['Checker'] == False and values['Sp'] == False):
                     sg.Popup("You seem to have not selected the method")            
                 else:
                     sg.Popup("Make sure your platemap is correct")
@@ -623,8 +630,8 @@ while True:
             driver = webdriver.Firefox(service = service, options = options)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/Plate384/")
             assert "MIC - 384 Well Plate.title"
-            fillingrobot = values[9]
-            notfillingrobot = values[10]
+            fillingrobot = values['Fill']
+            notfillingrobot = values['nFill']
             x = Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)
         
         elif(values['M9MixR']== True):
@@ -637,7 +644,16 @@ while True:
             driver = webdriver.Firefox(service = service, options = options)
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/SingleplateMIC/")
             assert "Singleplate MIC - OT2 Commander.title"
-            x = Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)            
+            x = Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)  
+        
+        elif(values['48w'] == True):
+            driver = webdriver.Firefox(service = service, options = options)
+            driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/Plate48/")
+            assert "48 Well Plate.title"
+            fillingrobot = values['Fill']
+            notfillingrobot = values['nFill']
+            x = Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation)    
+        
         else:
             sg.Popup('Please select the method you want to use (the app is going to crash now)')
             window.close()

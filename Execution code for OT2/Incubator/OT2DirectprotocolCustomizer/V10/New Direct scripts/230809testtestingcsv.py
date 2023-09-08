@@ -1,3 +1,17 @@
+#This protocol is made for OT2R
+fileName ='CommandList_PMID-test_EXPID-48w.csv'
+
+pc ='Jorn'
+
+touch_tips ='No'
+
+#METADATA----------
+metadata = {
+	'protocolName':'230809testtestingcsv OT2R',
+	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
+	'description':'96 wells plate MIC with p300 possibility''User customized',
+	'apiLevel':'2.12'
+}
 
 #IMPORTS---------
 import csv
@@ -39,8 +53,8 @@ def translate_labwareLibrary(string_identifier):
         #labware_name = "corning_384_wellplate_112ul_flat"
 
     elif("48" in string_identifier):
-        labware_name = "greinerbioone677102_48_wellplate_1000ul"
-        #labware_name = "corning_48_wellplate_1.6ml_flat"
+        #labware_name = "greinerbioone677102_48_wellplate_1000ul"
+        labware_name = "corning_48_wellplate_1.6ml_flat"
         
     elif("96" in string_identifier):
         if("dilution" in string_identifier or "deep" in string_identifier):
@@ -484,3 +498,12 @@ def run(protocol: protocol_api.ProtocolContext):
         #drop tip decision
         if(int(tip_next) != int(current_tip) or (i == len(aspirate_groups2)-1)):
             c_pipette.drop_tip(protocol.fixed_trash['A1'].top().move(types.Point(10, 5, 12)))
+
+##########Simulation##########
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.12')
+bep.home()
+run(bep)
+amtList, cmdList, deckMap = ReadCSV_input(fileName)
+for line in bep.commands():
+    print(line)
