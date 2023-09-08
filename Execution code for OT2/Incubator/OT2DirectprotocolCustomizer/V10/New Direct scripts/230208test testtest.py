@@ -1,5 +1,5 @@
-#This protocol is made for OT2R
-fileName ='CommandList_PMID-dsaf_EXPID-asdfsadfsadf-sdaf_sdafsdaf.dsafsadf.csv'
+#This protocol is made for both OT2s
+fileName ='CommandList_PMID-Test_EXPID-Test-Test_Test.Test.csv'
 
 pc ='Jorn'
 
@@ -7,7 +7,7 @@ touch_tips ='No'
 
 #METADATA----------
 metadata = {
-	'protocolName':'sdfgfdsgdgfsOT2R',
+	'protocolName':'230208test testtestboth OT2s',
 	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
 	'description':'96 wells plate MIC with p300 possibility''User customized',
 	'apiLevel':'2.12'
@@ -28,11 +28,10 @@ def ReadCSV_Dat(file_name):
     with open(file_name, 'r') as file:
         cmdCSV = csv.reader(file, delimiter=',')
         for cmdRow in cmdCSV:
-            print(cmdRow)
             content_list = np.vstack([content_list, cmdRow])
-            
+    
     #Find starting point of amount list and command list
-    #indices = []
+    indices = []
     for a in range(len(content_list)):
         if(">" in content_list[a][0]):
             indices.append(a)
@@ -470,10 +469,9 @@ def run(protocol: protocol_api.ProtocolContext):
                 right_pipette.drop_tip()
                 
 ##########Simulation##########
-from opentrons import simulate
-bep = simulate.get_protocol_api('2.12')
+from opentrons import simulatebep = simulate.get_protocol_api('2.12')
 bep.home()
 run(bep)
-amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
+amtList, cmdList, deckMap = ReadCSV_dat(filename)
 for line in bep.commands():
     print(line)

@@ -1,13 +1,13 @@
-#This protocol is made for OT2L
-fileName ='CommandList_PMID-dsfa_EXPID-sdfasdf-asdf_sdfa.sdfasdaf.csv'
+#This protocol is made for OT2R
+fileName ='CommandList_PMID-test_EXPID-384w.csv'
 
 pc ='Jorn'
 
-touch_tips ='Yes'
+touch_tips ='No'
 
 #METADATA----------
 metadata = {
-	'protocolName':'testettestweOT2L',
+	'protocolName':'settesttestOT2R',
 	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
 	'description':'96 wells plate MIC with p300 possibility''User customized',
 	'apiLevel':'2.12'
@@ -25,9 +25,11 @@ def ReadCSV_input(file_name):
     content_list = np.empty(10)
     with open(file_name, 'r') as file:
         cmdCSV = csv.reader(file, delimiter=',')
-        for cmdRow in cmdCSV:
-            content_list = np.vstack([content_list, cmdRow])
+        for i in cmdCSV:
+            print(i)
+            content_list = np.vstack([content_list, i])
     
+    print(content_list)
     #Find starting point of amount list and command list
     indices = []
     for a in range(len(content_list)):
@@ -245,7 +247,7 @@ def run(protocol: protocol_api.ProtocolContext):
     except:
         os.chdir('/var/lib/jupyter/notebooks/UserInputs')
         
-    amtList, cmdList, deckMap = ReadCSV_input(mainInput)
+    amtList, cmdList, deckMap = ReadCSV_input(fileName)
     ############ LOAD LABWARES ############
     tipLocs_300 = []
     tipLocs_1000 = []
@@ -513,3 +515,6 @@ from opentrons import simulate
 bep = simulate.get_protocol_api('2.12')
 bep.home()
 run(bep)
+amtList, cmdList, deckMap = ReadCSV_input(fileName)
+for line in bep.commands():
+    print(line)

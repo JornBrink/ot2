@@ -1,17 +1,3 @@
-#This protocol is made for OT2L
-fileName ='CommandList_PMID-dsfa_EXPID-sdfasdf-asdf_sdfa.sdfasdaf.csv'
-
-pc ='Jorn'
-
-touch_tips ='Yes'
-
-#METADATA----------
-metadata = {
-	'protocolName':'testettestweOT2L',
-	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
-	'description':'96 wells plate MIC with p300 possibility''User customized',
-	'apiLevel':'2.12'
-}
 
 #IMPORTS---------
 import csv
@@ -507,9 +493,3 @@ def run(protocol: protocol_api.ProtocolContext):
 # for line in bep.commands():
 #     print(line)
 # =============================================================================
-
-##########Simulation##########
-from opentrons import simulate
-bep = simulate.get_protocol_api('2.12')
-bep.home()
-run(bep)

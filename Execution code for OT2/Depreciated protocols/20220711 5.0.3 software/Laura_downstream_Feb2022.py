@@ -1,7 +1,7 @@
 #INPUTS------------
-mainwd = '/var/lib/jupyter/notebooks/User Inputs'
+mainwd = 'C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs'
 #mainwd = "C:\\Users\\sebas\\OneDrive\\Documents\\WebServer\\Incubator\\Laura_384"
-mainInput = "CommandList_PMID-_EXPID--_. (8)"
+mainInput = "48WellTrialCMDList_expTOB1.csv"
 
 #IMPORTS---------
 import csv
@@ -488,9 +488,9 @@ def run(protocol: protocol_api.ProtocolContext):
 
 
 ######### SIMULATION ############
-#from opentrons import simulate
-#bep = simulate.get_protocol_api('2.10')
-#bep.home()
-#run(bep) 
-#for line in bep.commands():
-#    print(line)
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.10')
+bep.home()
+run(bep) 
+for line in bep.commands():
+    print(line)
