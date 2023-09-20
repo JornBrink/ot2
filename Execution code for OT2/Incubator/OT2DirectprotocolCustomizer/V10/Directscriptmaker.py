@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
 import os
 import shutil
-
 import subprocess
 import json
 from selenium.webdriver.firefox.service import Service
@@ -57,7 +56,7 @@ def Mainwindow(simulation, x):
             [sg.T("Do you want to use touchtip? (run will take longer)")],
             [sg.R('Yes', 'group4', key = 'TTy', disabled = True), sg.R('No', 'group4', key = 'TTn', disabled = True, default = True)],
             [sg.T('384 wells / 48 wells?')],
-            [sg.R('Yes', 'group5', key = '384wy'), sg.R('No', 'group5', key='384wn')],
+            [sg.R('Yes', 'group5', key = '384wy'), sg.R('No', 'group5', key='384wn', default = True)],
             [sg.B('Save', s= 16, button_color = 'black on yellow'), sg.B('Send', disabled = True, s= 16), sg.P(), sg.B('Close', s=16, button_color = 'tomato')],
             ]
     
@@ -80,7 +79,7 @@ def Webdriver():
          sg.Radio("48 Well plate", "group1", key = '48w'),
          sg.Radio("SingleplateMIC", "group1", key= 'Sp')],                                                             
         [sg.Text("Do you want to fill outer wells in robot? (384 plate only)")],
-        [sg.Radio("Yes", "group2", key = 'Fill'), sg.Radio("No", "group2", key = 'nFill')],
+        [sg.Radio("Yes", "group3", key = 'Fill'), sg.Radio("No", "group3", key = 'nFill', default = False)],
         [sg.Button("Save User Inputs", s= 16, button_color = 'black on yellow'), 
          sg.Button("Send to Server", s= 16, disabled = True), sg.Push(), sg.Button("Close", s= 16, button_color = "tomato")]
         ]
@@ -356,7 +355,8 @@ while True:
                     smting = sg.PopupOKCancel("Name can not be pasted into areas, check if file is ok and fill in yourself")
         except:
             ok = sg.PopupOKCancel("This function does not do anything when you havent made a command list through this program or you havent selected made" '\n' "(underneath the browse button)")
-     
+    
+    #Make command list (window2) Launcher
     if event == 'Make commandlist':
         if(test_internet()== True):
             window2 = Webdriver()
@@ -381,11 +381,14 @@ while True:
             os.chdir(livepath + '//Directscriptmaker')
         lines = []
         if(values['384wy'] == True):
-         with open('Directscript384.py') as f:
-            lines = f.readlines()
-        else:
+             with open('Directscript384.py') as f:
+                lines = f.readlines()
+        elif (values['384wy'] == False):
             with open('Directscript.py') as f:
                lines = f.readlines()
+        else:
+            sg.popup_ok_cancel("It seems you forgot the 384/48 Yes or NO question")
+            continue
 
             
         #put filename = into the script
@@ -491,7 +494,8 @@ while True:
         
             # check robot IP
             robot_ip = robotgetIPs(simulation)
-        
+    
+    #Send event
     if (event == 'Send' and simulation == '0') :
         #when value 4 is true then the OT2L is selected and the script tries to send the csv to the jupyter
         if(values['OT2L'] == True):
@@ -566,6 +570,7 @@ while True:
         else:
             sg.Popup("Check one of the options", keep_on_top = True)
     
+    #No sending needed (only simulation)
     if (event == 'Send' and simulation == '1') :
         print('normally i would send but simulation')
     
@@ -611,7 +616,7 @@ while True:
         except:
             sg.Popup ("Some expected fields were not filled in or incorrectly")
         
-        
+    # Send server action    
     if(event == "Send to Server"):
         #Start webdriver with the executable_paths. If the computer changes then you need to change this in the service section and the options values
         if(values['Checker'] == True):
