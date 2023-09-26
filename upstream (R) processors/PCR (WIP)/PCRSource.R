@@ -1,0 +1,157 @@
+#LIBRARIES-------
+library(dplyr)
+library(readxl)
+library(reshape2)
+library(tidyr)
+library(tidyverse)
+library(rlist)
+#Functions----------------------
+GetVol <- function(file_name){
+  res <- read_xlsx(file_name, range = "C2:C3", col_names = F) %>% unlist()
+  names(res) <- c("TotalVol", "FillVol")
+  return(res)
+}
+
+GetPlateMap <- function(file_name){
+  #read
+  res <- read_xlsx(file_name, 1, range="B29:M36", col_names=F) %>% data.frame()
+  rownames(res) <- LETTERS[1:8]
+  colnames(res) <- sapply(c(1:12), toString)
+  
+  #parse to vector
+  map <- c()
+  for(row in c(1:8)){
+    #subset
+    curRow <- unlist(res[row,])
+    
+    #get info
+    well_id <- sapply(c(1:12), function(x) paste(LETTERS[row], toString(x), sep=''))
+    curRow <- cbind(well_id, curRow)
+    
+    #concatenate results
+    map <- rbind(map, curRow)
+  }
+  
+  #parse names
+  fin_map <- c()
+  parsed_names <- sapply(map[,2], function(x) strsplit(x, ' ', fixed=T))
+  
+  for(i in c(1:length(parsed_names))){
+    #if well is empty
+    if(map[i,2]!="0" & map[i,2]!=""){
+      if(parsed_names[[i]][1]=="0"){
+        print(parsed_names)
+        #if both drug name and inoculum is not filled, then it is a blank fill well (which might as well be blank control)
+        nex_info <- c("FILL",
+                      "NA",                 #drug name
+                      parsed_names[[i]][1], #concentration
+                      "NA")
+      }else{
+        #if all info is complete OR inoculum not added
+        nex_info <- c(paste(parsed_names[[i]][1], parsed_names[[i]][2], parsed_names[[i]][3], sep=' '),
+                      parsed_names[[i]][1], #drug name
+                      parsed_names[[i]][2])
+      #concatenate well
+      fin_map <- rbind(fin_map, nex_info)
+      rownames(fin_map) <- c()
+    }
+    }}
+  map <- map[(map[,2]!=""),]
+  map <- map[(map[,2]!="0"),]
+  
+  #concatenate info
+  fin_map <- cbind.data.frame(map, fin_map)
+  colnames(fin_map) <- c('Well', 'solID','fillID', 'Sample', 'Mix')
+  return(fin_map)
+}
+
+Createoccurencelist <- function(plate_map){
+  #get occurence mastermix type
+  occ <- table(plate_map$Mix)
+  occurences <- cbind.data.frame(names(occ), floor(as.numeric(occ)* as.numeric(1.1)))
+  colnames(occurences) <- c("ID", "Occ")
+  
+  #get occurence Template type
+  occ2 <- table(plate_map$Sample)
+  occurences2 <- cbind.data.frame(names(occ2), floor(as.numeric(occ2)* as.numeric(1.1)))
+  colnames(occurences2) <- c("ID", "Occ")
+  
+  #full occurence list
+  occurences <- rbind.data.frame(occurences,occurences2)
+  
+  return(occurences)
+}
+
+
+
+
+
+
+
+#Execute
+main <- function (file_path, file_name = ""){
+  #Reads
+  Wellinfo <<-  GetVol(file_path)
+  PlateMap <<- GetPlateMap(file_path)
+  
+  #get Solution list
+  occurencelist <<- Createoccurencelist(PlateMap)
+  
+  #-1. LOADING DECK MAP-----------
+  ## error not expected
+  if(errMessage==""){
+    deckMap <- c('', '', '',
+                 '96-well-PCR', '', '',
+                 'tip', '', '96-well-MMX',
+                 '15ml_Falcon_stock', 'Solvent', 'TRASH')
+    names(deckMap) <- sapply(c(1:12), function(x) paste('labware', toString(x), sep='_'))
+    
+    # 0. LOAD LABWARES--------
+    #solvents
+    #initiate map
+    coords <- c(1, 1)
+    solventMap <- c()
+    #iterate through all solvents in platemap
+    solvents <- unique(plateMap$Solvent)
+    for(i in c(1:length(solvents))){
+      nexItem <- c(paste(LETTERS[coords[1]], toString(coords[2]), sep=''), toString(solvents[i]))
+      #place to map
+      solventMap <- rbind(solventMap, nexItem)
+      
+      #update fill coordinates
+      coords[2] <- coords[2]+1
+      if(coords[2]>3){
+        coords[2] <- 1
+        coords[1] <- coords[1] + 1
+      }
+    }
+    
+    #stock
+    #initiate map
+    coords <- c(1, 1)
+    stockMap <- c()
+    #iterate through all items in stockList
+    for(i in c(1:length(stockList))){
+      nexItem <- c(paste(LETTERS[coords[1]], toString(coords[2]), sep=''), names(stockList)[i])
+      
+      #place to map
+      stockMap <- rbind(stockMap, nexItem)
+      
+      #update fill coordinates
+      coords[2] <- coords[2]+1
+      if(coords[2]>5){ #as 15 mL Falcon tube racks
+        coords[2] <- 1
+        coords[1] <- coords[1] + 1
+      }
+    }
+  }
+}
+
+
+
+
+
+#Troubleshooting------------------------------------
+mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2new\\upstream (R) processors\\PCR (WIP)"
+plateInput <- "PCRTemplate.xlsx"
+dqs <- main(paste0(mainwd, "//", plateInput))
