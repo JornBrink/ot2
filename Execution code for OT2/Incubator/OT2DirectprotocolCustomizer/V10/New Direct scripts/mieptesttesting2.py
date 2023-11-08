@@ -1,13 +1,13 @@
-#This protocol is made for OT2R
-fileName ='CommandList_PMID-01_EXPID-Tob_CSspecialisation-2_abbasi.Yousra.csv'
+#This protocol is made for OT2L
+fileName ='CommandList_PMID-test_EXPID-384w.csv.csv'
 
-pc ='OT'
+pc ='Jorn'
 
 touch_tips ='No'
 
 #METADATA----------
 metadata = {
-	'protocolName':'20203033jorn brinktestOT2R',
+	'protocolName':'mieptesttesting2 OT2L',
 	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
 	'description':'96 wells plate MIC with p300 possibility''User customized',
 	'apiLevel':'2.12'
@@ -451,6 +451,14 @@ def run(protocol: protocol_api.ProtocolContext):
                     
                     #blow out on top of the current slot
                     right_pipette.blow_out(globals()[target_ware].wells_by_name()[target_well[j]].bottom(dspH))
+                    
+                    if(touch_tips == "Yes"):
+                        if("384" not in str(target_ware)):
+                            right_pipette.touch_tip(globals()[target_ware].well_by_name()[target_well[j]], radius=0.8)
+                        else:
+                            right_pipette.touch_tip(globals()[target_ware].well_by_name()[target_well[j]], radius=0.5, speed = 15)
+                    else:
+                        print("not using touch tips")
                 
             #check if tip need to be trashed afterwards
             if(i == len(cmdList)-1):
@@ -460,17 +468,11 @@ def run(protocol: protocol_api.ProtocolContext):
                 #drop if different tip id is detected
                 right_pipette.drop_tip()
                 
-######### SIMULATION ############
-# =============================================================================
-#from opentrons import simulate
-#bep = simulate.get_protocol_api('2.12')
-#bep.home()
-#run(bep)
-#amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
-# for line in bep.commands():
-#    print(line)
-# =============================================================================
 ##########Simulation##########
-from opentrons import simulatebep = simulate.get_protocol_api('2.12')
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.12')
 bep.home()
 run(bep)
+amtList, cmdList, deckMap = ReadCSV_dat(filename)
+for line in bep.commands():
+    print(line)

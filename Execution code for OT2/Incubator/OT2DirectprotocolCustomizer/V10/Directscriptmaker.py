@@ -85,16 +85,16 @@ def Webdriver():
         ]
     return sg.Window("Webdriver", layout, finalize= True)
 
-#File sending function
+#File sending function Both this one and the other 384: there be dragons
 def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation):
-    #it searches per id most of the time if possible
+    #This part searches ID of the HTML and adds the variables to it
     fileinput = driver.find_element(By.ID, "file").send_keys(fullpath)
     Plate_Map_ID = driver.find_element(By.ID, "pmid").send_keys(pmid_plate)
     Firstname_file = driver.find_element(By.ID, "f_name").send_keys(Firstname)
     Lastname_file = driver.find_element(By.ID, "l_name").send_keys(Lastname)
     Experiment_name_file = driver.find_element(By.ID, "exp_name").send_keys(Experiment_name)
     Experiment_num_file = driver.find_element(By.ID, "exp_num").send_keys(Experiment_num)
-    #these sleeptimers are so it doesnt just try to download or click something while this is not possible or might give some problems
+    #Sleep timers to not try to click the download button before server is ready
     time.sleep(2)
     confirmupload = driver.find_element(By.ID, "do").click()
     time.sleep(3)
@@ -167,8 +167,10 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
         
         x = "CommandList_" + textFromDiv
         driver.close()
+        #X is the command list so it appears in the Main window
     return x
 
+#completely the same as the previous file sending with only minor changes
 def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation):
     fileinput = driver.find_element(By.ID, "file").send_keys(fullpath)
     if (fillingrobot == True):

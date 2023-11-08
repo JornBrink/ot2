@@ -1,3 +1,4 @@
+
 #IMPORTS---------
 import csv
 import os
@@ -32,14 +33,17 @@ def ReadCSV_input(file_name):
         
     return(solution_list, command_list, deck_map)
 
-def translate_labwareLibrary(string_identifier):
+def translate_labwareLibrary(string_identifier, brand):
     if("384" in string_identifier):
         labware_name = "greiner_384_wellplate_115ul"
         #labware_name = "corning_384_wellplate_112ul_flat"
 
     elif("48" in string_identifier):
-        labware_name = "greinerbioone677102_48_wellplate_1000ul"
-        #labware_name = "corning_48_wellplate_1.6ml_flat"
+        if(brand == 'Sarstedt'):
+            labware_name = "sarstedt_48_wellplate_1270ul"
+        else:
+            labware_name = "greinerbioone677102_48_wellplate_1000ul"
+            #labware_name = "corning_48_wellplate_1.6ml_flat"
         
     elif("96" in string_identifier):
         if("dilution" in string_identifier or "deep" in string_identifier):
@@ -240,7 +244,7 @@ def run(protocol: protocol_api.ProtocolContext):
         #perform only if name not null
         if(deckMap[i][1]!="" and deckMap[i][1]!="trash"):
             #find labware name
-            current_labware_name = translate_labwareLibrary(deckMap[i][1])
+            current_labware_name = translate_labwareLibrary(deckMap[i][1], brand)
             caller_id = 'labware_' + str(i+1)
             labwareCaller[caller_id] = protocol.load_labware(current_labware_name, i+1)
 
