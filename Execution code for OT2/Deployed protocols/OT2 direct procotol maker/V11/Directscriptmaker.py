@@ -37,6 +37,8 @@ def Mainwindow(simulation, x):
             [sg.R('Yes', 'group4', key = 'TTy'), sg.R('No', 'group4', key = 'TTn')],
             [sg.T('384 wells / 48 wells?')],
             [sg.R('Yes', 'group5', key = '384wy'), sg.R('No', 'group5', key='384wn', default = True)],
+            [sg.T('Sarstedt or Greiner (only 48 wellplates)')],
+            [sg.R('Sarstedt', 'group6', key = 'brands'), sg.R('Greiner', 'group6', key ='brandg')],
             [sg.B('Save', s= 16, button_color = 'black on yellow'), sg.B('Send', disabled = True, s= 16), sg.P(), sg.B('Close', s=16, button_color = 'tomato')],
         ]
     else:
@@ -57,6 +59,8 @@ def Mainwindow(simulation, x):
             [sg.R('Yes', 'group4', key = 'TTy', disabled = True), sg.R('No', 'group4', key = 'TTn', disabled = True, default = True)],
             [sg.T('384 wells / 48 wells?')],
             [sg.R('Yes', 'group5', key = '384wy'), sg.R('No', 'group5', key='384wn', default = True)],
+            [sg.T('Sarstedt or Greiner (only 48 wellplates)')],
+            [sg.R('Sarstedt', 'group6', key = 'brands'), sg.R('Greiner', 'group6', key ='brandg')],
             [sg.B('Save', s= 16, button_color = 'black on yellow'), sg.B('Send', disabled = True, s= 16), sg.P(), sg.B('Close', s=16, button_color = 'tomato')],
             ]
     
@@ -87,6 +91,7 @@ def Webdriver():
 
 #File sending function Both this one and the other 384: there be dragons
 def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation):
+    x = 'NA'
     #This part searches ID of the HTML and adds the variables to it
     fileinput = driver.find_element(By.ID, "file").send_keys(fullpath)
     Plate_Map_ID = driver.find_element(By.ID, "pmid").send_keys(pmid_plate)
@@ -172,6 +177,7 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
 
 #completely the same as the previous file sending with only minor changes
 def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation):
+    x = 'NA'
     fileinput = driver.find_element(By.ID, "file").send_keys(fullpath)
     if (fillingrobot == True):
         element = driver.find_element(By.ID, "fillOuter")
@@ -375,6 +381,10 @@ while True:
         expname = values.get("ExpName")
         name = values.get("Name")
         date = values.get("date")
+        if (values['brandg']==True and values['384wy']):
+            brand = 'Greiner'
+        elif(values['brands']==True and values['384wy']):
+            brand = 'Sarstedt'
         
         #Needs to store the Directscript into memory for later use
         if(simulation == "1"):    
@@ -395,9 +405,9 @@ while True:
             
         #put filename = into the script
         if(simulation == "1"):
-            os.chdir(simpath + '//V10' + '//New Direct scripts')
+            os.chdir(simpath + '//V11' + '//New Direct scripts')
         elif(simulation == "1" and values['PCS'] == True): #change This @sebastian
-            os.chdir(simpath + '//V10' + '//New Direct scripts')
+            os.chdir(simpath + '//V11' + '//New Direct scripts')
         else:
             os.chdir(livepath + "//New Direct scripts")
         
@@ -444,7 +454,7 @@ while True:
                 elif(filecheck1 == True and simulation == "0"):
                     print("Check complete :)")
                 else:
-                    print("Simulation")
+                    print("")
 
             #creates the option to create the possiblity for simulations (does not uncomment the simulation underneath the directscript)
             if(values['PCJ'] == True and simulation == "1" ):
@@ -466,25 +476,30 @@ while True:
                     file.write("#" + 'This protocol is made for'+ " " + activeOT2 + "\n")
                     file.write('fileName =' + "\'" + file_name_meta  + '.csv'+ "\'" "\n" + "\n")
                     file.write('pc =' + "\'" +active_pc + "\'" + "\n" + "\n")
+                    if(values['384wy'] == True):
+                        file.write('brand =' + "\'" + brand + "\'" + "\n" + "\n")
+                    else:
+                        print("")
                     file.write('touch_tips =' + "\'" + touch_tips + "\'" + "\n" + "\n")
                     file.write('#METADATA----------' "\n" +
                                 'metadata = {'+"\n"+"\t"+
                                     "\'"+ 'protocolName'"\'"+":"+  "\'" + Direct_protocol_name + "\'" +","+"\n"+"\t"+
                                     "\'"+'author'"\'"+":" + "\'" +'Sebastian <sebastian.tandar@gmail.com>' +"\'" +"\'"+ 'Jorn <jornbrink@kpnmail.nl>' + "\'"+"," +"\n"+"\t"+
                                     "\'"+'description'"\'"+":" + "\'" +'96 wells plate MIC with p300 possibility'+"\'"+ "\'"+'User customized'+"\'"+","+ "\n"+"\t"+
-                                    "\'"+'apiLevel'"\'"+":"+"\'" +'2.12'+"\'"+ "\n"+'}\n')
+                                    "\'"+'apiLevel'"\'"+":"+"\'" +'2.15'+"\'"+ "\n"+'}\n')
+                    
                     #actually puts the script into the new file
                     for asd in lines:
                         file.write(asd)
                         
                     if(simulation == "1" and values['384wn'] == True):
                         file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
-                                   "bep = simulate.get_protocol_api('2.12')" + "\n" + 
+                                   "bep = simulate.get_protocol_api('2.15')" + "\n" + 
                                    "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_dat(filename)" + "\n"+
                                    "for line in bep.commands():" + "\n"+"    print(line)")
                     elif(simulation == "1" and values['384wy'] == True):
                         file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
-                                   "bep = simulate.get_protocol_api('2.12')" + "\n" + 
+                                   "bep = simulate.get_protocol_api('2.15')" + "\n" + 
                                    "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_input(fileName)" + "\n"+
                                    "for line in bep.commands():" + "\n"+"    print(line)")
                     else:
