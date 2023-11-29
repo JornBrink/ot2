@@ -1,5 +1,5 @@
-#This protocol is made for OT2R
-fileName ='Testdatamvplate.csv'
+#This protocol is made for OT2L
+fileName ='CommandList_PMID-testtouchtip_EXPID-Touchtip-21_Brink.Jorn.csv'
 
 pc ='Jorn'
 
@@ -7,10 +7,10 @@ touch_tips ='Yes'
 
 #METADATA----------
 metadata = {
-	'protocolName':'testtest testtest OT2R',
+	'protocolName':'231129JornBrinkTouchtip-21 OT2L',
 	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
 	'description':'96 wells plate MIC with p300 possibility''User customized',
-	'apiLevel':'2.12'
+	'apiLevel':'2.14'
 }
 
 #IMPORTS---------
@@ -454,9 +454,9 @@ def run(protocol: protocol_api.ProtocolContext):
                     
                     if(touch_tips == "Yes"):
                         if("384" not in str(target_ware)):
-                            right_pipette.touch_tip(globals()[target_ware].well_by_name()[target_well[j]], radius=0.8)
+                            right_pipette.touch_tip(globals()[target_ware].wells_by_name()[target_well[j]], radius=0.8)
                         else:
-                            right_pipette.touch_tip(globals()[target_ware].well_by_name()[target_well[j]], radius=0.5, speed = 15)
+                            right_pipette.touch_tip(globals()[target_ware].wells_by_name()[target_well[j]], radius=0.5, speed = 15)
                     else:
                         print("not using touch tips")
                 
@@ -473,6 +473,6 @@ from opentrons import simulate
 bep = simulate.get_protocol_api('2.12')
 bep.home()
 run(bep)
-amtList, cmdList, deckMap = ReadCSV_dat(filename)
+amtList, cmdList, deckMap = ReadCSV_Dat(fileName)
 for line in bep.commands():
     print(line)
