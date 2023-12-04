@@ -1,9 +1,9 @@
 #This protocol is made for OT2R
-fileName ='Testdatamvplate.csv'
+fileName ='Testdatamvplate.csv.csv'
 
 pc ='Jorn'
 
-touch_tips ='Yes'
+touch_tips ='No'
 
 #METADATA----------
 metadata = {
