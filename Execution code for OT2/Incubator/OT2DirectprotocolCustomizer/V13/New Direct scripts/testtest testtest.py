@@ -1,5 +1,5 @@
 #This protocol is made for OT2R
-fileName ='Testdatamvplate.csv.csv'
+fileName ='CommandList_PMID-test_EXPID-test-set_test.test test.csv'
 
 pc ='Jorn'
 
@@ -242,7 +242,7 @@ def run(protocol: protocol_api.ProtocolContext):
     global pc
     try:
         if(pc =="Jorn" or pc =="jorn"):
-            os.chdir("C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//Test User inputs" )
+            os.chdir("C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//Test User inputs" )
         elif(pc == "Sebastian" or pc== "sebastian"):
             os.chdir("C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\DownstreamProcessors")
         else:
@@ -273,7 +273,7 @@ def run(protocol: protocol_api.ProtocolContext):
     #load pipettes
         #single-channel
     right_pipette = protocol.load_instrument(
-        'p300_single_gen2', 'right', tip_racks=tipLocs)
+        'flex_1channel_1000', 'right', tip_racks=tipLocs)
     right_pipette.flow_rate.aspirate=aspirateSpeed
     right_pipette.flow_rate.dispense=dispenseSpeed
     
@@ -470,9 +470,9 @@ def run(protocol: protocol_api.ProtocolContext):
                 
 ##########Simulation##########
 from opentrons import simulate
-bep = simulate.get_protocol_api('2.12')
+bep = simulate.get_protocol_api(version = '2.15', robot_type = 'Flex')
 bep.home()
 run(bep)
-amtList, cmdList, deckMap = ReadCSV_dat(filename)
-for line in bep.commands():
-    print(line)
+#amtList, cmdList, deckMap = ReadCSV_dat(filename)
+#for line in bep.commands():
+    #print(line)
