@@ -159,7 +159,6 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
         new_curList <- c()
         for(q in c(1:length(curList[,1]))){
           new_curList <- rbind.data.frame(new_curList, curList[q,])
-          
           #get the current dilution factor
           if(q == length(curList[,1])){
             conc_hi <- stock_list[curList$DrugType[q]]
@@ -208,6 +207,7 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
         curList$solAmt <- as.numeric(curList$solAmt)
         curList$DrugConc <- as.numeric(curList$DrugConc)
         curList <- curList[order(curList$DrugConc),]
+        test5 <<- curList
         
         #####################################################################
         
@@ -255,8 +255,9 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
   }
   
   #renaming
+  test6 <<- new_solList
   colnames(new_solList)[length(new_solList[1,])] <- 'AmtHi'
-  
+  rest7 <<- new_solList
   #calculate required solvent amount
   solventAmt <- as.numeric(new_solList$solAmt) - as.numeric(new_solList$AmtHi)
   
@@ -295,6 +296,7 @@ CreateDilMap <- function(sol_list, deckMap, stock_list){
   
   # assign slots to stock solutions
   stockIndices <- which(solution_map$Labware == names(deckMap)[grepl("stock", deckMap)])
+  testing <<- stock_list
   solution_map$Fill[stockIndices[1:length(stock_list)]] <- names(stock_list)
   solution_map$solutionType[stockIndices[1:length(stock_list)]] <- "Stock"
   solution_map <- subset(solution_map, solutionType!="Stock")
@@ -935,7 +937,6 @@ main <- function(file_path, file_name=""){
     #iterate through all items in stockList
     for(i in c(1:length(stockList))){
       nexItem <- c(paste(LETTERS[coords[1]], toString(coords[2]), sep=''), names(stockList)[i])
-      
       #place to map
       stockMap <- rbind(stockMap, nexItem)
       
@@ -1041,7 +1042,7 @@ main <- function(file_path, file_name=""){
 }
 
 #TROUBLESHOOTING---------
-# errMessage <<- ""
-# fpath <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate\\"
-# dataName <- "MVPlate_ABs_interest_top.xlsx"
-# dqs <- main(paste(fpath, dataName, sep="//"))
+errMessage <<- ""
+fpath <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\Execution code for OT2\\Incubator\\Test User inputs\\"
+dataName <- "MV_InputTemplate.xlsx"
+dqs <- main(paste(fpath, dataName, sep="//"))
