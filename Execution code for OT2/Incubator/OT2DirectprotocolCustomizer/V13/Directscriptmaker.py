@@ -196,7 +196,7 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
     file_name = "CommandList_" + textFromDiv + ".csv"
     
     if(simulation == "1"):
-        path_to_cmd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + file_name
+        path_to_cmd = "C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + file_name
     else:
         path_to_cmd = path + "//Desktop//User input (for direct)//" + file_name
     
@@ -225,7 +225,7 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
         RSP = "Robothandler_" + textFromDiv + ".xlsx"
         
         if(simulation == "1"):
-            path_to_RSP = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + RSP
+            path_to_RSP = "C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + RSP
         else:
             path_to_RSP = path + "//Desktop//User input (for direct)" + '//' + RSP
         checkdownloadrsp = os.path.isfile(path_to_RSP)
@@ -281,7 +281,7 @@ def robotgetIPs(simulation):
 
 def prepare():   
     #Troubleshooting paths/ development path        
-    simpath = 'C://Users//jornb//OneDrive//Documenten//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer'
+    simpath = 'C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer'
     livepathR = 'C://Users//User'
     livepathL = 'C://Users//cvhLa//OneDrive'
     x = "NA"
@@ -631,7 +631,7 @@ while True:
                 options.set_preference("browser.download.manager.showWhenStarting", False)
                 print(simulation)
                 if (simulation == "1"):
-                    options.set_preference("browser.download.dir", r"C:\Users\jornb\Documents\GitHub\ot2new\Execution code for OT2\Incubator\OT2DirectprotocolCustomizer\Webdriver\Firefox download test")
+                    options.set_preference("browser.download.dir", r"C:\Users\jornb\Documents\GitHub\ot2\Execution code for OT2\Incubator\OT2DirectprotocolCustomizer\Webdriver\Firefox download test")
                     service = Service(executable_path= path + '//Webdriver//Firefox webdriver//geckodriver.exe')
                 else:
                     options.set_preference("browser.download.dir", r"C:\Users\User\Desktop\User input (for direct)")

@@ -1,4 +1,4 @@
-"SourceLabware,""SourceSlot"",""TargetLabware"",""TargetSlot"",""TransAmt"",""MixAmt"",""TipID"",""Comment"""
+﻿"SourceLabware,""SourceSlot"",""TargetLabware"",""TargetSlot"",""TransAmt"",""MixAmt"",""TipID"",""Comment"""
 ">Amount List,"""","""","""","""","""","""","""""
 "labware_6,""A1"",""MED_A"",""NA"",""22"",""NA"",""NA"",""NA"""
 "labware_9,""A1"",""CIP"",""NA"",""300"",""NA"",""NA"",""NA"""
