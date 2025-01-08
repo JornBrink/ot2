@@ -57,11 +57,10 @@ shinyServer(function(input, output) {
       #rename files for safekeeping
       file_name <<- strsplit(infile$name, '.xl')[[1]][1]
       
-      #update table view; perform main function
+      #update table view; perform main function note that dis is display
       dis <- main(infile$datapath, infile$name)
-      
       if(errMessage==""){
-        #generate appropriate output files
+        #generate appropriate output files bit of a behind the scene for me cmdList_output is created by the << aka global good to know
         #Robot Commands---------------
         sel_colnames <- colnames(cmdList_output[[4]])
         
