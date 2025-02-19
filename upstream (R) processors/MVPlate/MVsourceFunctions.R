@@ -1015,9 +1015,9 @@ main <- function(file_path, file_name=""){
     dis <- replicate(length(allAmt[,1]), "NA")
     print(dis)
     all_amt <- cbind.data.frame(allAmt[,c(2, 4, 5)], dis, allAmt[,6], dis, dis, dis, stringsAsFactors=F)
-    print(all_amt)
     colnames(all_amt) <- colnames(cmdList)
-    print(all_amt)
+    print("findeck")
+
     print(finDeck)
     ware_num <- unlist(finDeck[c(1, 3, 5, 7),])
     ware_fil <- unlist(finDeck[c(2, 4, 6, 8),])

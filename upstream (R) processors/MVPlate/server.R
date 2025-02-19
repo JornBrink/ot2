@@ -137,6 +137,8 @@ shinyServer(function(input, output) {
         #add second item
         first_item <- c()
         curItem <- usercmd_output[[1]]
+        print("here")
+        print(curItem)
         for(i in c(1:8)){
           curRow <- curItem[i,]
           nex_item <- replicate(length(sel_colnames), "")

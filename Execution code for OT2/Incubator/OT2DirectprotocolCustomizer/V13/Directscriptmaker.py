@@ -1,3 +1,4 @@
+#LIBRARIES
 import PySimpleGUI as sg
 import os
 import shutil
@@ -11,7 +12,8 @@ import time
 from pathlib import Path
 from urllib.request import urlopen
 
-#Window
+#WINDOWS
+# Main Window
 def Mainwindow(simulation, x):
     if (simulation == "1"):
         layout = [
@@ -60,7 +62,7 @@ def Mainwindow(simulation, x):
     
     return sg.Window('Directscript maker', layout, finalize = True)
 
-#Window2
+# Second Window
 def Webdriver():
     layout = [
         [sg.Text("Please provide all information below")],
@@ -83,6 +85,7 @@ def Webdriver():
         ]
     return sg.Window("Webdriver", layout, finalize= True)
 
+#FUNCTIONS------------------
 #File sending function Both this one and the other 384: there be dragons
 def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, path):
     x = 'NA'
@@ -124,12 +127,10 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
         #checks another time if the command file exists.
         time.sleep(3)
         checkdownload = os.path.isfile(path_to_cmd)
-        oldpath = path + "//Downloads//" + file_name
+        oldpath = path.replace('//OneDrive', '')
+        oldpath = oldpath + "//Downloads//" + file_name
         if (checkdownload == False):
-            try:
-                os.replace(oldpath, path_to_cmd)
-            except:
-                pass
+            os.replace(oldpath, path_to_cmd)
         
         RSP = "Robothandler_" + textFromDiv + ".xlsx"
         
@@ -196,7 +197,7 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
     file_name = "CommandList_" + textFromDiv + ".csv"
     
     if(simulation == "1"):
-        path_to_cmd = "C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + file_name
+        path_to_cmd = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + file_name
     else:
         path_to_cmd = path + "//Desktop//User input (for direct)//" + file_name
     
@@ -216,16 +217,14 @@ def Filesending384(fullpath, fillingrobot, notfillingrobot, pmid_plate, Firstnam
         #checks another time if the command file exists.
         time.sleep(3)
         checkdownload = os.path.isfile(path_to_cmd)
-        oldpath = "C://Users//User//Downloads" + '//' + file_name
+        oldpath = path.replace('//OneDrive', '')
+        oldpath = oldpath + "//Downloads" + '//' + file_name
         if (checkdownload == False):
-            try:
-                os.replace(oldpath, path_to_cmd)
-            except:
-                pass
+            os.replace(oldpath, path_to_cmd)
         RSP = "Robothandler_" + textFromDiv + ".xlsx"
         
         if(simulation == "1"):
-            path_to_RSP = "C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + RSP
+            path_to_RSP = "C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox download test" + '//' + RSP
         else:
             path_to_RSP = path + "//Desktop//User input (for direct)" + '//' + RSP
         checkdownloadrsp = os.path.isfile(path_to_RSP)
@@ -281,16 +280,17 @@ def robotgetIPs(simulation):
 
 def prepare():   
     #Troubleshooting paths/ development path        
-    simpath = 'C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer'
+    simpath = 'C://Users//jornb//OneDrive//Documenten//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer'
     livepathR = 'C://Users//User'
-    livepathL = 'C://Users//cvhLa//OneDrive'
+    livepathL = 'C://Users//User'
+    
     x = "NA"
     str(x)
     listofusers = os.listdir('C://Users')
     if ("User" in listofusers):
         simulation = '0'
         path = livepathR
-    elif("cvhLa" in listofusers):
+    elif("OT2L" in listofusers):
         simulation = '0'
         path = livepathL
     else:
@@ -396,7 +396,7 @@ while True:
         
         #Needs to store the Directscript into memory for later use
         if(simulation == "1"):    
-            os.chdir(path + '//V11')
+            os.chdir(path + '//V13')
         else:
             os.chdir(path + "//Desktop" + '//Directscriptmaker')
         lines = []
@@ -457,11 +457,8 @@ while True:
                 
                 #Move from USB or other spot to correct file spot
                 filecheck1 = path + "//Desktop" + '//' + "User input (for direct)//" + file_name_meta + ".csv"
-                print(filecheck1)
                 check4 = os.path.isfile(filecheck1)
-                print(check4)
                 filemove = path + "//Desktop" + '//' + "User input (for direct)//" + file_name_meta + ".csv"
-                print(check4)
                 if(check4 == False and simulation == "0"):
                     print("filecheck correct")
                     shutil.copy(pathfile, filemove, follow_symlinks=True)
@@ -533,14 +530,14 @@ while True:
         if(activeOT2 == "OT2L"):
             popup_connecting()
             fileName_direc = file_name_meta  + '.csv'+ '\'' + " "
-            path_to_file = "'C:/Users/cvhLa/Onedrive/Desktop/User input (for direct)/"
+            path_to_file = "'C:/Users/User/Desktop/User input (for direct)/"
             file_path = path_to_file + fileName_direc
             robot_root = "'root@"
             robot_ip_ot2l = robot_ip["OT2L"]
             robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
             path_robot = robot_root+robot_ip_ot2l+robot_rest
-            OT2_key = "C:/Users/cvhLa/ot2_ssh_key_OT2L "
-            scp = "scp -i "
+            OT2_key = "C:/Users/User/ot2_ssh_key_OT2L "
+            scp = "scp -O -i "
                 
             Full_command = scp + OT2_key + file_path + path_robot
             completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
@@ -557,51 +554,13 @@ while True:
             robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
             path_robot = robot_root+robot_ip_ot2r+robot_rest
             OT2_key_right = "C:/Users/User/ot2_ssh_key_OT2R "
-            scp = "scp -i "
+            scp = "scp -O -i "
             
             #scp -i C:/Users/cvhLa/ot2_ssh_key_OT2R 'C:/Users/cvhLa/OneDrive/Desktop/Direct Protocols/README.jpg' root@169.254.212.60:/var/lib/jupyter/notebooks
             Full_command = scp + OT2_key_right + file_path + path_robot
             completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
             print(completed)
         
-# =============================================================================
-#       Depriciated since new computers of OT2s         
-#       elif(values['BothOT2']):
-#             popup_connecting()
-#             fileName_direc = file_name_meta + '.csv'+ '\'' + " "
-#             path_to_file = "'C:/Users/User/Desktop/User input (for direct)/"
-#             file_path = path_to_file + fileName_direc
-#             robot_root = "'root@"
-#             robot_ip_ot2r = robot_ip["OT2R"]
-#             robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
-#             path_robot = robot_root+robot_ip_ot2r+robot_rest
-#             OT2_key_right = "C:/Users/User/ot2_ssh_key_OT2R" + " "
-#             scp = "scp -i "
-#             
-#             #literal command : scp -i C:/Users/cvhLa/ot2_ssh_key_OT2R 'C:/Users/cvhLa/OneDrive/Desktop/Direct Protocols/README.jpg' root@169.254.212.60:/var/lib/jupyter/notebooks
-#             Full_command = scp + OT2_key_right + file_path + path_robot
-#             completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
-#             print(completed)
-#             print('Right completed')
-#             
-#             time.sleep(3)
-#        
-#             fileName_direc = file_name_meta  + '.csv'+ '\'' + " "
-#             path_to_file = "'C:/Users/User/Desktop/User input (for direct)/"
-#             file_path = path_to_file + fileName_direc
-#             robot_root = "'root@"
-#             robot_ip_ot2l = robot_ip["OT2L"]
-#             robot_rest = ":/var/lib/jupyter/notebooks/UserInputs'"
-#             path_robot = robot_root+robot_ip_ot2l+robot_rest
-#             OT2_key = "C:/Users/User/ot2_ssh_key_OT2L "
-#             scp = "scp -i "
-#             
-#             Full_command = scp + OT2_key + file_path + path_robot
-#             completed = subprocess.run(["powershell", "-Command", Full_command], capture_output=True)
-#             print(completed)
-#             print('Job done, am I finished for today?')
-#                 
-# =============================================================================
         else:
             sg.Popup("Check one of the options", keep_on_top = True)
     
@@ -631,7 +590,7 @@ while True:
                 options.set_preference("browser.download.manager.showWhenStarting", False)
                 print(simulation)
                 if (simulation == "1"):
-                    options.set_preference("browser.download.dir", r"C:\Users\jornb\Documents\GitHub\ot2\Execution code for OT2\Incubator\OT2DirectprotocolCustomizer\Webdriver\Firefox download test")
+                    options.set_preference("browser.download.dir", r"C:\Users\jornb\Documents\GitHub\ot2new\Execution code for OT2\Incubator\OT2DirectprotocolCustomizer\Webdriver\Firefox download test")
                     service = Service(executable_path= path + '//Webdriver//Firefox webdriver//geckodriver.exe')
                 else:
                     options.set_preference("browser.download.dir", r"C:\Users\User\Desktop\User input (for direct)")

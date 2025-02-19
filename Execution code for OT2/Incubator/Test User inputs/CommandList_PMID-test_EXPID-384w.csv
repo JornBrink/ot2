@@ -1,290 +1,290 @@
-"from_deck","from_slot","to_deck","to_slot","amt","mix","tip_n","asp_set","pipette","comment"
-"> SolutionList","","","","","","","","",""
-"4","A10","1000","","","","","","",""
-"4","B8","1000","","","","","","",""
-"4","C6","1000","","","","","","",""
-"4","D4","1000","","","","","","",""
-"4","E2","1000","","","","","","",""
-"4","E12","1000","","","","","","",""
-"4","F10","1000","","","","","","",""
-"1","A2","31000","","","","","","",""
-"> CmdList","","","","","","","","",""
-"1","A2","4","A1","250","0","1","1","p1000","initial solvent distribution"
-"1","A2","4","A2","375","0","1","1","p1000","initial solvent distribution"
-"1","A2","4","A3","437.5","0","1","2","p1000","initial solvent distribution"
-"1","A2","4","A4","468.75","0","1","2","p1000","initial solvent distribution"
-"1","A2","4","A5","484.375","0","1","3","p1000","initial solvent distribution"
-"1","A2","4","A6","492.1875","0","1","3","p1000","initial solvent distribution"
-"1","A2","4","A7","496.09375","0","1","4","p1000","initial solvent distribution"
-"1","A2","4","A8","498.046875","0","1","4","p1000","initial solvent distribution"
-"1","A2","4","A9","499.0234375","0","1","5","p1000","initial solvent distribution"
-"1","A2","4","A11","250","0","1","5","p1000","initial solvent distribution"
-"1","A2","4","A12","375","0","1","6","p1000","initial solvent distribution"
-"1","A2","4","B1","437.5","0","1","6","p1000","initial solvent distribution"
-"1","A2","4","B2","468.75","0","1","7","p1000","initial solvent distribution"
-"1","A2","4","B3","484.375","0","1","7","p1000","initial solvent distribution"
-"1","A2","4","B4","492.1875","0","1","8","p1000","initial solvent distribution"
-"1","A2","4","B5","496.09375","0","1","8","p1000","initial solvent distribution"
-"1","A2","4","B6","498.046875","0","1","9","p1000","initial solvent distribution"
-"1","A2","4","B7","499.0234375","0","1","9","p1000","initial solvent distribution"
-"1","A2","4","B9","250","0","1","10","p1000","initial solvent distribution"
-"1","A2","4","B10","375","0","1","10","p1000","initial solvent distribution"
-"1","A2","4","B11","437.5","0","1","11","p1000","initial solvent distribution"
-"1","A2","4","B12","468.75","0","1","11","p1000","initial solvent distribution"
-"1","A2","4","C1","484.375","0","1","12","p1000","initial solvent distribution"
-"1","A2","4","C2","492.1875","0","1","12","p1000","initial solvent distribution"
-"1","A2","4","C3","496.09375","0","1","13","p1000","initial solvent distribution"
-"1","A2","4","C4","498.046875","0","1","13","p1000","initial solvent distribution"
-"1","A2","4","C5","499.0234375","0","1","14","p1000","initial solvent distribution"
-"1","A2","4","C7","250","0","1","14","p1000","initial solvent distribution"
-"1","A2","4","C8","375","0","1","15","p1000","initial solvent distribution"
-"1","A2","4","C9","437.5","0","1","15","p1000","initial solvent distribution"
-"1","A2","4","C10","468.75","0","1","16","p1000","initial solvent distribution"
-"1","A2","4","C11","484.375","0","1","16","p1000","initial solvent distribution"
-"1","A2","4","C12","492.1875","0","1","17","p1000","initial solvent distribution"
-"1","A2","4","D1","496.09375","0","1","17","p1000","initial solvent distribution"
-"1","A2","4","D2","498.046875","0","1","18","p1000","initial solvent distribution"
-"1","A2","4","D3","499.0234375","0","1","18","p1000","initial solvent distribution"
-"1","A2","4","D5","250","0","1","19","p1000","initial solvent distribution"
-"1","A2","4","D6","375","0","1","19","p1000","initial solvent distribution"
-"1","A2","4","D7","437.5","0","1","20","p1000","initial solvent distribution"
-"1","A2","4","D8","468.75","0","1","20","p1000","initial solvent distribution"
-"1","A2","4","D9","484.375","0","1","21","p1000","initial solvent distribution"
-"1","A2","4","D10","492.1875","0","1","21","p1000","initial solvent distribution"
-"1","A2","4","D11","496.09375","0","1","22","p1000","initial solvent distribution"
-"1","A2","4","D12","498.046875","0","1","22","p1000","initial solvent distribution"
-"1","A2","4","E1","499.0234375","0","1","23","p1000","initial solvent distribution"
-"1","A2","4","E3","250","0","1","23","p1000","initial solvent distribution"
-"1","A2","4","E4","375","0","1","24","p1000","initial solvent distribution"
-"1","A2","4","E5","437.5","0","1","24","p1000","initial solvent distribution"
-"1","A2","4","E6","468.75","0","1","25","p1000","initial solvent distribution"
-"1","A2","4","E7","484.375","0","1","25","p1000","initial solvent distribution"
-"1","A2","4","E8","492.1875","0","1","26","p1000","initial solvent distribution"
-"1","A2","4","E9","496.09375","0","1","26","p1000","initial solvent distribution"
-"1","A2","4","E10","498.046875","0","1","27","p1000","initial solvent distribution"
-"1","A2","4","E11","499.0234375","0","1","27","p1000","initial solvent distribution"
-"1","A2","4","F1","250","0","1","28","p1000","initial solvent distribution"
-"1","A2","4","F2","375","0","1","28","p1000","initial solvent distribution"
-"1","A2","4","F3","437.5","0","1","29","p1000","initial solvent distribution"
-"1","A2","4","F4","468.75","0","1","29","p1000","initial solvent distribution"
-"1","A2","4","F5","484.375","0","1","30","p1000","initial solvent distribution"
-"1","A2","4","F6","492.1875","0","1","30","p1000","initial solvent distribution"
-"1","A2","4","F7","496.09375","0","1","31","p1000","initial solvent distribution"
-"1","A2","4","F8","498.046875","0","1","31","p1000","initial solvent distribution"
-"1","A2","4","F9","499.0234375","0","1","32","p1000","initial solvent distribution"
-"4","A10","4","A9","499.0234375","499.0234375","2","33","p300","Serial dilution"
-"4","A9","4","A8","498.046875","498.046875","3","34","p300","Serial dilution"
-"4","A8","4","A7","496.09375","496.09375","4","35","p300","Serial dilution"
-"4","A7","4","A6","492.1875","492.1875","5","36","p300","Serial dilution"
-"4","A6","4","A5","484.375","484.375","6","37","p300","Serial dilution"
-"4","A5","4","A4","468.75","468.75","7","38","p300","Serial dilution"
-"4","A4","4","A3","437.5","437.5","8","39","p300","Serial dilution"
-"4","A3","4","A2","375","375","9","40","p300","Serial dilution"
-"4","A2","4","A1","250","250","10","41","p300","Serial dilution"
-"4","B8","4","B7","499.0234375","499.0234375","11","42","p300","Serial dilution"
-"4","B7","4","B6","498.046875","498.046875","12","43","p300","Serial dilution"
-"4","B6","4","B5","496.09375","496.09375","13","44","p300","Serial dilution"
-"4","B5","4","B4","492.1875","492.1875","14","45","p300","Serial dilution"
-"4","B4","4","B3","484.375","484.375","15","46","p300","Serial dilution"
-"4","B3","4","B2","468.75","468.75","16","47","p300","Serial dilution"
-"4","B2","4","B1","437.5","437.5","17","48","p300","Serial dilution"
-"4","B1","4","A12","375","375","18","49","p300","Serial dilution"
-"4","A12","4","A11","250","250","19","50","p300","Serial dilution"
-"4","C6","4","C5","499.0234375","499.0234375","20","51","p300","Serial dilution"
-"4","C5","4","C4","498.046875","498.046875","21","52","p300","Serial dilution"
-"4","C4","4","C3","496.09375","496.09375","22","53","p300","Serial dilution"
-"4","C3","4","C2","492.1875","492.1875","23","54","p300","Serial dilution"
-"4","C2","4","C1","484.375","484.375","24","55","p300","Serial dilution"
-"4","C1","4","B12","468.75","468.75","25","56","p300","Serial dilution"
-"4","B12","4","B11","437.5","437.5","26","57","p300","Serial dilution"
-"4","B11","4","B10","375","375","27","58","p300","Serial dilution"
-"4","B10","4","B9","250","250","28","59","p300","Serial dilution"
-"4","D4","4","D3","499.0234375","499.0234375","29","60","p300","Serial dilution"
-"4","D3","4","D2","498.046875","498.046875","30","61","p300","Serial dilution"
-"4","D2","4","D1","496.09375","496.09375","31","62","p300","Serial dilution"
-"4","D1","4","C12","492.1875","492.1875","32","63","p300","Serial dilution"
-"4","C12","4","C11","484.375","484.375","33","64","p300","Serial dilution"
-"4","C11","4","C10","468.75","468.75","34","65","p300","Serial dilution"
-"4","C10","4","C9","437.5","437.5","35","66","p300","Serial dilution"
-"4","C9","4","C8","375","375","36","67","p300","Serial dilution"
-"4","C8","4","C7","250","250","37","68","p300","Serial dilution"
-"4","E2","4","E1","499.0234375","499.0234375","38","69","p300","Serial dilution"
-"4","E1","4","D12","498.046875","498.046875","39","70","p300","Serial dilution"
-"4","D12","4","D11","496.09375","496.09375","40","71","p300","Serial dilution"
-"4","D11","4","D10","492.1875","492.1875","41","72","p300","Serial dilution"
-"4","D10","4","D9","484.375","484.375","42","73","p300","Serial dilution"
-"4","D9","4","D8","468.75","468.75","43","74","p300","Serial dilution"
-"4","D8","4","D7","437.5","437.5","44","75","p300","Serial dilution"
-"4","D7","4","D6","375","375","45","76","p300","Serial dilution"
-"4","D6","4","D5","250","250","46","77","p300","Serial dilution"
-"4","E12","4","E11","499.0234375","499.0234375","47","78","p300","Serial dilution"
-"4","E11","4","E10","498.046875","498.046875","48","79","p300","Serial dilution"
-"4","E10","4","E9","496.09375","496.09375","49","80","p300","Serial dilution"
-"4","E9","4","E8","492.1875","492.1875","50","81","p300","Serial dilution"
-"4","E8","4","E7","484.375","484.375","51","82","p300","Serial dilution"
-"4","E7","4","E6","468.75","468.75","52","83","p300","Serial dilution"
-"4","E6","4","E5","437.5","437.5","53","84","p300","Serial dilution"
-"4","E5","4","E4","375","375","54","85","p300","Serial dilution"
-"4","E4","4","E3","250","250","55","86","p300","Serial dilution"
-"4","F10","4","F9","499.0234375","499.0234375","56","87","p300","Serial dilution"
-"4","F9","4","F8","498.046875","498.046875","57","88","p300","Serial dilution"
-"4","F8","4","F7","496.09375","496.09375","58","89","p300","Serial dilution"
-"4","F7","4","F6","492.1875","492.1875","59","90","p300","Serial dilution"
-"4","F6","4","F5","484.375","484.375","60","91","p300","Serial dilution"
-"4","F5","4","F4","468.75","468.75","61","92","p300","Serial dilution"
-"4","F4","4","F3","437.5","437.5","62","93","p300","Serial dilution"
-"4","F3","4","F2","375","375","63","94","p300","Serial dilution"
-"4","F2","4","F1","250","250","64","95","p300","Serial dilution"
-"4","A1","10","B11, C11, B23, C23","50","0","65","96","p300","Final distribution"
-"4","A1","11","B11, C11, B23, C23","50","0","65","97","p300","Final distribution"
-"4","A2","10","B10, C10, B22, C22","50","0","66","98","p300","Final distribution"
-"4","A2","11","B10, C10, B22, C22","50","0","66","99","p300","Final distribution"
-"4","A3","10","B9, C9, B21, C21","50","0","67","100","p300","Final distribution"
-"4","A3","11","B9, C9, B21, C21","50","0","67","101","p300","Final distribution"
-"4","A4","10","B8, C8, B20, C20","50","0","68","102","p300","Final distribution"
-"4","A4","11","B8, C8, B20, C20","50","0","68","103","p300","Final distribution"
-"4","A5","10","B7, C7, B19, C19","50","0","69","104","p300","Final distribution"
-"4","A5","11","B7, C7, B19, C19","50","0","69","105","p300","Final distribution"
-"4","A6","10","B6, C6, B18, C18","50","0","70","106","p300","Final distribution"
-"4","A6","11","B6, C6, B18, C18","50","0","70","107","p300","Final distribution"
-"4","A7","10","B5, C5, B17, C17","50","0","71","108","p300","Final distribution"
-"4","A7","11","B5, C5, B17, C17","50","0","71","109","p300","Final distribution"
-"4","A8","10","B4, C4, B16, C16","50","0","72","110","p300","Final distribution"
-"4","A8","11","B4, C4, B16, C16","50","0","72","111","p300","Final distribution"
-"4","A9","10","B3, C3, B15, C15","50","0","73","112","p300","Final distribution"
-"4","A9","11","B3, C3, B15, C15","50","0","73","113","p300","Final distribution"
-"4","A10","10","B2, C2, B14, C14","50","0","74","114","p300","Final distribution"
-"4","A10","11","B2, C2, B14, C14","50","0","74","115","p300","Final distribution"
-"4","A11","10","D11, E11, D23, E23","50","0","75","116","p300","Final distribution"
-"4","A11","11","D11, E11, D23, E23","50","0","75","117","p300","Final distribution"
-"4","A12","10","D10, E10, D22, E22","50","0","76","118","p300","Final distribution"
-"4","A12","11","D10, E10, D22, E22","50","0","76","119","p300","Final distribution"
-"4","B1","10","D9, E9, D21, E21","50","0","77","120","p300","Final distribution"
-"4","B1","11","D9, E9, D21, E21","50","0","77","121","p300","Final distribution"
-"4","B2","10","D8, E8, D20, E20","50","0","78","122","p300","Final distribution"
-"4","B2","11","D8, E8, D20, E20","50","0","78","123","p300","Final distribution"
-"4","B3","10","D7, E7, D19, E19","50","0","79","124","p300","Final distribution"
-"4","B3","11","D7, E7, D19, E19","50","0","79","125","p300","Final distribution"
-"4","B4","10","D6, E6, D18, E18","50","0","80","126","p300","Final distribution"
-"4","B4","11","D6, E6, D18, E18","50","0","80","127","p300","Final distribution"
-"4","B5","10","D5, E5, D17, E17","50","0","81","128","p300","Final distribution"
-"4","B5","11","D5, E5, D17, E17","50","0","81","129","p300","Final distribution"
-"4","B6","10","D4, E4, D16, E16","50","0","82","130","p300","Final distribution"
-"4","B6","11","D4, E4, D16, E16","50","0","82","131","p300","Final distribution"
-"4","B7","10","D3, E3, D15, E15","50","0","83","132","p300","Final distribution"
-"4","B7","11","D3, E3, D15, E15","50","0","83","133","p300","Final distribution"
-"4","B8","10","D2, E2, D14, E14","50","0","84","134","p300","Final distribution"
-"4","B8","11","D2, E2, D14, E14","50","0","84","135","p300","Final distribution"
-"4","B9","10","F11, G11, F23, G23","50","0","85","136","p300","Final distribution"
-"4","B9","11","F11, G11, F23, G23","50","0","85","137","p300","Final distribution"
-"4","B10","10","F10, G10, F22, G22","50","0","86","138","p300","Final distribution"
-"4","B10","11","F10, G10, F22, G22","50","0","86","139","p300","Final distribution"
-"4","B11","10","F9, G9, F21, G21","50","0","87","140","p300","Final distribution"
-"4","B11","11","F9, G9, F21, G21","50","0","87","141","p300","Final distribution"
-"4","B12","10","F8, G8, F20, G20","50","0","88","142","p300","Final distribution"
-"4","B12","11","F8, G8, F20, G20","50","0","88","143","p300","Final distribution"
-"4","C1","10","F7, G7, F19, G19","50","0","89","144","p300","Final distribution"
-"4","C1","11","F7, G7, F19, G19","50","0","89","145","p300","Final distribution"
-"4","C2","10","F6, G6, F18, G18","50","0","90","146","p300","Final distribution"
-"4","C2","11","F6, G6, F18, G18","50","0","90","147","p300","Final distribution"
-"4","C3","10","F5, G5, F17, G17","50","0","91","148","p300","Final distribution"
-"4","C3","11","F5, G5, F17, G17","50","0","91","149","p300","Final distribution"
-"4","C4","10","F4, G4, F16, G16","50","0","92","150","p300","Final distribution"
-"4","C4","11","F4, G4, F16, G16","50","0","92","151","p300","Final distribution"
-"4","C5","10","F3, G3, F15, G15","50","0","93","152","p300","Final distribution"
-"4","C5","11","F3, G3, F15, G15","50","0","93","153","p300","Final distribution"
-"4","C6","10","F2, G2, F14, G14","50","0","94","154","p300","Final distribution"
-"4","C6","11","F2, G2, F14, G14","50","0","94","155","p300","Final distribution"
-"4","C7","10","H11, I11, H23, I23","50","0","95","156","p300","Final distribution"
-"4","C7","11","H11, I11, H23, I23","50","0","95","157","p300","Final distribution"
-"4","C8","10","H10, I10, H22, I22","50","0","96","158","p300","Final distribution"
-"4","C8","11","H10, I10, H22, I22","50","0","96","159","p300","Final distribution"
-"4","C9","10","H9, I9, H21, I21","50","0","97","160","p300","Final distribution"
-"4","C9","11","H9, I9, H21, I21","50","0","97","161","p300","Final distribution"
-"4","C10","10","H8, I8, H20, I20","50","0","98","162","p300","Final distribution"
-"4","C10","11","H8, I8, H20, I20","50","0","98","163","p300","Final distribution"
-"4","C11","10","H7, I7, H19, I19","50","0","99","164","p300","Final distribution"
-"4","C11","11","H7, I7, H19, I19","50","0","99","165","p300","Final distribution"
-"4","C12","10","H6, I6, H18, I18","50","0","100","166","p300","Final distribution"
-"4","C12","11","H6, I6, H18, I18","50","0","100","167","p300","Final distribution"
-"4","D1","10","H5, I5, H17, I17","50","0","101","168","p300","Final distribution"
-"4","D1","11","H5, I5, H17, I17","50","0","101","169","p300","Final distribution"
-"4","D2","10","H4, I4, H16, I16","50","0","102","170","p300","Final distribution"
-"4","D2","11","H4, I4, H16, I16","50","0","102","171","p300","Final distribution"
-"4","D3","10","H3, I3, H15, I15","50","0","103","172","p300","Final distribution"
-"4","D3","11","H3, I3, H15, I15","50","0","103","173","p300","Final distribution"
-"4","D4","10","H2, I2, H14, I14","50","0","104","174","p300","Final distribution"
-"4","D4","11","H2, I2, H14, I14","50","0","104","175","p300","Final distribution"
-"4","D5","10","J11, K11, J23, K23","50","0","105","176","p300","Final distribution"
-"4","D5","11","J11, K11, J23, K23","50","0","105","177","p300","Final distribution"
-"4","D6","10","J10, K10, J22, K22","50","0","106","178","p300","Final distribution"
-"4","D6","11","J10, K10, J22, K22","50","0","106","179","p300","Final distribution"
-"4","D7","10","J9, K9, J21, K21","50","0","107","180","p300","Final distribution"
-"4","D7","11","J9, K9, J21, K21","50","0","107","181","p300","Final distribution"
-"4","D8","10","J8, K8, J20, K20","50","0","108","182","p300","Final distribution"
-"4","D8","11","J8, K8, J20, K20","50","0","108","183","p300","Final distribution"
-"4","D9","10","J7, K7, J19, K19","50","0","109","184","p300","Final distribution"
-"4","D9","11","J7, K7, J19, K19","50","0","109","185","p300","Final distribution"
-"4","D10","10","J6, K6, J18, K18","50","0","110","186","p300","Final distribution"
-"4","D10","11","J6, K6, J18, K18","50","0","110","187","p300","Final distribution"
-"4","D11","10","J5, K5, J17, K17","50","0","111","188","p300","Final distribution"
-"4","D11","11","J5, K5, J17, K17","50","0","111","189","p300","Final distribution"
-"4","D12","10","J4, K4, J16, K16","50","0","112","190","p300","Final distribution"
-"4","D12","11","J4, K4, J16, K16","50","0","112","191","p300","Final distribution"
-"4","E1","10","J3, K3, J15, K15","50","0","113","192","p300","Final distribution"
-"4","E1","11","J3, K3, J15, K15","50","0","113","193","p300","Final distribution"
-"4","E2","10","J2, K2, J14, K14","50","0","114","194","p300","Final distribution"
-"4","E2","11","J2, K2, J14, K14","50","0","114","195","p300","Final distribution"
-"4","E3","10","L11, M11, L23, M23","50","0","115","196","p300","Final distribution"
-"4","E3","11","L11, M11, L23, M23","50","0","115","197","p300","Final distribution"
-"4","E4","10","L10, M10, L22, M22","50","0","116","198","p300","Final distribution"
-"4","E4","11","L10, M10, L22, M22","50","0","116","199","p300","Final distribution"
-"4","E5","10","L9, M9, L21, M21","50","0","117","200","p300","Final distribution"
-"4","E5","11","L9, M9, L21, M21","50","0","117","201","p300","Final distribution"
-"4","E6","10","L8, M8, L20, M20","50","0","118","202","p300","Final distribution"
-"4","E6","11","L8, M8, L20, M20","50","0","118","203","p300","Final distribution"
-"4","E7","10","L7, M7, L19, M19","50","0","119","204","p300","Final distribution"
-"4","E7","11","L7, M7, L19, M19","50","0","119","205","p300","Final distribution"
-"4","E8","10","L6, M6, L18, M18","50","0","120","206","p300","Final distribution"
-"4","E8","11","L6, M6, L18, M18","50","0","120","207","p300","Final distribution"
-"4","E9","10","L5, M5, L17, M17","50","0","121","208","p300","Final distribution"
-"4","E9","11","L5, M5, L17, M17","50","0","121","209","p300","Final distribution"
-"4","E10","10","L4, M4, L16, M16","50","0","122","210","p300","Final distribution"
-"4","E10","11","L4, M4, L16, M16","50","0","122","211","p300","Final distribution"
-"4","E11","10","L3, M3, L15, M15","50","0","123","212","p300","Final distribution"
-"4","E11","11","L3, M3, L15, M15","50","0","123","213","p300","Final distribution"
-"4","E12","10","L2, M2, L14, M14","50","0","124","214","p300","Final distribution"
-"4","E12","11","L2, M2, L14, M14","50","0","124","215","p300","Final distribution"
-"4","F1","10","N11, O11, N23, O23","50","0","125","216","p300","Final distribution"
-"4","F1","11","N11, O11, N23, O23","50","0","125","217","p300","Final distribution"
-"4","F2","10","N10, O10, N22, O22","50","0","126","218","p300","Final distribution"
-"4","F2","11","N10, O10, N22, O22","50","0","126","219","p300","Final distribution"
-"4","F3","10","N9, O9, N21, O21","50","0","127","220","p300","Final distribution"
-"4","F3","11","N9, O9, N21, O21","50","0","127","221","p300","Final distribution"
-"4","F4","10","N8, O8, N20, O20","50","0","128","222","p300","Final distribution"
-"4","F4","11","N8, O8, N20, O20","50","0","128","223","p300","Final distribution"
-"4","F5","10","N7, O7, N19, O19","50","0","129","224","p300","Final distribution"
-"4","F5","11","N7, O7, N19, O19","50","0","129","225","p300","Final distribution"
-"4","F6","10","N6, O6, N18, O18","50","0","130","226","p300","Final distribution"
-"4","F6","11","N6, O6, N18, O18","50","0","130","227","p300","Final distribution"
-"4","F7","10","N5, O5, N17, O17","50","0","131","228","p300","Final distribution"
-"4","F7","11","N5, O5, N17, O17","50","0","131","229","p300","Final distribution"
-"4","F8","10","N4, O4, N16, O16","50","0","132","230","p300","Final distribution"
-"4","F8","11","N4, O4, N16, O16","50","0","132","231","p300","Final distribution"
-"4","F9","10","N3, O3, N15, O15","50","0","133","232","p300","Final distribution"
-"4","F9","11","N3, O3, N15, O15","50","0","133","233","p300","Final distribution"
-"4","F10","10","N2, O2, N14, O14","50","0","134","234","p300","Final distribution"
-"4","F10","11","N2, O2, N14, O14","50","0","134","235","p300","Final distribution"
-"> DeckMap","","","","","","","","",""
-"1","solvent","","","","","","","",""
-"2","p1000","","","","","","","",""
-"3","p300","","","","","","","",""
-"4","dilution_96_A","","","","","","","",""
-"5","","","","","","","","",""
-"6","","","","","","","","",""
-"7","","","","","","","","",""
-"8","","","","","","","","",""
-"9","","","","","","","","",""
-"10","384_1","","","","","","","",""
-"11","384_2","","","","","","","",""
-"12","trash","","","","","","","",""
+from_deck,from_slot,to_deck,to_slot,amt,mix,tip_n,asp_set,pipette,comment
+> SolutionList,,,,,,,,,
+4,A10,1000,,,,,,,
+4,B8,1000,,,,,,,
+4,C6,1000,,,,,,,
+4,D4,1000,,,,,,,
+4,E2,1000,,,,,,,
+4,E12,1000,,,,,,,
+4,F10,1000,,,,,,,
+1,A2,31000,,,,,,,
+> CmdList,,,,,,,,,
+1,A2,4,A1,250,0,1,1,p1000,initial solvent distribution
+1,A2,4,A2,375,0,1,1,p1000,initial solvent distribution
+1,A2,4,A3,437.5,0,1,2,p1000,initial solvent distribution
+1,A2,4,A4,468.75,0,1,2,p1000,initial solvent distribution
+1,A2,4,A5,484.375,0,1,3,p1000,initial solvent distribution
+1,A2,4,A6,492.1875,0,1,3,p1000,initial solvent distribution
+1,A2,4,A7,496.09375,0,1,4,p1000,initial solvent distribution
+1,A2,4,A8,498.046875,0,1,4,p1000,initial solvent distribution
+1,A2,4,A9,499.0234375,0,1,5,p1000,initial solvent distribution
+1,A2,4,A11,250,0,1,5,p1000,initial solvent distribution
+1,A2,4,A12,375,0,1,6,p1000,initial solvent distribution
+1,A2,4,B1,437.5,0,1,6,p1000,initial solvent distribution
+1,A2,4,B2,468.75,0,1,7,p1000,initial solvent distribution
+1,A2,4,B3,484.375,0,1,7,p1000,initial solvent distribution
+1,A2,4,B4,492.1875,0,1,8,p1000,initial solvent distribution
+1,A2,4,B5,496.09375,0,1,8,p1000,initial solvent distribution
+1,A2,4,B6,498.046875,0,1,9,p1000,initial solvent distribution
+1,A2,4,B7,499.0234375,0,1,9,p1000,initial solvent distribution
+1,A2,4,B9,250,0,1,10,p1000,initial solvent distribution
+1,A2,4,B10,375,0,1,10,p1000,initial solvent distribution
+1,A2,4,B11,437.5,0,1,11,p1000,initial solvent distribution
+1,A2,4,B12,468.75,0,1,11,p1000,initial solvent distribution
+1,A2,4,C1,484.375,0,1,12,p1000,initial solvent distribution
+1,A2,4,C2,492.1875,0,1,12,p1000,initial solvent distribution
+1,A2,4,C3,496.09375,0,1,13,p1000,initial solvent distribution
+1,A2,4,C4,498.046875,0,1,13,p1000,initial solvent distribution
+1,A2,4,C5,499.0234375,0,1,14,p1000,initial solvent distribution
+1,A2,4,C7,250,0,1,14,p1000,initial solvent distribution
+1,A2,4,C8,375,0,1,15,p1000,initial solvent distribution
+1,A2,4,C9,437.5,0,1,15,p1000,initial solvent distribution
+1,A2,4,C10,468.75,0,1,16,p1000,initial solvent distribution
+1,A2,4,C11,484.375,0,1,16,p1000,initial solvent distribution
+1,A2,4,C12,492.1875,0,1,17,p1000,initial solvent distribution
+1,A2,4,D1,496.09375,0,1,17,p1000,initial solvent distribution
+1,A2,4,D2,498.046875,0,1,18,p1000,initial solvent distribution
+1,A2,4,D3,499.0234375,0,1,18,p1000,initial solvent distribution
+1,A2,4,D5,250,0,1,19,p1000,initial solvent distribution
+1,A2,4,D6,375,0,1,19,p1000,initial solvent distribution
+1,A2,4,D7,437.5,0,1,20,p1000,initial solvent distribution
+1,A2,4,D8,468.75,0,1,20,p1000,initial solvent distribution
+1,A2,4,D9,484.375,0,1,21,p1000,initial solvent distribution
+1,A2,4,D10,492.1875,0,1,21,p1000,initial solvent distribution
+1,A2,4,D11,496.09375,0,1,22,p1000,initial solvent distribution
+1,A2,4,D12,498.046875,0,1,22,p1000,initial solvent distribution
+1,A2,4,E1,499.0234375,0,1,23,p1000,initial solvent distribution
+1,A2,4,E3,250,0,1,23,p1000,initial solvent distribution
+1,A2,4,E4,375,0,1,24,p1000,initial solvent distribution
+1,A2,4,E5,437.5,0,1,24,p1000,initial solvent distribution
+1,A2,4,E6,468.75,0,1,25,p1000,initial solvent distribution
+1,A2,4,E7,484.375,0,1,25,p1000,initial solvent distribution
+1,A2,4,E8,492.1875,0,1,26,p1000,initial solvent distribution
+1,A2,4,E9,496.09375,0,1,26,p1000,initial solvent distribution
+1,A2,4,E10,498.046875,0,1,27,p1000,initial solvent distribution
+1,A2,4,E11,499.0234375,0,1,27,p1000,initial solvent distribution
+1,A2,4,F1,250,0,1,28,p1000,initial solvent distribution
+1,A2,4,F2,375,0,1,28,p1000,initial solvent distribution
+1,A2,4,F3,437.5,0,1,29,p1000,initial solvent distribution
+1,A2,4,F4,468.75,0,1,29,p1000,initial solvent distribution
+1,A2,4,F5,484.375,0,1,30,p1000,initial solvent distribution
+1,A2,4,F6,492.1875,0,1,30,p1000,initial solvent distribution
+1,A2,4,F7,496.09375,0,1,31,p1000,initial solvent distribution
+1,A2,4,F8,498.046875,0,1,31,p1000,initial solvent distribution
+1,A2,4,F9,499.0234375,0,1,32,p1000,initial solvent distribution
+4,A10,4,A9,499.0234375,499.0234375,2,33,p300,Serial dilution
+4,A9,4,A8,498.046875,498.046875,3,34,p300,Serial dilution
+4,A8,4,A7,496.09375,496.09375,4,35,p300,Serial dilution
+4,A7,4,A6,492.1875,492.1875,5,36,p300,Serial dilution
+4,A6,4,A5,484.375,484.375,6,37,p300,Serial dilution
+4,A5,4,A4,468.75,468.75,7,38,p300,Serial dilution
+4,A4,4,A3,437.5,437.5,8,39,p300,Serial dilution
+4,A3,4,A2,375,375,9,40,p300,Serial dilution
+4,A2,4,A1,250,250,10,41,p300,Serial dilution
+4,B8,4,B7,499.0234375,499.0234375,11,42,p300,Serial dilution
+4,B7,4,B6,498.046875,498.046875,12,43,p300,Serial dilution
+4,B6,4,B5,496.09375,496.09375,13,44,p300,Serial dilution
+4,B5,4,B4,492.1875,492.1875,14,45,p300,Serial dilution
+4,B4,4,B3,484.375,484.375,15,46,p300,Serial dilution
+4,B3,4,B2,468.75,468.75,16,47,p300,Serial dilution
+4,B2,4,B1,437.5,437.5,17,48,p300,Serial dilution
+4,B1,4,A12,375,375,18,49,p300,Serial dilution
+4,A12,4,A11,250,250,19,50,p300,Serial dilution
+4,C6,4,C5,499.0234375,499.0234375,20,51,p300,Serial dilution
+4,C5,4,C4,498.046875,498.046875,21,52,p300,Serial dilution
+4,C4,4,C3,496.09375,496.09375,22,53,p300,Serial dilution
+4,C3,4,C2,492.1875,492.1875,23,54,p300,Serial dilution
+4,C2,4,C1,484.375,484.375,24,55,p300,Serial dilution
+4,C1,4,B12,468.75,468.75,25,56,p300,Serial dilution
+4,B12,4,B11,437.5,437.5,26,57,p300,Serial dilution
+4,B11,4,B10,375,375,27,58,p300,Serial dilution
+4,B10,4,B9,250,250,28,59,p300,Serial dilution
+4,D4,4,D3,499.0234375,499.0234375,29,60,p300,Serial dilution
+4,D3,4,D2,498.046875,498.046875,30,61,p300,Serial dilution
+4,D2,4,D1,496.09375,496.09375,31,62,p300,Serial dilution
+4,D1,4,C12,492.1875,492.1875,32,63,p300,Serial dilution
+4,C12,4,C11,484.375,484.375,33,64,p300,Serial dilution
+4,C11,4,C10,468.75,468.75,34,65,p300,Serial dilution
+4,C10,4,C9,437.5,437.5,35,66,p300,Serial dilution
+4,C9,4,C8,375,375,36,67,p300,Serial dilution
+4,C8,4,C7,250,250,37,68,p300,Serial dilution
+4,E2,4,E1,499.0234375,499.0234375,38,69,p300,Serial dilution
+4,E1,4,D12,498.046875,498.046875,39,70,p300,Serial dilution
+4,D12,4,D11,496.09375,496.09375,40,71,p300,Serial dilution
+4,D11,4,D10,492.1875,492.1875,41,72,p300,Serial dilution
+4,D10,4,D9,484.375,484.375,42,73,p300,Serial dilution
+4,D9,4,D8,468.75,468.75,43,74,p300,Serial dilution
+4,D8,4,D7,437.5,437.5,44,75,p300,Serial dilution
+4,D7,4,D6,375,375,45,76,p300,Serial dilution
+4,D6,4,D5,250,250,46,77,p300,Serial dilution
+4,E12,4,E11,499.0234375,499.0234375,47,78,p300,Serial dilution
+4,E11,4,E10,498.046875,498.046875,48,79,p300,Serial dilution
+4,E10,4,E9,496.09375,496.09375,49,80,p300,Serial dilution
+4,E9,4,E8,492.1875,492.1875,50,81,p300,Serial dilution
+4,E8,4,E7,484.375,484.375,51,82,p300,Serial dilution
+4,E7,4,E6,468.75,468.75,52,83,p300,Serial dilution
+4,E6,4,E5,437.5,437.5,53,84,p300,Serial dilution
+4,E5,4,E4,375,375,54,85,p300,Serial dilution
+4,E4,4,E3,250,250,55,86,p300,Serial dilution
+4,F10,4,F9,499.0234375,499.0234375,56,87,p300,Serial dilution
+4,F9,4,F8,498.046875,498.046875,57,88,p300,Serial dilution
+4,F8,4,F7,496.09375,496.09375,58,89,p300,Serial dilution
+4,F7,4,F6,492.1875,492.1875,59,90,p300,Serial dilution
+4,F6,4,F5,484.375,484.375,60,91,p300,Serial dilution
+4,F5,4,F4,468.75,468.75,61,92,p300,Serial dilution
+4,F4,4,F3,437.5,437.5,62,93,p300,Serial dilution
+4,F3,4,F2,375,375,63,94,p300,Serial dilution
+4,F2,4,F1,250,250,64,95,p300,Serial dilution
+4,A1,10,"B11, C11, B23, C23",50,0,65,96,p300,Final distribution
+4,A1,11,"B11, C11, B23, C23",50,0,65,97,p300,Final distribution
+4,A2,10,"B10, C10, B22, C22",50,0,66,98,p300,Final distribution
+4,A2,11,"B10, C10, B22, C22",50,0,66,99,p300,Final distribution
+4,A3,10,"B9, C9, B21, C21",50,0,67,100,p300,Final distribution
+4,A3,11,"B9, C9, B21, C21",50,0,67,101,p300,Final distribution
+4,A4,10,"B8, C8, B20, C20",50,0,68,102,p300,Final distribution
+4,A4,11,"B8, C8, B20, C20",50,0,68,103,p300,Final distribution
+4,A5,10,"B7, C7, B19, C19",50,0,69,104,p300,Final distribution
+4,A5,11,"B7, C7, B19, C19",50,0,69,105,p300,Final distribution
+4,A6,10,"B6, C6, B18, C18",50,0,70,106,p300,Final distribution
+4,A6,11,"B6, C6, B18, C18",50,0,70,107,p300,Final distribution
+4,A7,10,"B5, C5, B17, C17",50,0,71,108,p300,Final distribution
+4,A7,11,"B5, C5, B17, C17",50,0,71,109,p300,Final distribution
+4,A8,10,"B4, C4, B16, C16",50,0,72,110,p300,Final distribution
+4,A8,11,"B4, C4, B16, C16",50,0,72,111,p300,Final distribution
+4,A9,10,"B3, C3, B15, C15",50,0,73,112,p300,Final distribution
+4,A9,11,"B3, C3, B15, C15",50,0,73,113,p300,Final distribution
+4,A10,10,"B2, C2, B14, C14",50,0,74,114,p300,Final distribution
+4,A10,11,"B2, C2, B14, C14",50,0,74,115,p300,Final distribution
+4,A11,10,"D11, E11, D23, E23",50,0,75,116,p300,Final distribution
+4,A11,11,"D11, E11, D23, E23",50,0,75,117,p300,Final distribution
+4,A12,10,"D10, E10, D22, E22",50,0,76,118,p300,Final distribution
+4,A12,11,"D10, E10, D22, E22",50,0,76,119,p300,Final distribution
+4,B1,10,"D9, E9, D21, E21",50,0,77,120,p300,Final distribution
+4,B1,11,"D9, E9, D21, E21",50,0,77,121,p300,Final distribution
+4,B2,10,"D8, E8, D20, E20",50,0,78,122,p300,Final distribution
+4,B2,11,"D8, E8, D20, E20",50,0,78,123,p300,Final distribution
+4,B3,10,"D7, E7, D19, E19",50,0,79,124,p300,Final distribution
+4,B3,11,"D7, E7, D19, E19",50,0,79,125,p300,Final distribution
+4,B4,10,"D6, E6, D18, E18",50,0,80,126,p300,Final distribution
+4,B4,11,"D6, E6, D18, E18",50,0,80,127,p300,Final distribution
+4,B5,10,"D5, E5, D17, E17",50,0,81,128,p300,Final distribution
+4,B5,11,"D5, E5, D17, E17",50,0,81,129,p300,Final distribution
+4,B6,10,"D4, E4, D16, E16",50,0,82,130,p300,Final distribution
+4,B6,11,"D4, E4, D16, E16",50,0,82,131,p300,Final distribution
+4,B7,10,"D3, E3, D15, E15",50,0,83,132,p300,Final distribution
+4,B7,11,"D3, E3, D15, E15",50,0,83,133,p300,Final distribution
+4,B8,10,"D2, E2, D14, E14",50,0,84,134,p300,Final distribution
+4,B8,11,"D2, E2, D14, E14",50,0,84,135,p300,Final distribution
+4,B9,10,"F11, G11, F23, G23",50,0,85,136,p300,Final distribution
+4,B9,11,"F11, G11, F23, G23",50,0,85,137,p300,Final distribution
+4,B10,10,"F10, G10, F22, G22",50,0,86,138,p300,Final distribution
+4,B10,11,"F10, G10, F22, G22",50,0,86,139,p300,Final distribution
+4,B11,10,"F9, G9, F21, G21",50,0,87,140,p300,Final distribution
+4,B11,11,"F9, G9, F21, G21",50,0,87,141,p300,Final distribution
+4,B12,10,"F8, G8, F20, G20",50,0,88,142,p300,Final distribution
+4,B12,11,"F8, G8, F20, G20",50,0,88,143,p300,Final distribution
+4,C1,10,"F7, G7, F19, G19",50,0,89,144,p300,Final distribution
+4,C1,11,"F7, G7, F19, G19",50,0,89,145,p300,Final distribution
+4,C2,10,"F6, G6, F18, G18",50,0,90,146,p300,Final distribution
+4,C2,11,"F6, G6, F18, G18",50,0,90,147,p300,Final distribution
+4,C3,10,"F5, G5, F17, G17",50,0,91,148,p300,Final distribution
+4,C3,11,"F5, G5, F17, G17",50,0,91,149,p300,Final distribution
+4,C4,10,"F4, G4, F16, G16",50,0,92,150,p300,Final distribution
+4,C4,11,"F4, G4, F16, G16",50,0,92,151,p300,Final distribution
+4,C5,10,"F3, G3, F15, G15",50,0,93,152,p300,Final distribution
+4,C5,11,"F3, G3, F15, G15",50,0,93,153,p300,Final distribution
+4,C6,10,"F2, G2, F14, G14",50,0,94,154,p300,Final distribution
+4,C6,11,"F2, G2, F14, G14",50,0,94,155,p300,Final distribution
+4,C7,10,"H11, I11, H23, I23",50,0,95,156,p300,Final distribution
+4,C7,11,"H11, I11, H23, I23",50,0,95,157,p300,Final distribution
+4,C8,10,"H10, I10, H22, I22",50,0,96,158,p300,Final distribution
+4,C8,11,"H10, I10, H22, I22",50,0,96,159,p300,Final distribution
+4,C9,10,"H9, I9, H21, I21",50,0,97,160,p300,Final distribution
+4,C9,11,"H9, I9, H21, I21",50,0,97,161,p300,Final distribution
+4,C10,10,"H8, I8, H20, I20",50,0,98,162,p300,Final distribution
+4,C10,11,"H8, I8, H20, I20",50,0,98,163,p300,Final distribution
+4,C11,10,"H7, I7, H19, I19",50,0,99,164,p300,Final distribution
+4,C11,11,"H7, I7, H19, I19",50,0,99,165,p300,Final distribution
+4,C12,10,"H6, I6, H18, I18",50,0,100,166,p300,Final distribution
+4,C12,11,"H6, I6, H18, I18",50,0,100,167,p300,Final distribution
+4,D1,10,"H5, I5, H17, I17",50,0,101,168,p300,Final distribution
+4,D1,11,"H5, I5, H17, I17",50,0,101,169,p300,Final distribution
+4,D2,10,"H4, I4, H16, I16",50,0,102,170,p300,Final distribution
+4,D2,11,"H4, I4, H16, I16",50,0,102,171,p300,Final distribution
+4,D3,10,"H3, I3, H15, I15",50,0,103,172,p300,Final distribution
+4,D3,11,"H3, I3, H15, I15",50,0,103,173,p300,Final distribution
+4,D4,10,"H2, I2, H14, I14",50,0,104,174,p300,Final distribution
+4,D4,11,"H2, I2, H14, I14",50,0,104,175,p300,Final distribution
+4,D5,10,"J11, K11, J23, K23",50,0,105,176,p300,Final distribution
+4,D5,11,"J11, K11, J23, K23",50,0,105,177,p300,Final distribution
+4,D6,10,"J10, K10, J22, K22",50,0,106,178,p300,Final distribution
+4,D6,11,"J10, K10, J22, K22",50,0,106,179,p300,Final distribution
+4,D7,10,"J9, K9, J21, K21",50,0,107,180,p300,Final distribution
+4,D7,11,"J9, K9, J21, K21",50,0,107,181,p300,Final distribution
+4,D8,10,"J8, K8, J20, K20",50,0,108,182,p300,Final distribution
+4,D8,11,"J8, K8, J20, K20",50,0,108,183,p300,Final distribution
+4,D9,10,"J7, K7, J19, K19",50,0,109,184,p300,Final distribution
+4,D9,11,"J7, K7, J19, K19",50,0,109,185,p300,Final distribution
+4,D10,10,"J6, K6, J18, K18",50,0,110,186,p300,Final distribution
+4,D10,11,"J6, K6, J18, K18",50,0,110,187,p300,Final distribution
+4,D11,10,"J5, K5, J17, K17",50,0,111,188,p300,Final distribution
+4,D11,11,"J5, K5, J17, K17",50,0,111,189,p300,Final distribution
+4,D12,10,"J4, K4, J16, K16",50,0,112,190,p300,Final distribution
+4,D12,11,"J4, K4, J16, K16",50,0,112,191,p300,Final distribution
+4,E1,10,"J3, K3, J15, K15",50,0,113,192,p300,Final distribution
+4,E1,11,"J3, K3, J15, K15",50,0,113,193,p300,Final distribution
+4,E2,10,"J2, K2, J14, K14",50,0,114,194,p300,Final distribution
+4,E2,11,"J2, K2, J14, K14",50,0,114,195,p300,Final distribution
+4,E3,10,"L11, M11, L23, M23",50,0,115,196,p300,Final distribution
+4,E3,11,"L11, M11, L23, M23",50,0,115,197,p300,Final distribution
+4,E4,10,"L10, M10, L22, M22",50,0,116,198,p300,Final distribution
+4,E4,11,"L10, M10, L22, M22",50,0,116,199,p300,Final distribution
+4,E5,10,"L9, M9, L21, M21",50,0,117,200,p300,Final distribution
+4,E5,11,"L9, M9, L21, M21",50,0,117,201,p300,Final distribution
+4,E6,10,"L8, M8, L20, M20",50,0,118,202,p300,Final distribution
+4,E6,11,"L8, M8, L20, M20",50,0,118,203,p300,Final distribution
+4,E7,10,"L7, M7, L19, M19",50,0,119,204,p300,Final distribution
+4,E7,11,"L7, M7, L19, M19",50,0,119,205,p300,Final distribution
+4,E8,10,"L6, M6, L18, M18",50,0,120,206,p300,Final distribution
+4,E8,11,"L6, M6, L18, M18",50,0,120,207,p300,Final distribution
+4,E9,10,"L5, M5, L17, M17",50,0,121,208,p300,Final distribution
+4,E9,11,"L5, M5, L17, M17",50,0,121,209,p300,Final distribution
+4,E10,10,"L4, M4, L16, M16",50,0,122,210,p300,Final distribution
+4,E10,11,"L4, M4, L16, M16",50,0,122,211,p300,Final distribution
+4,E11,10,"L3, M3, L15, M15",50,0,123,212,p300,Final distribution
+4,E11,11,"L3, M3, L15, M15",50,0,123,213,p300,Final distribution
+4,E12,10,"L2, M2, L14, M14",50,0,124,214,p300,Final distribution
+4,E12,11,"L2, M2, L14, M14",50,0,124,215,p300,Final distribution
+4,F1,10,"N11, O11, N23, O23",50,0,125,216,p300,Final distribution
+4,F1,11,"N11, O11, N23, O23",50,0,125,217,p300,Final distribution
+4,F2,10,"N10, O10, N22, O22",50,0,126,218,p300,Final distribution
+4,F2,11,"N10, O10, N22, O22",50,0,126,219,p300,Final distribution
+4,F3,10,"N9, O9, N21, O21",50,0,127,220,p300,Final distribution
+4,F3,11,"N9, O9, N21, O21",50,0,127,221,p300,Final distribution
+4,F4,10,"N8, O8, N20, O20",50,0,128,222,p300,Final distribution
+4,F4,11,"N8, O8, N20, O20",50,0,128,223,p300,Final distribution
+4,F5,10,"N7, O7, N19, O19",50,0,129,224,p300,Final distribution
+4,F5,11,"N7, O7, N19, O19",50,0,129,225,p300,Final distribution
+4,F6,10,"N6, O6, N18, O18",50,0,130,226,p300,Final distribution
+4,F6,11,"N6, O6, N18, O18",50,0,130,227,p300,Final distribution
+4,F7,10,"N5, O5, N17, O17",50,0,131,228,p300,Final distribution
+4,F7,11,"N5, O5, N17, O17",50,0,131,229,p300,Final distribution
+4,F8,10,"N4, O4, N16, O16",50,0,132,230,p300,Final distribution
+4,F8,11,"N4, O4, N16, O16",50,0,132,231,p300,Final distribution
+4,F9,10,"N3, O3, N15, O15",50,0,133,232,p300,Final distribution
+4,F9,11,"N3, O3, N15, O15",50,0,133,233,p300,Final distribution
+4,F10,10,"N2, O2, N14, O14",50,0,134,234,p300,Final distribution
+4,F10,11,"N2, O2, N14, O14",50,0,134,235,p300,Final distribution
+> DeckMap,,,,,,,,,
+1,solvent,,,,,,,,
+2,p1000,,,,,,,,
+3,p300,,,,,,,,
+4,dilution_96_A,,,,,,,,
+5,,,,,,,,,
+6,,,,,,,,,
+7,,,,,,,,,
+8,,,,,,,,,
+9,,,,,,,,,
+10,384_1,,,,,,,,
+11,384_2,,,,,,,,
+12,trash,,,,,,,,
