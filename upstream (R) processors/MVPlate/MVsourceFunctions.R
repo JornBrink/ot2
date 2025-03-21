@@ -1048,5 +1048,5 @@ main <- function(file_path, file_name=""){
 #TROUBLESHOOTING---------
 errMessage <<- ""
 fpath <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\Execution code for OT2\\Incubator\\Test User inputs\\"
-dataName <- "MV_InputTemplate.xlsx"
+dataName <- "MBV_WST_InputTemplate_final.xlsx"
 dqs <- main(paste(fpath, dataName, sep="//"))

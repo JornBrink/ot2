@@ -1,5 +1,5 @@
 #LIBRARIES
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 import os
 import shutil
 import subprocess
