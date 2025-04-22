@@ -1,32 +1,36 @@
 #META #####
-#S.T.Tandar_OT2 Controller -- 2021/01/31
-# > Multiplate (up to 6 plates)
-# > More versatile than "Multiplate MIC" version
+#J. Brink Flex Controller -- 2025/01/08
+# > 96 well plate for qPCR
+# > Credits for S.T. Tandar for major help and contibutions
 
+#Library ------------
 library(shiny)
 library(readxl)
 library(writexl)
 library(dplyr)
+library(tidyr)
 
 options(stringsAsFactors = F)
 
-#SERVER MAIN------------
-shinyServer(function(input, output) {
-  #defining directory-------
+#Server Main functions-------------
+shinyServer(function(input, output){
+  
+  #first defining directorys --------- change if in troubleshooting or Servermode (not yet implemented)
   outputDir_cmdline <- "/home/shiny-ot2/ShinyApps/outputs_cmdlist"
   outputDir_usrGuide <- "/home/shiny-ot2/ShinyApps/outputs_usrguide"
-  inputTemplate <- "/home/shiny-ot2/ShinyApps/ot2/MVPlate/MV_InputTemplate.xlsx"
-  sourceDir <- "/home/shiny-ot2/ShinyApps/ot2/MVPlate/MVsourceFunctions.R"
-
-  # outputDir_cmdline <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate"
-  # outputDir_usrGuide <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate"
-  # inputTemplate <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate/MV_InputTemplate.xlsx"
-  # sourceDir <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate/MVsourceFunctions.R"
+  inputTemplate <- "/home/shiny-ot2/ShinyApps/ot2/qPCR/qPCR_template.xlsx"
+  sourceDir <- "/home/shiny-ot2/ShinyApps/ot2/qPCR/96wellsplatefunction.R"
   
-  #loading functions--------
+  #Troubleshooting (local machine paths)
+  #outputDir_cmdline <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Testoutput"
+  #outputDir_usrGuide <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Testoutput"
+  #inputTemplate <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Rscript\\qPCR_template.xlsx"
+  #sourceDir <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Rscript\\96wellsplatefunction.R"
+  
+  #Loading source
   source(sourceDir)
   
-  #initiating error message
+  #Initializing err message
   errMessage <<- ""
   
   #Obtain names---------
@@ -43,7 +47,6 @@ shinyServer(function(input, output) {
     
     return(res)
   })
-  
   #Confirming Upload File-----------
   contents <- reactive({
     infile = input$file
@@ -57,11 +60,10 @@ shinyServer(function(input, output) {
       #rename files for safekeeping
       file_name <<- strsplit(infile$name, '.xl')[[1]][1]
       
-      #update table view; perform main function
+      #update table view; perform main function note that dis is display
       dis <- main(infile$datapath, infile$name)
-      
       if(errMessage==""){
-        #generate appropriate output files
+        #generate appropriate output files bit of a behind the scene for me cmdList_output is created by the << aka global good to know
         #Robot Commands---------------
         sel_colnames <- colnames(cmdList_output[[4]])
         
@@ -119,6 +121,8 @@ shinyServer(function(input, output) {
         new_cmdLineOutput <- rbind.data.frame(new_cmdLineOutput, nex, stringsAsFactors = F)
         
         #place to global
+        new_cmdLineOutput[new_cmdLineOutput == "NA"] <- ""
+        
         new_cmdLineOutput <<- new_cmdLineOutput
         
         #User Commands---------------
@@ -127,9 +131,9 @@ shinyServer(function(input, output) {
         #initiate new command line output
         new_userGuideOutput <- c()
         
-        #add first item
+        #add first item--------------
         nex_item <- replicate(length(sel_colnames), "")
-        nex_item[1] <- '>>> OT2 DECK MAP <<<'
+        nex_item[1] <- '>>> Stocklist <<<'
         nex_item <- data.frame(t(nex_item))
         
         colnames(nex_item) <- sel_colnames
@@ -138,7 +142,7 @@ shinyServer(function(input, output) {
         #add second item
         first_item <- c()
         curItem <- usercmd_output[[1]]
-        for(i in c(1:8)){
+        for(i in 1:nrow(curItem)){
           curRow <- curItem[i,]
           nex_item <- replicate(length(sel_colnames), "")
           nex_item[1:length(curRow)] <- curRow
@@ -147,9 +151,80 @@ shinyServer(function(input, output) {
         colnames(first_item) <- sel_colnames
         new_userGuideOutput <- rbind.data.frame(new_userGuideOutput, first_item)
         
+        
+        #Third part
+        nex_item <- replicate(length(sel_colnames), "")
+        nex_item[1] <- '>>> Empty tubes <<<'
+        nex_item <- data.frame(t(nex_item))
+        
+        colnames(nex_item) <- sel_colnames
+        new_userGuideOutput <- rbind(new_userGuideOutput, nex_item)
+        
+        
         #add fourth item
-        new_userGuideOutput <- rbind.data.frame(usercmd_output[[2]], new_userGuideOutput)
+        first_item <- c()
+        curItem <- usercmd_output[[2]]
+        for(i in 1:nrow(curItem)){
+          curRow <- curItem[i,]
+          nex_item <- replicate(length(sel_colnames), "")
+          nex_item[1:length(curRow)] <- curRow
+          first_item <- rbind(first_item, nex_item)
+        }
+        colnames(first_item) <- sel_colnames
+        new_userGuideOutput <- rbind.data.frame(new_userGuideOutput, first_item)
+        
+        #fifth part
+        nex_item <- replicate(length(sel_colnames), "")
+        nex_item[1] <- '>>> Samples <<<'
+        nex_item <- data.frame(t(nex_item))
+        
+        colnames(nex_item) <- sel_colnames
+        new_userGuideOutput <- rbind(new_userGuideOutput, nex_item)
+        
+        #add 6th item
+        first_item <- c()
+        curItem <- usercmd_output[[3]]
+        for(i in 1:nrow(curItem)){
+          curRow <- curItem[i,]
+          nex_item <- replicate(length(sel_colnames), "")
+          nex_item[1:length(curRow)] <- curRow
+          first_item <- rbind(first_item, nex_item)
+        }
+        colnames(first_item) <- sel_colnames
+        new_userGuideOutput <- rbind.data.frame(new_userGuideOutput, first_item)
+        
+        #lastpart of Rhandler
+        FLEXdeck <- cmdList_output[[6]]
+        FLEXdeck <- FLEXdeck[c(2)]
+        FLEXdeck <- unlist(FLEXdeck)
+        matrixversion <- matrix(FLEXdeck, nrow=4, ncol=3, byrow = TRUE)
+        res3 <- as.data.frame(matrixversion)
+        colnames(res3) <- c("[,1]", "[,2]", "[,3]")
+        
+        #Finally
+        nex_item <- replicate(length(sel_colnames), "")
+        nex_item[1] <- '>>> FLEX DECK <<<'
+        nex_item <- data.frame(t(nex_item))
+        
+        colnames(nex_item) <- sel_colnames
+        titlenex <- nex_item
+        
+        first_item <- c()
+        curItem <- res3
+        for(i in 1:nrow(curItem)){
+          curRow <- curItem[i,]
+          nex_item <- replicate(length(sel_colnames), "")
+          nex_item[1:length(curRow)] <- curRow
+          first_item <- rbind(first_item, nex_item)
+        }
+        
+        colnames(first_item) <- sel_colnames
+        
+        new_userGuideOutput <- rbind.data.frame(first_item, new_userGuideOutput)
+        new_userGuideOutput <- rbind.data.frame(nex_item, new_userGuideOutput)
+        
         new_userGuideOutput <- apply(new_userGuideOutput,2,as.character) %>% data.frame()
+        
         new_userGuideOutput <<- new_userGuideOutput 
         
         #savekeeping output files
@@ -207,6 +282,5 @@ shinyServer(function(input, output) {
     content = function(file) {
       file.copy(inputTemplate, file)
     }
-  
   )
 })

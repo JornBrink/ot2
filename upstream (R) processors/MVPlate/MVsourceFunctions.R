@@ -27,6 +27,8 @@ Get_nPlate <- function(file_name){
   return(res)
 }
 GetPlateMap <- function(file_name){
+  # file_name <<- file_name
+  
   #read
   res <- read_xlsx(file_name, 1, range="B57:M64", col_names=F) %>% data.frame()
   rownames(res) <- LETTERS[1:8]
@@ -118,10 +120,10 @@ CreateSolList <- function(plate_map, total_vol_well, inoc_vol, stock_list, n_pla
   return(fin_list)
 }
 CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
-  sol_list <<- sol_list
-  total_vol_well <<- total_vol_well
-  inoc_vol <<- inoc_vol
-  stock_list <<- stock_list
+  # sol_list <<- sol_list
+  # total_vol_well <<- total_vol_well
+  # inoc_vol <<- inoc_vol
+  # stock_list <<- stock_list
   
   #calculate initially required amount
   drugSol_well <- total_vol_well - inoc_vol
@@ -159,6 +161,7 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
         new_curList <- c()
         for(q in c(1:length(curList[,1]))){
           new_curList <- rbind.data.frame(new_curList, curList[q,])
+          
           #get the current dilution factor
           if(q == length(curList[,1])){
             conc_hi <- stock_list[curList$DrugType[q]]
@@ -207,7 +210,6 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
         curList$solAmt <- as.numeric(curList$solAmt)
         curList$DrugConc <- as.numeric(curList$DrugConc)
         curList <- curList[order(curList$DrugConc),]
-        test5 <<- curList
         
         #####################################################################
         
@@ -255,9 +257,8 @@ CalculateDilVolume <- function(sol_list, total_vol_well, inoc_vol, stock_list){
   }
   
   #renaming
-  test6 <<- new_solList
   colnames(new_solList)[length(new_solList[1,])] <- 'AmtHi'
-  rest7 <<- new_solList
+  
   #calculate required solvent amount
   solventAmt <- as.numeric(new_solList$solAmt) - as.numeric(new_solList$AmtHi)
   
@@ -296,7 +297,6 @@ CreateDilMap <- function(sol_list, deckMap, stock_list){
   
   # assign slots to stock solutions
   stockIndices <- which(solution_map$Labware == names(deckMap)[grepl("stock", deckMap)])
-  testing <<- stock_list
   solution_map$Fill[stockIndices[1:length(stock_list)]] <- names(stock_list)
   solution_map$solutionType[stockIndices[1:length(stock_list)]] <- "Stock"
   solution_map <- subset(solution_map, solutionType!="Stock")
@@ -937,6 +937,7 @@ main <- function(file_path, file_name=""){
     #iterate through all items in stockList
     for(i in c(1:length(stockList))){
       nexItem <- c(paste(LETTERS[coords[1]], toString(coords[2]), sep=''), names(stockList)[i])
+      
       #place to map
       stockMap <- rbind(stockMap, nexItem)
       
@@ -1010,18 +1011,14 @@ main <- function(file_path, file_name=""){
     #CREATING OUTPUT#
     #################
     
-    print(allAmt)
+    
     #Command List-------
     dis <- replicate(length(allAmt[,1]), "NA")
-    print(dis)
     all_amt <- cbind.data.frame(allAmt[,c(2, 4, 5)], dis, allAmt[,6], dis, dis, dis, stringsAsFactors=F)
     colnames(all_amt) <- colnames(cmdList)
-    print("findeck")
-
-    print(finDeck)
+    
     ware_num <- unlist(finDeck[c(1, 3, 5, 7),])
     ware_fil <- unlist(finDeck[c(2, 4, 6, 8),])
-    print(ware_fil)
     ware_fil <- ware_fil[order(as.numeric(ware_num))]
     ware_num <- ware_num[order(as.numeric(ware_num))]
     ware_num <- sapply(ware_num, function(x) paste('labware_', toString(x), sep=''))
@@ -1046,7 +1043,7 @@ main <- function(file_path, file_name=""){
 }
 
 #TROUBLESHOOTING---------
-errMessage <<- ""
-fpath <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\Execution code for OT2\\Incubator\\Test User inputs\\"
-dataName <- "MBV_WST_InputTemplate_final.xlsx"
-dqs <- main(paste(fpath, dataName, sep="//"))
+# errMessage <<- ""
+# fpath <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate\\"
+# dataName <- "CDV_TOXICITY_2.0_210325_InputTemplate 1 3.xlsx"
+# dqs <- main(paste(fpath, dataName, sep="//"))

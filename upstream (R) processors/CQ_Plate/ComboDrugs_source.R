@@ -7,6 +7,11 @@ library(readxl)
 library(rlist)
 library(tidyr)
 
+#SUPPORTING------------
+removeNonNumeric <- function(x) {
+  gsub("[^[:digit:].]+", "", x)
+}
+
 # ---------- SECTION A - Read and Preparation -------------
 ReadInput <- function(data_path){
   #initial read
@@ -58,6 +63,7 @@ ParseDrugCombination <- function(slot_info){
   return(curdata)
 }
 GetSolutionInfo <- function(drug_map){
+  # drug_map <<- drug_map
   drug_map <- subset(drug_map, DrugName!="mediumfill")
   
   #iterate through all slots in drug map
@@ -97,6 +103,10 @@ GetSolutionInfo <- function(drug_map){
 
 ## NEW DIL SCHEME
 CalculateRequired_ConcVol <- function(drug_map, vol_info, sol_list, n_plate){
+  # drug_map <<- drug_map
+  # vol_info <<- vol_info
+  # sol_list <<- sol_list
+  # n_plate <<- n_plate
   well_totalVol <- vol_info["Total"] - vol_info["Inoculum"]
   sol_separate <- max(sapply(drug_map$DrugName, function(x) length(strsplit(x, split="_")[[1]])))
   vol_per_drugSol <- well_totalVol / sol_separate
@@ -107,13 +117,17 @@ CalculateRequired_ConcVol <- function(drug_map, vol_info, sol_list, n_plate){
   return(sol_list)
 }
 cal_dilScheme_MedID <- function(current_set_id, solution_list, stock_info){
+  # current_set_id <<- current_set_id
+  # solution_list <<- solution_list
+  # stock_info <<- stock_info 
   # subset
   current_set <- subset(solution_list, medDrugID==current_set_id) %>% filter(Conc>0) %>%
     mutate(finVolumes=0, volAbove=0, volMedium=0, vol_forBelow=0)
   
   # get stock concentration
-  stock_conc <- stock_info[1,which(colnames(stock_info)==current_set$DrugName[1])] %>% as.numeric()
-  
+  stock_conc <- toString(stock_info[1,which(colnames(stock_info)==current_set$DrugName[1])]) %>% 
+    removeNonNumeric() %>% as.numeric()
+
   # main dilutions
   for(i in c(1:nrow(current_set))){
     # assign required volume
@@ -446,34 +460,39 @@ MainDistribution <- function(vol_info, sol_list, rack_map, drug_map, n_plate, de
   }
   
   #fill 0 ng/uL solutions with respective mediums
-  control_code <- paste("0", unique(drug_map$Medium), sep="-")
-  med_names <- unique(drug_map$Medium)
-  
-  for(j in c(1:length(control_code))){
-    choose_well <- drug_map3$Slot[apply(drug_map3, 1, function(x) sum(grepl(control_code[j], x)))>0]
-    times <- apply(drug_map3, 1, function(x) sum(grepl(control_code[j], x)))[which(drug_map3$Slot %in% choose_well)]
+  for(medium_selected in unique(drug_map$Medium)){
+    # filter relevant wells according to medium
+    relevant_wells <- filter(drug_map2, Medium==medium_selected)
+    
+    # select wells to apply additional medium to
+    well_index <- sapply(c(1:nrow(relevant_wells)), function(xi){
+      parse_conc <- strsplit(relevant_wells$Conc[xi], split="_")[[1]] %>% as.numeric()
+      return(sum(parse_conc==0))
+    })
+    
+    choose_well <- relevant_wells$Slot[which(well_index>0)]
+    times <- well_index[well_index>0]
     
     if(length(choose_well)>0){
       nex_cmd <- c()
       for(q in c(1:length(choose_well))){
         nex_cmd <- rbind(nex_cmd, 
-                         c(rack_map$Labware[rack_map$FillSolution == med_names[j]],
-                           rack_map$Slot[rack_map$FillSolution == med_names[j]],
+                         c(rack_map$Labware[rack_map$FillSolution == medium_selected],
+                           rack_map$Slot[rack_map$FillSolution == medium_selected],
                            "", choose_well[q], amt_per_well*times[q], 0, cur_tip,
-                           paste("Distributing", med_names[j], "to")))
+                           paste("Distributing", medium_selected, "to")))
       }
     }else{
       nex_cmd <- NULL
     }
     
-    
     #fill outer wells
-    choose_well <- drug_map$Slot[drug_map$DrugName=="mediumfill" & drug_map$Medium == med_names[j]]
+    choose_well <- drug_map$Slot[drug_map$DrugName=="mediumfill" & drug_map$Medium == medium_selected]
     if(length(choose_well)>0){
-      nex_cmd2 <- c(rack_map$Labware[rack_map$FillSolution == med_names[j]],
-                    rack_map$Slot[rack_map$FillSolution == med_names[j]],
+      nex_cmd2 <- c(rack_map$Labware[rack_map$FillSolution == medium_selected],
+                    rack_map$Slot[rack_map$FillSolution == medium_selected],
                     "", paste(choose_well, collapse=", "), vol_info[1], 0, cur_tip + 1,
-                    paste(med_names[j], "fillings for"))
+                    paste(medium_selected, "fillings for"))
     }else{
       nex_cmd2 <- NULL
     }
@@ -638,7 +657,7 @@ mainExec <- function(file_name){
   
   #B. Pre-calculating solution amounts required (for wells)
   solList <- CalculateRequired_ConcVol(drugMap, volInfo, solList, nPlate)
-  
+  solList <<- solList
   #C. Serial Dilution Pre-Calculation
   solList <- solList %>% unite("medDrugID", Medium, DrugName, remove=F)
   
@@ -756,8 +775,8 @@ mainExec <- function(file_name){
 }
 
 #TROUBLESHOOTING--------------
-# mainwd <- "C:\\Users\\sebas\\Desktop\\Freelance\\2023_Laura\\"
-# inputFile <- "20230203_Checkerboard_SYT_PI_Full .xlsx"
-# dqs <- mainExec(paste(mainwd, inputFile, sep="\\"))
-# 
+mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\upstream (R) processors\\CQ_Plate\\"
+inputFile <- "CQ_InputTemplate_GCV_FOS_LS_2.xlsx"
+dqs <- mainExec(paste0(mainwd, inputFile))
+
 # write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)

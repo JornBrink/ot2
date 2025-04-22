@@ -250,7 +250,7 @@ mainExec <- function(input_file_name, fill_outer){
   stockInfo <- inputFiles[[1]]
   generalInfo <- inputFiles[[2]]
   plateInfo <- inputFiles[[3]]
-  
+ 
   # B | Parse out solution list\
   plateInfo$solutionID <- paste(plateInfo$Fill, plateInfo$Concentration, plateInfo$Solvent, sep="_")
   solList <- dplyr::select(plateInfo, -Well) %>% 
@@ -311,7 +311,6 @@ mainExec <- function(input_file_name, fill_outer){
   # F | Command list
   #   Solvent Distribution
   cmdList_solventDistribution <- create_commandList_solventDistribution(solList, solventMap)
-  print(cmdList_solventDistribution)
   
   #   Serial Dilution
   cmdList_serialDilution <- lapply(unique(solList$dilutionID), function(x)
@@ -327,7 +326,7 @@ mainExec <- function(input_file_name, fill_outer){
   
   cmdList <- rbind.data.frame(cmdList_solventDistribution, cmdList_serialDilution,
                               cmdList_finalDistribution)
-  print(cmdList)
+  
   #   Filling outer wells
   if(fill_outer){
     cmdList <- distribute_outerWells(plateInfo, cmdList, solventMap, deckMap, generalInfo)
@@ -502,11 +501,11 @@ mainExec <- function(input_file_name, fill_outer){
 
 #TEST--------------
 # input 
-fileName <- "384Well_InputTemplate.xlsx"
-mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\Execution code for OT2\\Incubator\\Test User inputs"
-input_file_name <- paste0(mainwd, "\\", fileName)
+# fileName <- "20220301_MIC384_NM2_NM3_NM4_NM5_NM6_NM7_CIP (1).xlsx"
+# mainwd <- "C:\\Users\\sebas\\OneDrive\\Desktop\\Freelance\\Laura\\Conc_calc"
+# input_file_name <- paste0(mainwd, "\\", fileName)
 # 
-output <- mainExec(input_file_name, T)
+# output <- mainExec(input_file_name, T)
 
 #write output
 #write.csv(output[[1]], paste0(mainwd, "/Halving_CommandList.csv"), row.names=F)
