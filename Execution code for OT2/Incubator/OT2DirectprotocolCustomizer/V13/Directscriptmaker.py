@@ -104,6 +104,7 @@ def Filesending(fullpath, pmid_plate, Firstname, Lastname, Experiment_name, Expe
     driver.find_element(By.ID, "do").click()
     time.sleep(3)
     textFromDiv = driver.find_element(By.XPATH, "//div[@class='shiny-text-output shiny-bound-output']").text
+    print(textFromDiv)
     file_name = "CommandList_" + textFromDiv + ".csv"
     
     if(simulation== "1"):
