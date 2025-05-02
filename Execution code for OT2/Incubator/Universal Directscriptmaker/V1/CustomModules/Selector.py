@@ -1,10 +1,9 @@
 #protocol selector is the selector for what protocol to run on what robot.
 #scope: Find robot on pc, get IP, get name robot (active), load protocol and database it
-#imports Directscripts
-
 #import modules
 import os
 import json
+import FreeSimpleGUI as sg
 
 #functions
 #function Robots
@@ -33,13 +32,63 @@ def Robotdetails(simulation):
             addresses = (current_data['addresses'][0]['ip'])
             status = (current_data['addresses'][0]['seen'])
             robot_type = current_data['health']
-            #[health] is a dict  so turned into list then added technically no list or anythin is needed
-            robot_type = robot_type[0]['robot_model']
-                  
+            robot_type = robot_type['robot_model']
+        
+        else:
+            if status == False and simulation == "1": 
+                names = (current_data['name'])
+                addresses = (current_data['addresses'][0]['ip'])
+                status = (current_data['addresses'][0]['seen'])
+                robot_type = current_data['health']
+                robot_type = robot_type['robot_model']
+                
+            else:
+                sg.Popup("The robot is offline -- restart the robot and this program (after the robot is ready)", keep_on_top=True)
+                break
+    
+    if "OT-3" in robot_type:
+        robot_type = "Flex"
+    else:
+        robot_type = "OT2"
+        
     return names, addresses, robot_type
 
 
-def protocolselector(simulation):
+def protocolfinder(simulation, robot_type):
     #first 
     userpath = os.path.expanduser("~")
     
+    #simulation block
+    if simulation == "1":
+        #If simulation = 1 all files should be detected
+        restpath = userpath + '//Documents//GitHub//ot2//Execution code for OT2//Incubator//Universal Directscriptmaker//V1//Directscripts'
+        #since simulation gives access to everthing this needs to be done with a bit of an interesting route
+        filelist = []
+        for root, dirs, files in os.walk(restpath):
+            for name in files:
+                filelist.append(name)
+    else:
+        #production version
+        restpath = userpath + "//Desktop//Directscriptmaker//Directscripts//" + robot_type
+        filelist = os.listdir(restpath)
+     
+    return filelist
+
+
+def protocolselector(simulation, robot_type, selection):
+    userpath = os.path.expanduser("~")
+    
+    if simulation == "1":
+        #If simulation = 1 all files should be detected
+        restpath = userpath + '//Documents//GitHub//ot2//Execution code for OT2//Incubator//Universal Directscriptmaker//V1//Directscripts//'
+        #since simulation gives access to everthing this needs to be done with a bit of an interesting route
+        for root, dirs, files in os.walk(restpath):
+            for root, dirs, files in os.walk(restpath):
+                for file in files:
+                    if file == selection:
+                        truename = os.path.join(root, file)
+                        return truename
+    else:
+        #production version
+        restpath = userpath + "//Desktop//Directscriptmaker//Directscripts//" + robot_type + "//" + selection
+        return None  # If no file matches
