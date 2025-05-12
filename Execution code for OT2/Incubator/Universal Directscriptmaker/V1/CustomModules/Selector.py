@@ -61,7 +61,7 @@ def protocolfinder(simulation, robot_type):
     #simulation block
     if simulation == "1":
         #If simulation = 1 all files should be detected
-        restpath = userpath + '//Documents//GitHub//ot2//Execution code for OT2//Incubator//Universal Directscriptmaker//V1//Directscripts'
+        restpath = os.getcwd() +  '//Directscripts'
         #since simulation gives access to everthing this needs to be done with a bit of an interesting route
         filelist = []
         for root, dirs, files in os.walk(restpath):
@@ -80,7 +80,7 @@ def protocolselector(simulation, robot_type, selection):
     
     if simulation == "1":
         #If simulation = 1 all files should be detected
-        restpath = userpath + '//Documents//GitHub//ot2//Execution code for OT2//Incubator//Universal Directscriptmaker//V1//Directscripts//'
+        restpath = os.path.dirname(os.path.realpath(__file__)) +'//Directscripts//'
         #since simulation gives access to everthing this needs to be done with a bit of an interesting route
         for root, dirs, files in os.walk(restpath):
             for root, dirs, files in os.walk(restpath):
