@@ -133,10 +133,13 @@ while True:
             cmdfilename = cmdfilename.split(".")
             #note: this is only the file name not with extention yet
             cmdfilename = cmdfilename[0]+"."+cmdfilename[1]
+            
             #Move from USB or other spot to correct file spot
             filecheck1 =  os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
             check4 = os.path.isfile(filecheck1)
             filemove = os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
+            
+            #and actually making sure this is not causing the simulation to fail. (not what we would want)
             if(check4 == False and simulation == "0"):
                 print("filecheck correct")
                 shutil.copy(pathfile, filemove, follow_symlinks=True)

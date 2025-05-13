@@ -93,116 +93,77 @@ def Protocolcustomizer(experimentname, simulation, fileName, pc, brand, protocol
             return
         
     elif "Drugdilution96.py" in directscript:
+            
+        os.chdir(directscriptpath)
         
-        with open(Truename, 'w+') as file:
-                    file.write("#" + 'This protocol is made for'+ " " + fileName + "\n")
-                    file.write('fileName =' + "\'" + fileName  + '.csv'+ "\'" "\n" + "\n")
-                    file.write('pc =' + "\'" + pc + "\'" + "\n" + "\n")
-                    file.write('touch_tips =' + "\'" + "No" + "\'" + "\n" + "\n")
-                    file.write('#METADATA----------' "\n" +
-                                'metadata = {'+"\n"+"\t"+
-                                    "\'"+ 'protocolName'"\'"+":"+  "\'" + protocolname + "\'" +","+"\n"+"\t"+
-                                    "\'"+'author'"\'"+":" + "\'" +'Sebastian <sebastian.tandar@gmail.com>' +"\'" +"\'"+ 'Jorn <jornbrink@kpnmail.nl>' + "\'"+"," +"\n"+"\t"+
-                                    "\'"+'description'"\'"+":" + "\'" +'96 wells plate MIC with p300 possibility'+"\'"+ "\'"+'User customized'+"\'"+","+ "\n"+"\t"+
-                                    "\'"+'apiLevel'"\'"+":"+"\'" +'2.15'+"\'"+ "\n"+'}\n')
-                    
-                    #actually puts the script into the new file
-                    for asd in lines:
-                        file.write(asd)
-                        
-                    if(simulation == "1"):
-                        file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
-                                   "bep = simulate.get_protocol_api('2.15')" + "\n" + 
-                                   "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_dat(filename)" + "\n"+
-                                   "for line in bep.commands():" + "\n"+"    print(line)")
+        #opening the directscript
+        with open('Drugdilution96.py') as f:
+            lines=f.readlines()
+        
+        #change working directory to the new script spot for making the new script
+        os.chdir(newpathDS)
+        
+        try:
+            fh = open(experimentname, 'r+')
+        except:
+            fh= open(experimentname, 'w+')
+        
+        with open (experimentname, 'w+') as file:
+            file.write("# This protocol is made for " + activerobot + "\n")
+            file.write("fileName = '" + fileName + ".csv'" + "\n" + "\n")
+            file.write("pc = '" + pc + "'" + "\n" + "\n")
+            file.write("touch_tips = 'Yes'" + "\n" + "\n")
+            file.write("#METADATA----------" + "\n" + 
+                       'metadata = {'+"\n"+"\t"+
+                       "\'"+ 'protocolName'"\'"+":"+  "\'" + protocolname + "\'" +","+"\n"+"\t"+
+                       "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
+                       "'description':'Opentrons Flex custom script''User customized drugdilution on OT2'}\n" + "\n")
+            file.write("requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}")
+            
+            for asd in lines:
+                file.write(asd)
+                
+            if(simulation == "1"):
+                file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
+                           "bep = simulate.get_protocol_api('2.19'), robot_type = 'Flex'" + "\n" + 
+                           "bep.home()" + "\n" + "run(bep)" + "\n" +
+                           "for line in bep.commands():" + "\n"+"\t"+"print(line)")
+        return
         
     elif "Drugditlution384.py" in directscript:
-        with open(Truename, 'w+') as file:
-                    file.write("#" + 'This protocol is made for'+ " " + fileName + "\n")
-                    file.write('fileName =' + "\'" + fileName  + '.csv'+ "\'" "\n" + "\n")
-                    file.write('pc =' + "\'" +pc + "\'" + "\n" + "\n")
-                    file.write('brand =' + "\'" + brand + "\'" + "\n" + "\n")
-                    file.write('touch_tips =' + "\'" + "No" + "\'" + "\n" + "\n")
-                    file.write('#METADATA----------' "\n" +
-                                'metadata = {'+"\n"+"\t"+
-                                    "\'"+ 'protocolName'"\'"+":"+  "\'" + protocolname + "\'" +","+"\n"+"\t"+
-                                    "\'"+'author'"\'"+":" + "\'" +'Sebastian <sebastian.tandar@gmail.com>' +"\'" +"\'"+ 'Jorn <jornbrink@kpnmail.nl>' + "\'"+"," +"\n"+"\t"+
-                                    "\'"+'description'"\'"+":" + "\'" +'96 wells plate MIC with p300 possibility'+"\'"+ "\'"+'User customized'+"\'"+","+ "\n"+"\t"+
-                                    "\'"+'apiLevel'"\'"+":"+"\'" +'2.15'+"\'"+ "\n"+'}\n')
-                    
-                    #actually puts the script into the new file
-                    for asd in lines:
-                        file.write(asd)
-                        
-                    if(simulation == "1"):
-                        file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
-                                   "bep = simulate.get_protocol_api('2.15')" + "\n" + 
-                                   "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_input(fileName)" + "\n"+
-                                   "for line in bep.commands():" + "\n"+"    print(line)")
-                    else:
-                        print ("Simulation mode inactive")
+        os.chdir(directscriptpath)
         
-    else:
-        sg.popup("It seems that you have not selected anything?", keep_on_top=True)
-    return
-
-directscriptname = 'asdf_adsf_dsaf.py'
-simulation ="1"
-cmdfilename = "wupwup.csv"
-pc = "Jorn"
-protname = "qpcr"
-robotname= "Wall-E"
-test = Protocolcustomizer(directscriptname, simulation, cmdfilename, pc, "brand", protname, robotname,  "qPCR.py")
-
+        #opening the directscript
+        with open('Drugditlution384.py') as f:
+            lines=f.readlines()
         
+        #change working directory to the new script spot for making the new script
+        os.chdir(newpathDS)
         
+        try:
+            fh = open(experimentname, 'r+')
+        except:
+            fh= open(experimentname, 'w+')
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-# =============================================================================
-#     with open(Truename, 'w+') as file:
-#             file.write("#" + 'This protocol is made for'+ " " + activeOT2 + "\n")
-#             file.write('fileName =' + "\'" + file_name_meta  + '.csv'+ "\'" "\n" + "\n")
-#             file.write('pc =' + "\'" +active_pc + "\'" + "\n" + "\n")
-#             if(values['384wy'] == True):
-#                 file.write('brand =' + "\'" + brand + "\'" + "\n" + "\n")
-#             else:
-#                 print("")
-#             file.write('touch_tips =' + "\'" + touch_tips + "\'" + "\n" + "\n")
-#             file.write('#METADATA----------' "\n" +
-#                         'metadata = {'+"\n"+"\t"+
-#                             "\'"+ 'protocolName'"\'"+":"+  "\'" + Direct_protocol_name + "\'" +","+"\n"+"\t"+
-#                             "\'"+'author'"\'"+":" + "\'" +'Sebastian <sebastian.tandar@gmail.com>' +"\'" +"\'"+ 'Jorn <jornbrink@kpnmail.nl>' + "\'"+"," +"\n"+"\t"+
-#                             "\'"+'description'"\'"+":" + "\'" +'96 wells plate MIC with p300 possibility'+"\'"+ "\'"+'User customized'+"\'"+","+ "\n"+"\t"+
-#                             "\'"+'apiLevel'"\'"+":"+"\'" +'2.15'+"\'"+ "\n"+'}\n')
-#             
-#             #actually puts the script into the new file
-#             for asd in lines:
-#                 file.write(asd)
-#                 
-#             if(simulation == "1" and values['384wn'] == True):
-#                 file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
-#                            "bep = simulate.get_protocol_api('2.15')" + "\n" + 
-#                            "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_dat(filename)" + "\n"+
-#                            "for line in bep.commands():" + "\n"+"    print(line)")
-#             elif(simulation == "1" and values['384wy'] == True):
-#                 file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
-#                            "bep = simulate.get_protocol_api('2.15')" + "\n" + 
-#                            "bep.home()" + "\n" + "run(bep)" + "\n" + "amtList, cmdList, deckMap = ReadCSV_input(fileName)" + "\n"+
-#                            "for line in bep.commands():" + "\n"+"    print(line)")
-#             else:
-#                 print ("Simulation mode inactive")
-# =============================================================================
+        with open (experimentname, 'w+') as file:
+            file.write("# This protocol is made for " + activerobot + "\n")
+            file.write("fileName = '" + fileName + ".csv'" + "\n" + "\n")
+            file.write("pc = '" + pc + "'" + "\n" + "\n")
+            file.write('brand =' + "\'" + brand + "\'" + "\n" + "\n")
+            file.write("touch_tips = 'Yes'" + "\n" + "\n")
+            file.write("#METADATA----------" + "\n" + 
+                       'metadata = {'+"\n"+"\t"+
+                       "\'"+ 'protocolName'"\'"+":"+  "\'" + protocolname + "\'" +","+"\n"+"\t"+
+                       "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
+                       "'description':'Opentrons Flex custom script''User customized drugdilution on OT2'}\n" + "\n")
+            file.write("requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}")
+            
+            for asd in lines:
+                file.write(asd)
+                
+            if(simulation == "1"):
+                file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
+                           "bep = simulate.get_protocol_api('2.19'), robot_type = 'Flex'" + "\n" + 
+                           "bep.home()" + "\n" + "run(bep)" + "\n" +
+                           "for line in bep.commands():" + "\n"+"\t"+"print(line)")
+        return
