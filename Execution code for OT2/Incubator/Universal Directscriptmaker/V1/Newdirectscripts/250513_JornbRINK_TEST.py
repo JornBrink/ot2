@@ -1,3 +1,17 @@
+# This protocol is made for WallE
+fileName = 'CommandList_PMID-_co_culture_EXPID-COL_co_colture-20_Koumans.Annika.csv'
+
+pc = 'Jorn'
+
+touch_tips = 'Yes'
+
+#METADATA----------
+metadata = {
+	'protocolName':'TEST',
+	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
+	'description':'Opentrons Flex custom script''User customized drugdilution on Flex'}
+
+requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}
 #IMPORTS---------
 import csv
 import numpy as np
@@ -431,3 +445,11 @@ def run(protocol: protocol_api.ProtocolContext):
             elif(int(cmdRow[6]) != int(cmdList[i+1][6])):
                 #drop if different tip id is detected
                 left_pipette.drop_tip()
+
+##########Simulation##########
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.19', robot_type = 'Flex')
+bep.home()
+run(bep)
+for line in bep.commands():
+	print(line)

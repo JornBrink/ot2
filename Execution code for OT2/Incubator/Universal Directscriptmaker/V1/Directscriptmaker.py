@@ -32,14 +32,12 @@ def Mainwindow(simulation, protocollist):
          [sg.T("What experiment are you running?")],
          [sg.Listbox(protocollist, size = (50, 4), key = "protocol")],
          [sg.T('Sarstedt or Greiner (only 48 wellplates)')],
-         [sg.R('Sarstedt', 'group6', key = 'brands'), sg.R('Greiner', 'group6', key ='brandg')],
+         [sg.R('Sarstedt', 'group6', key = 'brands'), sg.R('Greiner', 'group6', key ='brandg', default=True)],
          [sg.B('Save', s= 16, button_color = 'black on yellow'), sg.B('Send', disabled = True, s= 16), sg.P(), sg.B('Close', s=16, button_color = 'tomato')]
          ]
     return sg.Window('Directscript maker', layout, finalize = True) 
 
-
-
-
+#cmdlistmaker Doesnt function yet
 def filesending():
     layout = [
         [sg.Text("Please provide all information below")],
@@ -114,40 +112,54 @@ while True:
         experimentname = values.get("ExpName")
         usrname = values.get("Name")
         date = values.get("date")
-
-        directscript = values.get("protocol")
-        directscript = directscript[0]
-        directscriptname = date + "_" + usrname + "_" + experimentname + ".py"
         
-        #time to check if the browsefile is actually in the right directory
-        if(values['Made'] == True):
-             cmdfilename = x
-
+        directscript = values.get("protocol")
+        if "" in (experimentname, usrname, date, directscript[0]):
+            sg.popup("Please fill all items")
         else:
-            #Browse will have the entire path --> need transformation to only get the .csv file
-            cmdfilename = values['Browse']
-            #pathfile is the path it is browsed from. Needed for the shuttil operation
-            pathfile = cmdfilename
-            cmdfilename= Path(cmdfilename)
-            cmdfilename = cmdfilename.name
-            cmdfilename = cmdfilename.split(".")
-            #note: this is only the file name not with extention yet
-            cmdfilename = cmdfilename[0]+"."+cmdfilename[1]
+            directscript = directscript[0]
+            directscriptname = date + "_" + usrname + "_" + experimentname + ".py"
             
-            #Move from USB or other spot to correct file spot
-            filecheck1 =  os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
-            check4 = os.path.isfile(filecheck1)
-            filemove = os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
-            
-            #and actually making sure this is not causing the simulation to fail. (not what we would want)
-            if(check4 == False and simulation == "0"):
-                print("filecheck correct")
-                shutil.copy(pathfile, filemove, follow_symlinks=True)
-                print("Copy succesfull")
-            elif(check4 == True and simulation == "0"):
-                print("Check complete :)")
+            #time to check if the browsefile is actually in the right directory
+            if(values['Made'] == True):
+                 cmdfilename = x
+    
             else:
-                print("")
-             
-             
+                #Browse will have the entire path --> need transformation to only get the .csv file
+                cmdfilename = values['Browse']
+                #pathfile is the path it is browsed from. Needed for the shuttil operation
+                pathfile = cmdfilename
+                cmdfilename= Path(cmdfilename)
+                cmdfilename = cmdfilename.name
+                cmdfilename = cmdfilename.split(".")
+                #note: this is only the file name not with extention yet
+                cmdfilename = cmdfilename[0]+"."+cmdfilename[1]
+                
+                #Move from USB or other spot to correct file spot
+                filecheck1 =  os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
+                check4 = os.path.isfile(filecheck1)
+                filemove = os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
+                
+                #and actually making sure this is not causing the simulation to fail. (not what we would want)
+                if(check4 == False and simulation == "0"):
+                    print("filecheck correct")
+                    shutil.copy(pathfile, filemove, follow_symlinks=True)
+                    print("Copy succesfull")
+                elif(check4 == True and simulation == "0"):
+                    print("Check complete :)")
+                else:
+                    print("")
+            
+            brandg = values.get("brandg")
+            if brandg == True:
+                brand = "Greiner"
+            else:
+                brand = "Sarstedt"
+            
+            #customizing the protocol to make a Unique Directscript
+            protocol = Protocolcustomizer.Protocolctzer(directscriptname, simulation, cmdfilename, pc, brand, experimentname, robotname, directscript)
+            
+            #After all thatenable sending
+            window['Send'].update(disabled=False)
+            window['Send'].update(button_color = 'green')
              

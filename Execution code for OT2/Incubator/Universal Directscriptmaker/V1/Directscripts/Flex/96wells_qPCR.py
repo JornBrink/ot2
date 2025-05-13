@@ -1,21 +1,3 @@
-#This protocol is made for WallE
-fileName ='CommandList_PMID-01_EXPID-qPCR Flex test paint-Painttest_Brink.Jorn.csv'
-
-pc ='Jorn'
-
-touch_tips ='Yes'
-
-brand = "Greiner"
-
-#METADATA----------
-metadata = {
-	'protocolName':'Flex paint test touch tip with PCR plate',
-	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
-	'description':'Opentrons Flex custom script''User customized qPCR'
-}
-
-requirements = {"robotType": "Flex", "apiLevel": "2.19"}
-
 
 #IMPORTS---------
 import csv
@@ -568,16 +550,5 @@ def run(protocol: protocol_api.ProtocolContext):
         #drop tip decision
         if(int(tip_next) != int(current_tip) or (i == len(aspirate_groups2)-1)):
             c_pipette.drop_tip()
-
-
-
-##########Simulation##########
-
-from opentrons import simulate
-bep = simulate.get_protocol_api('2.19', robot_type = 'Flex')
-bep.home()
-run(bep) 
-for line in bep.commands():
-    print(line)
 
 
