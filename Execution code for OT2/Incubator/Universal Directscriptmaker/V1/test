@@ -1,0 +1,16 @@
+# This protocol is made for Wall-E
+fileName = 'Wupwup.csv'
+
+pc = 'Jorn'
+
+brand = 'Greiner'
+
+touch_tips = 'Yes'
+
+#METADATA----------
+metadata = {
+	'protocolName':'qPCR',
+	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
+	'description':'Opentrons Flex custom script''User customized qPCR'}
+
+requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}

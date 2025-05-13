@@ -5,8 +5,8 @@ def Protocolcustomizer(experimentname, simulation, fileName, pc, brand, protocol
     #this should take the directscript <- selected in the window
     #start getting pathing
     if simulation == "1":
-        basepath = os.getcwd()
-        print(basepath)
+        basepath = os.getcwd() #this will be the same as the main executable
+        newpathDS = basepath + "//Newdirectscripts"
         if "qPCR" in directscript or "Drugdilution96flex" in directscript:
             directscriptpath = os.getcwd() +  '//Directscripts//Flex'
         else:
@@ -18,25 +18,79 @@ def Protocolcustomizer(experimentname, simulation, fileName, pc, brand, protocol
         newpathDS = userpath + "//Desktop//New Direct scripts"
     
     if "96wells_qPCR.py" in directscript:
-        #This protocol is made for WallE
-        print("testing qPCR")
         os.chdir(directscriptpath)
         
         #opening the directscript
         with open('96wells_qPCR.py') as f:
             lines=f.readlines()
         
-        if (simulation == "1"):
-            os.chdir(basepath + "//Newdirectscripts")
-        else:
-            os.chdir(newpathDS)
+        #change working directory to the new script spot for making the new script
+        os.chdir(newpathDS)
         
+        try:
+            fh = open(experimentname, 'r+')
+        except:
+            fh= open(experimentname, 'w+')
         
-        
-        
+        with open (experimentname, 'w+') as file:
+            file.write("# This protocol is made for " + activerobot + "\n")
+            file.write("fileName = '" + fileName + ".csv'" + "\n" + "\n")
+            file.write("pc = '" + pc + "'" + "\n" + "\n")
+            file.write("brand = 'Greiner'" + "\n" + "\n")
+            file.write("touch_tips = 'Yes'" + "\n" + "\n")
+            file.write("#METADATA----------" + "\n" + 
+                       'metadata = {'+"\n"+"\t"+
+                       "\'"+ 'protocolName'"\'"+":"+  "\'" + protocolname + "\'" +","+"\n"+"\t"+
+                       "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
+                       "'description':'Opentrons Flex custom script''User customized qPCR'}\n" + "\n")
+            file.write("requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}")
+            
+            for asd in lines:
+                file.write(asd)
+                
+            if(simulation == "1"):
+                file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
+                           "bep = simulate.get_protocol_api('2.19'), robot_type = 'Flex'" + "\n" + 
+                           "bep.home()" + "\n" + "run(bep)" + "\n" +
+                           "for line in bep.commands():" + "\n"+"\t"+"print(line)")
+        return
+    
     elif "Drugdilution96flex.py" in directscript:
-            #Adding metadata of the script to the script
-            print("testing flexdil")
+            os.chdir(directscriptpath)
+            
+            #opening the directscript
+            with open('Drugdilution96flex.py') as f:
+                lines=f.readlines()
+            
+            #change working directory to the new script spot for making the new script
+            os.chdir(newpathDS)
+            
+            try:
+                fh = open(experimentname, 'r+')
+            except:
+                fh= open(experimentname, 'w+')
+            
+            with open (experimentname, 'w+') as file:
+                file.write("# This protocol is made for " + activerobot + "\n")
+                file.write("fileName = '" + fileName + ".csv'" + "\n" + "\n")
+                file.write("pc = '" + pc + "'" + "\n" + "\n")
+                file.write("touch_tips = 'Yes'" + "\n" + "\n")
+                file.write("#METADATA----------" + "\n" + 
+                           'metadata = {'+"\n"+"\t"+
+                           "\'"+ 'protocolName'"\'"+":"+  "\'" + protocolname + "\'" +","+"\n"+"\t"+
+                           "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
+                           "'description':'Opentrons Flex custom script''User customized drugdilution on Flex'}\n" + "\n")
+                file.write("requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}")
+                
+                for asd in lines:
+                    file.write(asd)
+                    
+                if(simulation == "1"):
+                    file.write("\n" + "##########Simulation##########" + "\n" "from opentrons import simulate" + "\n" +
+                               "bep = simulate.get_protocol_api('2.19'), robot_type = 'Flex'" + "\n" + 
+                               "bep.home()" + "\n" + "run(bep)" + "\n" +
+                               "for line in bep.commands():" + "\n"+"\t"+"print(line)")
+            return
         
     elif "Drugdilution96.py" in directscript:
         

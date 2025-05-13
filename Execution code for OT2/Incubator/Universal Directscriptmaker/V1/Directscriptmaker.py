@@ -114,9 +114,37 @@ while True:
         experimentname = values.get("ExpName")
         usrname = values.get("Name")
         date = values.get("date")
-        cmdfilename = values.get("Browse")
+
         directscript = values.get("protocol")
         directscript = directscript[0]
         directscriptname = date + "_" + usrname + "_" + experimentname + ".py"
-        basepath = os.getcwd()
-        print(basepath)
+        
+        #time to check if the browsefile is actually in the right directory
+        if(values['Made'] == True):
+             cmdfilename = x
+
+        else:
+            #Browse will have the entire path --> need transformation to only get the .csv file
+            cmdfilename = values['Browse']
+            #pathfile is the path it is browsed from. Needed for the shuttil operation
+            pathfile = cmdfilename
+            cmdfilename= Path(cmdfilename)
+            cmdfilename = cmdfilename.name
+            cmdfilename = cmdfilename.split(".")
+            #note: this is only the file name not with extention yet
+            cmdfilename = cmdfilename[0]+"."+cmdfilename[1]
+            #Move from USB or other spot to correct file spot
+            filecheck1 =  os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
+            check4 = os.path.isfile(filecheck1)
+            filemove = os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
+            if(check4 == False and simulation == "0"):
+                print("filecheck correct")
+                shutil.copy(pathfile, filemove, follow_symlinks=True)
+                print("Copy succesfull")
+            elif(check4 == True and simulation == "0"):
+                print("Check complete :)")
+            else:
+                print("")
+             
+             
+             
