@@ -43,7 +43,11 @@ def setup(upgrade, fullinstall):
         upgradedate = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         upgradedate = upgradedate.replace(":", "_")
         upgradedate = upgradedate.replace("-", "_")
+        move = userpath + "//Previous version//" + upgradedate
+        dirpath = os.path.dirname(os.path.realpath(__file__))
+        DSMpath = os.path.dirname(os.path.dirname(dirpath))
         os.makedirs(upgradedate, exist_ok= True)
+        shutil.copytree(DSMpath, move, dirs_exist_ok=True)
         os.chdir(userpath)
         rm = userpath + "//Directscriptmaker"
         shutil.rmtree(rm)

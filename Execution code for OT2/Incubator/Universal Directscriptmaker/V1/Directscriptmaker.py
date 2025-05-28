@@ -185,6 +185,8 @@ while True:
             #time to check if the browsefile is actually in the right directory
             if(values['Made'] == True):
                  cmdfilename = x
+                 print(cmdfilename)
+                 filecheck1 =  os.path.expanduser("~") + "//Desktop//User input (for direct)//" + cmdfilename + ".csv"
     
             else:
                 #Browse will have the entire path --> need transformation to only get the .csv file
