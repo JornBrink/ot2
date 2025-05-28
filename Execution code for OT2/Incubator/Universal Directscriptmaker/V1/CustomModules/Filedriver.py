@@ -8,11 +8,8 @@ import time
 import os
 import FreeSimpleGUI as sg
 
-#temporary items do not forget to remove
-
-
 #function
-def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, fillingrobot = False):
+def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, fillingrobot = False):
     #needed for the later appearence in the GUI
     x = 'NA'
     
@@ -65,7 +62,7 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
         driver.find_element(By.ID, "d_OT2").click()
         time.sleep(3)
         driver.find_element(By.ID, "guide").click()
-        time.sleep(3)
+        time.sleep(6)
         
         #check if the download was succesfull
         downpath = path + "//Downloads//"
@@ -82,9 +79,10 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
         elif(checkdownloadrsp == False):
             driver.find_element(By.ID, "guide").click()
         
-        #now to move it to the correct spot
+        #now to move it to the correct spot --> if needed, Most will just go to the correct spot since its in the driveroptions
         try:
             os.replace(downpathcmd, path_cmd)
+            
             os.replace(downpathrsp, path_rsp)
         except:
             pass

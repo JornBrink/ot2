@@ -1,1 +1,1 @@
-__all__ = ["Filedriver", "Selector", "Simconfig", "Protocolcustomizer"]
+__all__ = ["Filedriver", "Selector", "Simconfig", "Protocolcustomizer", "SetupDirectscriptmaker"]

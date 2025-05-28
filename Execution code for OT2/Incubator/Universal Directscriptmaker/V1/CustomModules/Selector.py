@@ -69,7 +69,7 @@ def protocolfinder(simulation, robot_type):
                 filelist.append(name)
     else:
         #production version
-        restpath = userpath + "//Desktop//Directscriptmaker//Directscripts//" + robot_type
+        restpath = userpath + "//Desktop//Directscriptmaker//_internal//Directscripts//" + robot_type
         filelist = os.listdir(restpath)
      
     return filelist
@@ -90,5 +90,5 @@ def protocolselector(simulation, robot_type, selection):
                         return truename
     else:
         #production version
-        restpath = userpath + "//Desktop//Directscriptmaker//Directscripts//" + robot_type + "//" + selection
+        restpath = userpath + "//Desktop//_internal//Directscripts//" + robot_type + "//" + selection
         return None  # If no file matches

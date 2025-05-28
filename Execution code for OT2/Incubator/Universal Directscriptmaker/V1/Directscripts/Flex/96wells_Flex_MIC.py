@@ -232,7 +232,7 @@ def run(protocol: protocol_api.ProtocolContext):
         elif(pc == "WALL-E" or pc== "WallE"):
             os.chdir('C://Users//QPlei//Desktop//User input (for direct)')
         else:
-            os.chdir('C://Users//OT2QP//Desktop//User input (for direct)')
+            os.chdir(os.path.expanduser("~") + '//Desktop//User input (for direct)')
     except:
         os.chdir('/var/lib/jupyter/notebooks/UserInputs')
 

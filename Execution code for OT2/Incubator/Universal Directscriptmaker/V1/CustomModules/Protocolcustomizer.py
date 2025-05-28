@@ -14,7 +14,7 @@ def Protocolctzer(scriptname, simulation, fileName, pc, brand, experimentname, a
         
     else:
         userpath = os.path.expanduser("~")
-        directscriptpath = userpath + "//Desktop//Directscripts//" + pc
+        directscriptpath = userpath + "//Desktop//Directscriptmaker//_internal//Directscripts//" + pc
         newpathDS = userpath + "//Desktop//New Direct scripts"
     
     if "96wells_qPCR.py" in directscript:

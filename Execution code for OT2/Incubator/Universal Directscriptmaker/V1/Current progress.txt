@@ -1,4 +1,0 @@
-
-13/05
-Most main custom modules are now completed and the first window is now nearing completion. 
-In principle the whole Saving function is now completed and supporting modules

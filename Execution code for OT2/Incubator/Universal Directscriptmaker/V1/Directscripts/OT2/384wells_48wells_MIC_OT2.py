@@ -1,21 +1,3 @@
-#This protocol is made for WallE
-fileName ='CommandList_PMID-test_EXPID-384w.csv'
-
-pc ='Jorn'
-
-touch_tips ='No'
-
-brand = "Greiner"
-
-#METADATA----------
-metadata = {
-	'protocolName':'testtest testtest Flex',
-	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
-	'description':'Opentrons Flex custom script''User customized qPCR'
-}
-
-requirements = {"robotType": "OT2", "apiLevel": "2.19"}
-
 
 #IMPORTS---------
 import csv
@@ -249,7 +231,7 @@ def run(protocol: protocol_api.ProtocolContext):
         elif(pc == "Sebastian" or pc== "sebastian"):
             os.chdir("C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\DownstreamProcessors")
         else:
-            os.chdir('C://Users//User//Desktop//User input (for direct)')
+            os.chdir(os.path.expanduser("~") + '//Desktop//User input (for direct)')
     except:
         os.chdir('/var/lib/jupyter/notebooks/UserInputs')
         

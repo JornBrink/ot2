@@ -656,4 +656,3 @@ while True:
         
         else:
             sg.Popup('Please select the method you want to use (the app is going to crash now)')
-            window.close()
