@@ -10,32 +10,44 @@
         #Userinputs ( \Desktop\User input (for direct))
         #Output directory (//New Direct scripts)
         
-
 # imports
 import os
 import shutil
 import FreeSimpleGUI as sg
+import datetime
 
 def installwindow():
     layout = [
-        [sg.T("The installation detection found that Directscriptmaker needs to be installed")],
+        [sg.T("Installation setup started, want to Install? Uninstall? Upgrade?")],
         [sg.T("Ready for setup?")],
-        [sg.B("Install", button_color="green"), sg.P(), sg.B("Cancel", button_color = "tomato")],
+        [sg.B("Install/upgrade", button_color="green"), sg.P(), sg.B("Uninstall", button_color="yellow"), sg.P(), sg.B("Cancel", button_color = "tomato")],
     ]
     return sg.Window('Installation window', layout, finalize=True)
 
-def progresswindow(step):
+def installprogresswindow(step):
     layout = [
-        [sg.T("Currently installing directscriptmaker please wait")],
+        [sg.T("Select installation step:"), sg.R("Upgrade", 'group7', key = "upgrade"), sg.R("Full install", 'group7', key = "Fintall", default=True)],
         [sg.T("Current step"), sg.T(step, key='-step-')],
-        [sg.P(), sg.B("Cancel installation", button_color='tomato')]
+        [sg.B("GO", button_color="Green"), sg.P(), sg.B("Cancel installation", button_color='tomato')]
     ]
     return sg.Window('Progress window', layout, finalize=True)
 
-def setup():
+
+def setup(upgrade, fullinstall):
     userpath = os.path.expanduser("~") + "//Desktop"
     os.chdir(userpath)
-
+    
+    if upgrade == True:
+        os.makedirs("Previous version", exist_ok= True)
+        os.chdir(userpath + "//Previous version")
+        upgradedate = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        upgradedate = upgradedate.replace(":", "_")
+        upgradedate = upgradedate.replace("-", "_")
+        os.makedirs(upgradedate, exist_ok= True)
+        os.chdir(userpath)
+        rm = userpath + "//Directscriptmaker"
+        shutil.rmtree(rm)
+        
     os.makedirs("Directscriptmaker", exist_ok=True)
     DSMloc = userpath + "//Directscriptmaker"
 
@@ -63,10 +75,26 @@ def setup():
     shutil.copytree(driver, Driverloc, dirs_exist_ok=True)
     
     #done
-    step = "DONE :)"
+    step = "Installed :)"
     window2['-step-'].update(step)
     
     window.close()
+    return
+
+def uninstall():
+    userpath = os.path.expanduser("~") + "//Desktop"
+    os.chdir(userpath)
+    
+    #just some destinations that need to be gone
+    DSMloc = userpath + "//Directscriptmaker"
+    Driverloc = userpath + "//DO NOT TOUCH THIS FOLDER (webdriver)"
+    NDSloc = userpath + "//New Direct scripts"
+    cmdloc = userpath + "//User input (for direct)"
+    
+    shutil.rmtree(DSMloc, ignore_errors= True)
+    shutil.rmtree(Driverloc, ignore_errors= True)
+    shutil.rmtree(DSMloc, ignore_errors= True)
+    shutil.rmtree(Driverloc, ignore_errors= True)
     return
     
 
@@ -87,16 +115,29 @@ while True:
         if not window1_active and not window2_active:
             break
 
-    if window == window1 and event == "Install":
+    if window == window1 and event == "Uninstall":
+        try:
+            uninstall()
+            print("uninstalled")
+            
+        except Exception as e:
+                sg.popup("Something broke:", str(e))
+        
+        
+    if window == window1 and event == "Install/upgrade":
         window1.close()
         window1_active = False
 
-        step = "Step 1: Creating folders"
-        window2 = progresswindow(step)
+        step = "Step 1: Selecting install/upgrade"
+        window2 = installprogresswindow(step)
         window2_active = True
 
+
+
+    if window == window2 and event == "GO":
+        upgrade = values.get("upgrade")
+        fullinstall = values.get("Finstall")
         try:
-            print("works")
-            setup()
+            setup(upgrade, fullinstall)
         except Exception as e:
             sg.popup("Something broke:", str(e))

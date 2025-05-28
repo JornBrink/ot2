@@ -62,7 +62,7 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
         driver.find_element(By.ID, "d_OT2").click()
         time.sleep(3)
         driver.find_element(By.ID, "guide").click()
-        time.sleep(6)
+        time.sleep(10)
         
         #check if the download was succesfull
         downpath = path + "//Downloads//"
@@ -95,11 +95,13 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
     return x
 
 
-#only troubleshooting
-if __name__ == "__main__":
-   options = Options()
-   options.set_preference("browser.download.folderList", 2)
-   options.set_preference("browser.download.manager.showWhenStarting", False)
-   options.set_preference("browser.download.dir", r"C:\Users\User\Desktop\User input (for direct)")
-   service = Service(executable_path= os.path.expanduser("~") + "//Desktop" +'//DO NOT TOUCH THIS FOLDER (webdriver)//geckodriver.exe')
-   driver = webdriver.Firefox(service = service, options = options) 
+# =============================================================================
+# #only troubleshooting
+# if __name__ == "__main__":
+#    options = Options()
+#    options.set_preference("browser.download.folderList", 2)
+#    options.set_preference("browser.download.manager.showWhenStarting", False)
+#    options.set_preference("browser.download.dir", r"C:\Users\User\Desktop\User input (for direct)")
+#    service = Service(executable_path= os.path.expanduser("~") + "//Desktop" +'//DO NOT TOUCH THIS FOLDER (webdriver)//geckodriver.exe')
+#    driver = webdriver.Firefox(service = service, options = options) 
+# =============================================================================

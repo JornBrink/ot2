@@ -123,6 +123,48 @@ while True:
         window2 = filesending()
         window1.Hide()
         
+     #window 1 events refresh
+    if event == 'Refresh':
+        try:
+            if(values['Selected']== True and str(x) == "NA"):
+                ok = sg.PopupOKCancel("This function does not do anything when you havent made a command list through this program or you havent selected made" '\n' "(underneath the browse button)")
+                if(ok =="OK"):
+                    print('Try again')
+                else:
+                    print('try again')
+                    
+            elif(values['Selected'] == True and str(x) != "NA"):
+                tryagain = sg.PopupOKCancel("Dont forget to set selected --> 'Made' underneath Browse (this should never occur, congrats)")
+            
+            else:
+                x = str(x)
+                window['importfilename'].update(str(x))
+                longstring = x.split("_")
+                pmidstr = longstring[1]
+                pmidstr = pmidstr.split("-")
+                pmidstr = pmidstr[1]
+                
+                try: 
+                    expnamestr = longstring[2] + longstring[3]
+                    expnamestr = expnamestr.removeprefix('EXPID-')
+                    namestr = longstring[4]
+                    namestr = namestr.split('.')
+                    namestr = namestr[1] + namestr[0]
+                except:
+                    expnamestr = longstring[2]
+                    expnamestr = expnamestr.removeprefix('EXPID-')
+                    namestr = longstring[3]
+                    namestr = namestr.split('.')
+                    namestr = namestr[1] + namestr[0]
+                try:    
+                    window['ExpName'].update(expnamestr)
+                    window['Name'].update(namestr)
+                except:
+                    smting = sg.PopupOKCancel("Name can not be pasted into areas, check if file is ok and fill in yourself")
+        except:
+            ok = sg.PopupOKCancel("This function does not do anything when you havent made a command list through this program or you havent selected made" '\n' "(underneath the browse button)")
+    
+       
     if event == 'Save':
         #save event triggers only on window1. Goal: save user input and start preperations for sending the csv
         experimentname = values.get("ExpName")
