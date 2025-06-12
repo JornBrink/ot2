@@ -278,7 +278,7 @@ while True:
 
                 if (simulation == "1"):
                     path = os.path.expanduser("~")
-                    downloadloc = path + r"\Documents\GitHub\ot2new\Execution code for OT2\Incubator\Universal Directscriptmaker\Supporting scripts and items\Webdriver\Firefox download test"
+                    downloadloc = path + r"\Documents\GitHub\ot2\Execution code for OT2\Incubator\Universal Directscriptmaker\Supporting scripts and items\Webdriver\Firefox download test"
                     options.set_preference("browser.download.dir", downloadloc)
                     service = Service(executable_path= path +  "//Documents//GitHub//ot2//Execution code for OT2//Incubator//Universal Directscriptmaker//Supporting scripts and items//Webdriver//Firefox webdriver//geckodriver.exe")
 
