@@ -776,7 +776,7 @@ mainExec <- function(file_name){
 
 #TROUBLESHOOTING--------------
 mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\upstream (R) processors\\CQ_Plate\\"
-inputFile <- "CQ_InputTemplate_GCV_FOS_LS_2.xlsx"
+inputFile <- "CQ_InputTemplate_CIP_GEN_extra.xlsx"
 dqs <- mainExec(paste0(mainwd, inputFile))
 
 # write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
