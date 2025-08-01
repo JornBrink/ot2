@@ -4,6 +4,7 @@ import os
 def Protocolctzer(scriptname, simulation, fileName, pc, brand, experimentname, activerobot, directscript):
     #this should take the directscript <- selected in the window
     #start getting pathing
+    metaname = scriptname.removesuffix('.py')
     if simulation == "1":
         basepath = os.getcwd() #this will be the same as the main executable
         newpathDS = basepath + "//Newdirectscripts"
@@ -40,9 +41,9 @@ def Protocolctzer(scriptname, simulation, fileName, pc, brand, experimentname, a
             file.write("touch_tips = 'Yes'" + "\n" + "\n")
             file.write("#METADATA----------" + "\n" + 
                        'metadata = {'+"\n"+"\t"+
-                       "\'"+ 'protocolName'"\'"+":"+  "\'" + experimentname + "\'" +","+"\n"+"\t"+
+                       "\'"+ 'protocolName'"\'"+":"+  "\'" + metaname + "\'" +","+"\n"+"\t"+
                        "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
-                       "'description':'Opentrons Flex custom script''User customized qPCR'}\n" + "\n")
+                       "'description':'Opentrons Flex custom script'' User customized qPCR'}\n" + "\n")
             file.write("requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}"+ "\n")
             
             for asd in lines:
@@ -74,12 +75,12 @@ def Protocolctzer(scriptname, simulation, fileName, pc, brand, experimentname, a
                 file.write("# This protocol is made for " + activerobot + "\n")
                 file.write("fileName = '" + fileName + ".csv'" + "\n" + "\n")
                 file.write("pc = '" + pc + "'" + "\n" + "\n")
-                file.write("touch_tips = 'Yes'" + "\n" + "\n")
+                file.write("touch_tips = 'No'" + "\n" + "\n")
                 file.write("#METADATA----------" + "\n" + 
                            'metadata = {'+"\n"+"\t"+
-                           "\'"+ 'protocolName'"\'"+":"+  "\'" + experimentname + "\'" +","+"\n"+"\t"+
+                           "\'"+ 'protocolName'"\'"+":"+  "\'" + metaname + "\'" +","+"\n"+"\t"+
                            "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
-                           "'description':'Opentrons Flex custom script''User customized drugdilution on Flex'}\n" + "\n")
+                           "'description':'Opentrons Flex custom script ''User customized drugdilution on Flex'}\n" + "\n")
                 file.write("requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}"+ "\n")
                 
                 for asd in lines:
@@ -112,13 +113,13 @@ def Protocolctzer(scriptname, simulation, fileName, pc, brand, experimentname, a
             file.write("# This protocol is made for " + activerobot + "\n")
             file.write("fileName = '" + fileName + ".csv'" + "\n" + "\n")
             file.write("pc = '" + pc + "'" + "\n" + "\n")
-            file.write("touch_tips = 'Yes'" + "\n" + "\n")
+            file.write("touch_tips = 'No'" + "\n" + "\n")
             file.write("#METADATA----------" + "\n" + 
                        'metadata = {'+"\n"+"\t"+
-                       "\'"+ 'protocolName'"\'"+":"+  "\'" + experimentname + "\'" +","+"\n"+"\t"+
+                       "\'"+ 'protocolName'"\'"+":"+  "\'" + metaname + "\'" +","+"\n"+"\t"+
                        "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
-                       "'description':'Opentrons OT2 custom script''User customized drugdilution 96 wells on OT2'}\n" + "\n")
-            file.write("requirements = {'robotType': 'OT2', 'apiLevel': '2.19'}")
+                       "'description':'Opentrons OT2 custom script'' User customized drugdilution 96 wells on OT2'}\n" + "\n")
+            file.write("requirements = {'robotType': 'OT-2', 'apiLevel': '2.15'}")
             
             for asd in lines:
                 file.write(asd)
@@ -150,13 +151,13 @@ def Protocolctzer(scriptname, simulation, fileName, pc, brand, experimentname, a
             file.write("fileName = '" + fileName + ".csv'" + "\n" + "\n")
             file.write("pc = '" + pc + "'" + "\n" + "\n")
             file.write('brand =' + "\'" + brand + "\'" + "\n" + "\n")
-            file.write("touch_tips = 'Yes'" + "\n" + "\n")
+            file.write("touch_tips = 'No'" + "\n" + "\n")
             file.write("#METADATA----------" + "\n" + 
                        'metadata = {'+"\n"+"\t"+
-                       "\'"+ 'protocolName'"\'"+":"+  "\'" + experimentname + "\'" +","+"\n"+"\t"+
+                       "\'"+ 'protocolName'"\'"+":"+  "\'" + metaname + "\'" +","+"\n"+"\t"+
                        "'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>'," + "\n"+"\t"+
-                       "'description':'Opentrons OT2 custom script''User customized drugdilution 384 or 48 wells on OT2'}\n" + "\n")
-            file.write("requirements = {'robotType': 'OT2', 'apiLevel': '2.19'}")
+                       "'description':'Opentrons OT2 custom script'' User customized drugdilution 384 or 48 wells on OT2'}\n" + "\n")
+            file.write("requirements = {'robotType': 'OT-2', 'apiLevel': '2.15'}")
             
             for asd in lines:
                 file.write(asd)
