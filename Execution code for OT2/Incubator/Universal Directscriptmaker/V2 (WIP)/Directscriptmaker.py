@@ -1,5 +1,5 @@
 """
-uDirectscriptmaker - V1
+uDirectscriptmaker - V1.5
 Author: JB
 """
 
@@ -34,7 +34,7 @@ def Mainwindow(simulation, protocollist, x):
          [sg.Listbox(protocollist, size = (50, 4), key = "protocol")],
          [sg.T('Sarstedt or Greiner (only 48 wellplates)')],
          [sg.R('Sarstedt', 'group6', key = 'brands'), sg.R('Greiner', 'group6', key ='brandg', default=True)],
-         [sg.T('Do you use Filter tips?')],
+         [sg.T('Do you use Filter tips? (only affects flex)')],
          [sg.R("p1000 only", 'group7', key = 'p1000'), sg.R("p50 only", 'group7', key = 'p50'), sg.R("Both", 'group7', key ='both'), sg.R("None", 'group7', key='none', default=True)],
          [sg.B('Save', s= 16, button_color = 'black on yellow'), sg.B('Send', disabled = True, s= 16), sg.P(), sg.B('Close', s=16, button_color = 'tomato')]
          ]
