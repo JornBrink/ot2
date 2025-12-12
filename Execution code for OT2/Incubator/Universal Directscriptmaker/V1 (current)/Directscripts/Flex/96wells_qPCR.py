@@ -54,8 +54,8 @@ def translate_labwareLibrary(string_identifier, brand):
             labware_name = "nest_96_wellplate_2ml_deep" 
             return labware_name
         else:
-            labware_name = "nest_96_wellplate_100ul_pcr_full_skirt"
-            #labware_name = "appliedbiosystems_96_wellplate_100ul"  
+            #labware_name = "nest_96_wellplate_100ul_pcr_full_skirt"
+            labware_name = "appliedbiosystems_96_wellplate_100ul"  
             return labware_name
             
     elif("Tiprack" in string_identifier or "p5" in string_identifier or "p1" in string_identifier):
@@ -88,9 +88,9 @@ def get_LabwareCaller(deck_num):
 
 def cal_transferSpeed(min_trans_amt):
     if(min_trans_amt < 300):
-        trans_speed = min(min_trans_amt / 1.5, 150) # upper limit of 150 ul/s
+        trans_speed = min(min_trans_amt / 2, 50) # upper limit of 50 ul/s
     else:
-        trans_speed = min(min_trans_amt / 1.5, 300) # upper limit of 250 ul/s for higher volume transfers
+        trans_speed = min(min_trans_amt / 1.5, 150) # upper limit of 250 ul/s for higher volume transfers
     return(trans_speed)
 
 def cal_aspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
@@ -138,12 +138,12 @@ def cal_aspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
         
         if(rem_v > Vmax_bot):
             if(rem_v > (Vmax_bot + 50) and ("1.5" in ware_name)):
-                h_tip = 1 # hard-code location for eppendorfs
+                h_tip = 1.5 # hard-code location for eppendorfs
             else:
                 h_tip = h_bot + (rem_v - Vmax_bot)/(pi*r**2)
         else:
             if("1.5" in ware_name):
-                h_tip = 0.5 # hard-code location for eppendorfs
+                h_tip = 1.5 # hard-code location for eppendorfs
             else:
                 h_tip = ((3*rem_v*h_bot**2)/(pi*r**2))**(1/3)
         
@@ -357,7 +357,7 @@ def run(protocol: protocol_api.ProtocolContext):
             c_mix = min(float(c_amt[0])/1.25, 50)
             print(mixid)
         elif("1000" in str(c_pipette) and mix[current_set[0]] > '0'):
-            c_mix = min(float(c_amt[0])/2, 800)
+            c_mix = min(float(c_amt[0])/3, 800)
         else:
             c_mix = 0
         
@@ -420,7 +420,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
                 # adjust dispense speed for 384 well plate
                 if("384" not in str(labwareCaller[get_LabwareCaller(c_target_deck[0])])):
-                    c_pipette.flow_rate.dispense=max(current_aspSpeed, 75) # max. 75 dispense speed for common labwares
+                    c_pipette.flow_rate.dispense=max(current_aspSpeed/2, 50) # max. 75 dispense speed for common labwares
                 else:
                     c_pipette.flow_rate.dispense=max(current_aspSpeed/2, 25) #half speed for 384 well-plate; min. of 25
           
@@ -451,7 +451,7 @@ def run(protocol: protocol_api.ProtocolContext):
                         c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]],
                                             radius=0.45, speed=13)
                 
-                c_pipette.blow_out(trash)
+                c_pipette.blow_out()#251212 changed from trash location to location of the well since liquid handling seems inconsistent
                 # update amount list
                 amtList = update_amtList(amtList, c_source_deck, c_source_slot, current_transfer, "aspirate")
                 amtList = update_amtList(amtList, c_target_deck[0], c_target_slot[0], current_transfer, "dispense")
@@ -546,7 +546,7 @@ def run(protocol: protocol_api.ProtocolContext):
                     c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[-1]],
                                             radius=0.5, speed=13)
             #   blow out at last target
-            c_pipette.blow_out(trash)
+            c_pipette.blow_out()#changed from trash to none to try to get more consistency in volume mm and well
         #drop tip decision
         if(int(tip_next) != int(current_tip) or (i == len(aspirate_groups2)-1)):
             c_pipette.drop_tip()
