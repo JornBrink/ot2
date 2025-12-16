@@ -414,7 +414,7 @@ def run(protocol: protocol_api.ProtocolContext):
         if(operation==1):
             #    setup multiple transfers when needed
             transferV = float(c_amt[0])
-            if("P50" in str(c_pipette)):
+            if("right mount" in str(c_pipette)):
                 max_trans = 50
             else:
                 max_trans = 1000
@@ -450,7 +450,13 @@ def run(protocol: protocol_api.ProtocolContext):
                     c_pipette.flow_rate.dispense=max(current_aspSpeed/2, 25) #half speed for 384 well-plate; min. of 25
           
                 # perform liquid transfer)
-                if(c_mix > 0):
+                if(c_mix > 0 and "1-Channel 1000" in str(c_pipette)):
+                    c_pipette.transfer(current_transfer, 
+                                       labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH),
+                                       labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]].bottom(current_dspH),
+                                       new_tip='never',  mix_before=(3, c_mix), airgap = 0)
+                
+                elif(c_mix > 0 and "1-Channel 50 μL" in str(c_pipette)):
                     c_pipette.transfer(current_transfer, 
                                        labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH),
                                        labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]].bottom(current_dspH),
@@ -460,6 +466,7 @@ def run(protocol: protocol_api.ProtocolContext):
                                        labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH),
                                        labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]].bottom(current_dspH),
                                        new_tip='never')
+                    
 		
         		#   adjust blow out speed
                 if("384" not in str(labwareCaller[get_LabwareCaller(c_target_deck[0])])):
