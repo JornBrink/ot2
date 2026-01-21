@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-service = Service(executable_path='C://Users//jornb//Documents//GitHub//ot2new//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer//Webdriver//Firefox webdriver//geckodriver')
+service = Service(executable_path='C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//OT2DirectprotocolCustomizer (depricated)//Webdriver//Firefox webdriver')
 driver = webdriver.Firefox(service = service)
 driver.get("http://www.python.org")
 assert "Python in driver.title"
