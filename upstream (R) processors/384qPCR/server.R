@@ -54,7 +54,7 @@ shinyServer(function(input, output){
     
     #perform if file is loaded
     if(input$do==0){
-      dis <- read_xlsx(infile$datapath, sheet=1, range = "B57:M64", col_names=F)
+      dis <- read_xlsx(infile$datapath, sheet=1, range = "B42:Y57", col_names=F)
       pmap_output <<- dis
     }else{
       #rename files for safekeeping

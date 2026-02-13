@@ -978,10 +978,12 @@ main <- function(file_path, filename = ""){
     dis <- replicate(length(SolList[,1]), "NA")
     x <- rownames(SolList)
     cmd_sollist <- cbind.data.frame(SolList[,c(1,2)], SolList[,3], x, dis, dis, dis, dis, dis, dis, stringsAsFactors=F)
+    cmd_sollisttest2 <<- cmd_sollist
     colnames(cmd_sollist) <- colnames(cmd_complete)
     
     dis <- replicate(length(deckmap[,1]), "NA")
     deckmap <- cbind.data.frame(deckmap, dis, dis, dis, dis, dis, dis, dis, dis)
+    
     cmdList_output <<- list(Sollisthead, cmd_sollist,
                             CMDlisthead, cmd_complete,
                             Decklisthead, deckmap
@@ -997,16 +999,16 @@ main <- function(file_path, filename = ""){
   displaysollist <- cmd_sollist[c(1,2,3)]
   displaysollist$what <- rownames(displaysollist)
   
-  displaylist <- displaysollist[c[1,2,4,3]]
+  displaylist <- displaysollist
     
-  colnames(displaylist) <- c("Deck location", "Slot", "What", "Required Amount")
+  colnames(displaylist) <- c("Deck location", "Slot", "Required Amount", "What")
   return(displaylist)
 }
 
 
 
-#TEST--------------
-# input
+# #TEST--------------
+# # input
 # errMessage <<- ""
 # fileName <- "qPCRTemplate384_PlateMap_128.xlsx"
 # #fileName <- "qPCRTemplate384_PlateMap.xlsx"
@@ -1014,7 +1016,3 @@ main <- function(file_path, filename = ""){
 # input_file_name <- paste0(mainwd, "\\", fileName)
 # #
 # output <- main(input_file_name)
-# 
-# 
-# write.csv(cmdList_output, paste0(mainwd, "/Halving_CommandList.csv"), row.names=F)
-# write_xlsx(output[[2]], paste0(mainwd, "/Halving_UserGuide.xlsx"))

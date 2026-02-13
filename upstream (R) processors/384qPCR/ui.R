@@ -2,7 +2,7 @@ library(shiny)
 
 shinyUI(
   pageWithSidebar(
-    headerPanel("qPCR 384 - FLEX Commander"),
+    headerPanel("qPCR - FLEX Commander"),
     
     sidebarPanel(
       #link to home

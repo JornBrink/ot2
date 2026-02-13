@@ -854,8 +854,11 @@ main <- function(file_path, filename = ""){
     
     #making Sollist and Deckmap same column size to bind them in a list
     dis <- replicate(length(SolList[,1]), "NA")
+    testdis <<- length(SolList[,1])
+    testlengh <<- SolList
     x <- rownames(SolList)
     cmd_sollist <- cbind.data.frame(SolList[,c(1,2)], SolList[,3], x, dis, dis, dis, dis, dis, dis, stringsAsFactors=F)
+    cmdlisttest <<- cmd_sollist
     colnames(cmd_sollist) <- colnames(cmd_complete)
     
     dis <- replicate(length(deckmap[,1]), "NA")
