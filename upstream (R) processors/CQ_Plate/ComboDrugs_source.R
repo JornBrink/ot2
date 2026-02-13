@@ -63,7 +63,6 @@ ParseDrugCombination <- function(slot_info){
   return(curdata)
 }
 GetSolutionInfo <- function(drug_map){
-  # drug_map <<- drug_map
   drug_map <- subset(drug_map, DrugName!="mediumfill")
   
   #iterate through all slots in drug map
@@ -103,10 +102,6 @@ GetSolutionInfo <- function(drug_map){
 
 ## NEW DIL SCHEME
 CalculateRequired_ConcVol <- function(drug_map, vol_info, sol_list, n_plate){
-  # drug_map <<- drug_map
-  # vol_info <<- vol_info
-  # sol_list <<- sol_list
-  # n_plate <<- n_plate
   well_totalVol <- vol_info["Total"] - vol_info["Inoculum"]
   sol_separate <- max(sapply(drug_map$DrugName, function(x) length(strsplit(x, split="_")[[1]])))
   vol_per_drugSol <- well_totalVol / sol_separate
@@ -117,9 +112,6 @@ CalculateRequired_ConcVol <- function(drug_map, vol_info, sol_list, n_plate){
   return(sol_list)
 }
 cal_dilScheme_MedID <- function(current_set_id, solution_list, stock_info){
-  # current_set_id <<- current_set_id
-  # solution_list <<- solution_list
-  # stock_info <<- stock_info 
   # subset
   current_set <- subset(solution_list, medDrugID==current_set_id) %>% filter(Conc>0) %>%
     mutate(finVolumes=0, volAbove=0, volMedium=0, vol_forBelow=0)
@@ -657,7 +649,7 @@ mainExec <- function(file_name){
   
   #B. Pre-calculating solution amounts required (for wells)
   solList <- CalculateRequired_ConcVol(drugMap, volInfo, solList, nPlate)
-  solList <<- solList
+  
   #C. Serial Dilution Pre-Calculation
   solList <- solList %>% unite("medDrugID", Medium, DrugName, remove=F)
   
@@ -775,8 +767,9 @@ mainExec <- function(file_name){
 }
 
 #TROUBLESHOOTING--------------
-mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\upstream (R) processors\\CQ_Plate\\"
-inputFile <- "CQ_InputTemplate_CIP_GEN_extra.xlsx"
-dqs <- mainExec(paste0(mainwd, inputFile))
+# mainwd <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\CQ_Plate\\"
+# inputFile <- "CQ_InputTemplate_GCV_FOS_LS.xlsx"
+# inputFile <- "CQ_InputTemplate.xlsx"
+# dqs <- mainExec(paste0(mainwd, inputFile))
 
 # write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)

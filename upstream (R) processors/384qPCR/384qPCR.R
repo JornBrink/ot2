@@ -1,106 +1,148 @@
+#LIBRARIES--------
 options(stringsAsFactors = F)
 library(dplyr)
 library(rlist)
 library(readxl)
 library(tidyr)
 
-##Start Functions---------------------------
-#supportive function:
+#Functions---------
 # Function: split_larger_rows
 # Splits rows where the total volume exceeds a threshold
-split_larger_rows <- function(df, max_volume =1000){
-  i <- 1  # Start index
+#helper functions----------------
+split_larger_rows <- function(df, max_volume = 2000) {
+  
+  volume_cols <- c("Sensimix", "FWprimer", "RVprimer",
+                   "buffer", "MgCl2", "H2O")
+  
+  i <- 1
   while (i <= nrow(df)) {
-    # Check if the total volume exceeds the limit
+    
     if (df$totalvol[i] > max_volume) {
-      # Divide the row values by 2
-      original_row <- df[i, -ncol(df)] / 2
-
-      # Update the current row with halved values
-      df$totalvol[i] <- sum(original_row)
       
-      # Create a new row with the same halved values
-      new_row <- original_row
-      new_row$totalvol <- sum(original_row)
-      row_name <- paste(rownames(df)[i], 'splitted' , sep = "_")
+      # halve only volumes
+      df[i, volume_cols] <- df[i, volume_cols] / 2
+      df$totalvol[i] <- sum(df[i, volume_cols])
+      
+      # duplicate row
+      new_row <- df[i, ]
+      rownames(new_row) <- paste0(rownames(new_row), "_splitted")
+      new_row$totalvol <- sum(new_row[volume_cols])
       df <- rbind(df, new_row)
-      rownames(df)[nrow(df)] <- row_name
+      
     } else {
-      i <- i + 1  # Move to the next row
+      i <- i + 1
     }
   }
+  
   return(df)
 }
 
-# Function: GetPlateMap
-# Reads a plate map from an Excel file and processes it into a well ID format
-GetPlateMap <- function(file_name){
-  res <- read_xlsx(file_name, 1, range= "B32:M39", col_names= F)%>% data.frame()
-  rownames(res) <- LETTERS[1:8] # A-H for plate rows
-  colnames(res) <- sapply(c(1:12), toString) # Plate columns 1-12
+get_last_position <- function(df) {
+  idx <- max(which(!is.na(df$Slot_Id)))
+  df[idx, c("Deck_Id", "Slot_Id")]
+}
+
+fill_positions <- function(df, start_deck, start_slot, slots) {
+  n <- nrow(df)
+  out_slots <- character(n)
+  out_decks <- integer(n)
   
-  #Vector
+  start_idx <- match(start_slot, slots)
+  if (is.na(start_idx)) stop("Invalid start_slot")
+  
+  linear_start <- (start_deck - 1) * length(slots) + start_idx
+  linear_seq <- linear_start + seq_len(n)
+  
+  out_decks <- ((linear_seq - 1) %/% length(slots)) + 1
+  out_slots <- slots[((linear_seq - 1) %% length(slots)) + 1]
+  
+  df$Deck_Id <- out_decks
+  df$Slot_Id <- out_slots
+  df
+}
+
+expand_primers_for_mastermixes <- function(primer_info, mastermix_names) {
+  stopifnot(length(mastermix_names) %% 1 == 0)
+  
+  base_mm <- unique(sub("_splitted$", "", mastermix_names))
+  
+  expanded <- lapply(mastermix_names, function(mm) {
+    base_name <- sub("_splitted$", "", mm)
+    idx <- which(base_mm == base_name)
+    
+    rows <- primer_info[(2 * idx - 1):(2 * idx), , drop = FALSE]
+    rows$Mastermix <- mm
+    rows
+  })
+  
+  result <- do.call(rbind, expanded)
+  
+  stopifnot(
+    nrow(result) == 2 * length(mastermix_names),
+    all(table(result$Mastermix) == 2)
+  )
+  
+  rownames(result) <- NULL
+  result
+}
+
+#big functions --------------
+GetPlateMap <- function(file_name){
+  res <- read_xlsx(file_name, 1, range= "B42:Y57", col_names= F)%>% data.frame()
+  rownames(res) <- LETTERS[1:16] # rownames A-P
+  colnames(res) <- sapply(c(1:24), toString) #Plate columns 1-24
+  
+  #Vectormap
   map <- c()
-  for(row in c(1:8)){
+  for(row in c(1:16)){
     #sub-setting
     curRow <- unlist(res[row,])
-    #get info
-    well_id <- sapply(c(1:12), function(x) paste(LETTERS[row], toString(x), sep='')) # Generate well IDs
-    curRow <- cbind(well_id, curRow)   # Combine well IDs with data
-    map <- rbind(map, curRow)
+    #get the info
+    well_id <- sapply(c(1:24), function(x) paste(LETTERS[row], toString(x), sep= ' '))
+    curRow <- cbind(well_id, curRow)
+    map <- rbind(map,curRow)
   }
-  #parsing names
   fin_map <- c()
-  parsed_names <- sapply(map[,2], function(x) strsplit(x, ' ', fixed=T))
+  parsed_names <- sapply(map[,2], function(x) strsplit(x, ' ', fixed = T))
   
-  # Filter genes and sample names
-  Filtered_genes <- lapply(parsed_names, function(x) {
-    if (length(x) >= 2) { # Check if the element has at least two values
-      x[2]  # No explicit return, R automatically returns the last expression
-    } else {
-      NA    # This is the last expression if the condition is false
+  Filtered_genes <- lapply(parsed_names, function(x){
+    if (length(x) >= 2){
+      x[2]
+    }else {
+      NA
     }
   })
   
-  Filtered_names <- lapply(parsed_names, function(x) {
-    if (length(x) >= 1) { # Check if the element has at least two values
-      x[1]  # No explicit return, R automatically returns the last expression
-    } else {
-      NA    # This is the last expression if the condition is false
+  Filtered_names <- lapply(parsed_names, function(x){
+    if(length(x) >= 1){
+      x[1]
+    }else{
+      NA
     }
   })
+
   res3 <- as.data.frame(do.call(rbind, Filtered_names))
   res3$V2 <- Filtered_genes
-  res3$well_name <- sapply(LETTERS[1:8], function(x) paste0(x, c(1:12))) %>% as.vector()
+  res3$well_name <- sapply(LETTERS[1:16], function(x) paste0(x, c(1:24))) %>% as.vector()
   rownames(res3) <- res3[,3]
-  res3[,3]<- NULL
-  colnames(res3)<- c("Sample_name", "Gene_name")
+  res3$well_name <- NULL
+  colnames(res3) <- c("Sample_name", "Gene_name")
   map <- res3
   return(map)
 }
 
-# Function: Getsamplequestion
-# Extracts a specific cell value from the Excel sheet
-Getsamplequestion<- function(file_name){
-  res <- read_xlsx(file_name, 1, range= "H2", col_names= F)
-  res <- as.character(res[[1,1]])
-  return (res)
-}
-
-# Function: GetreactionNum
-# Counts the occurrences of gene names in a plate map and returns a count table
 GetreactionNum <- function(file_name){
-  res <- read_xlsx(file_name, 1, range= "B32:M39", col_names= F)%>% data.frame()
-  rownames(res) <- LETTERS[1:8]
-  colnames(res) <- sapply(c(1:12), toString)
+  res <- read_xlsx(file_name, 1, range= "B42:Y57", col_names= F)%>% data.frame()
+  rownames(res) <- LETTERS[1:16] # rownames A-P
+  colnames(res) <- sapply(c(1:24), toString) #Plate columns 1-24
   
   #Vector
   map <- c()
-  for(row in c(1:8)){
+  for(row in c(1:16)){
     #sub-setting
     curRow <- unlist(res[row,])
     #get info
-    well_id <- sapply(c(1:12), function(x) paste(LETTERS[row], toString(x), sep=''))
+    well_id <- sapply(c(1:24), function(x) paste(LETTERS[row], toString(x), sep=''))
     curRow <- cbind(well_id, curRow)
     map <- rbind(map, curRow)
   }
@@ -108,7 +150,8 @@ GetreactionNum <- function(file_name){
   #parsing names
   fin_map <- c()
   parsed_names <- sapply(map[,2], function(x) strsplit(x, ' ', fixed=T))
-
+  
+  
   parsed_names <- parsed_names[!is.na(parsed_names)]
   
   #filtering the primers out of it
@@ -126,20 +169,18 @@ GetreactionNum <- function(file_name){
   
   # Count the occurrences of each gene while preserving their original order
   gene_list$Count <- ave(seq_along(gene_list$Gene), gene_list$Gene, FUN = length)
-
+  
   # Remove duplicates, keeping only the first appearance of each gene
   gene_list <- gene_list[!duplicated(gene_list$Gene), ]
-
+  
   # Set row names and return the data frame
   rownames(gene_list) <- gene_list$Gene
- 
+  
   gene_list$Gene <- NULL
   
   return(gene_list)
 }
 
-# Function: MMscheme
-# Calculates the volumes of components needed for each mastermix
 MMscheme <- function(R_num){
   #first parameters Mastermix
   sensi <- 1.5
@@ -150,7 +191,7 @@ MMscheme <- function(R_num){
   H2O <- 2.92
   
   mastermix <- R_num
-  mastermix$ExcessReactions <- mastermix$Count + 20
+  mastermix$ExcessReactions <- mastermix$Count + 15
   mastermix$Sensimix <- mastermix$ExcessReactions * sensi
   mastermix$FWprimer <- mastermix$ExcessReactions * FW
   mastermix$RVprimer <- mastermix$ExcessReactions * RV
@@ -163,9 +204,10 @@ MMscheme <- function(R_num){
   
   # Rename rows and handle volume exceeding threshold
   rownames(mastermix) <- paste("Mastermix", seq_len(nrow(mastermix)))
+  mastermix$Gene <- rownames(mastermix)
   allmix <- split_larger_rows(mastermix)
   allmix$totalvol <- NULL
-
+  
   return (allmix)
 }
 
@@ -178,7 +220,7 @@ SolList_fill <- function(mastermix){
   MgCl2vol <- sum(mastermix$MgCl2)
   H2Ovol <- sum(mastermix$H2O)
   track <- 0
-  if(H2Ovol > 1000){
+  if(H2Ovol > 2000){
     H2Ovol <- H2Ovol/2
     H2Ovol <- data.frame(H2Ovol)
     H2Ovol <- rbind(H2Ovol, H2Ovol)
@@ -186,9 +228,26 @@ SolList_fill <- function(mastermix){
     colnames(H2Ovol) <- c("ul")
     track <- 1
   }
-
-  #now prep the primers for dataframe
-  FWprimer <- data.frame(mastermix$FWprimer)
+  
+  #firs aggregrate primers if they are for the same type of mmx
+  res <- data.frame(mastermix$FWprimer, mastermix$Gene)
+  colnames(res) <- c("ul","gene")
+  
+  #group by gene (mmx) then rearrage that mmx 1 is top and next is mmx 2
+  res <- res %>% group_by(gene) %>%
+    summarise(
+      ul = sum(ul, na.rm = TRUE),
+      .groups = "drop"
+    )
+  
+  #and rearranging so that 10 is not earlier then 2
+  res <- res %>%   mutate(mm_num = as.numeric(sub(".*?(\\d+)$", "\\1", gene))) %>%
+    arrange(mm_num) %>%
+    select(-mm_num)
+  
+  #now to recall it and make it about the primers
+  
+  FWprimer <- data.frame(res$ul)
   rownames(FWprimer) <- paste("Forward primer", seq_len(nrow(FWprimer)))
   colnames(FWprimer) <- c("ul")
   FWprimer[1] <- FWprimer[1] + 100
@@ -198,7 +257,7 @@ SolList_fill <- function(mastermix){
     }
   }
   
-  Rvprimer <- data.frame(mastermix$RVprimer)
+  Rvprimer <- data.frame(res$ul)
   rownames(Rvprimer) <- paste("Reverse primer", seq_len(nrow(Rvprimer)))
   colnames(Rvprimer) <- c("ul")
   Rvprimer[1] <- Rvprimer[1] + 100
@@ -212,13 +271,13 @@ SolList_fill <- function(mastermix){
   vollist <- rbind(sensimixvol,buffervol,MgCl2vol,H2Ovol)
   SolList <- data.frame(vollist)
   colnames(SolList) <- c("ul")
-
+  
   if(track == 1){
     rownames(SolList) <- c("sensimixvol", "buffervol", "MgCl2vol", rownames(H2Ovol))
   }
   
   colnames(SolList) <- c("ul")
-
+  
   SolList[1] <- SolList[1] + 100 #100 ul excess
   SolList <- rbind(SolList, FWprimer, Rvprimer)
   
@@ -232,26 +291,32 @@ SolList_fill <- function(mastermix){
   
   #formatting SolList for future Solution List
   SolList$Slot_Id <- slots[seq_len(nrow(SolList))]
-  SolList$Deck_Id <- 7
+  SolList$Deck_Id <- 5
   SolList <- SolList %>% select(Slot_Id, everything())
   SolList <- SolList %>% select(Deck_Id, everything())
-
+  na_index <- which(is.na(SolList$Slot_Id))
+  
+  if (length(na_index) > 0){
+    SolList$Deck_Id[na_index:length(SolList$Deck_Id)] <- 5
+    reset_slots <- slots[seq_len(nrow(SolList) - na_index[1]+1)]
+    SolList$Slot_Id[na_index:nrow(SolList)] <- reset_slots[seq_along(na_index:nrow(SolList))]
+  }
+  
   return(SolList)
 }
 
-#Sample Location
 Samplecoll <- function(file_name){
-  res <- read_xlsx(file_name, 1, range= "B32:M39", col_names= F)%>% data.frame()
-  rownames(res) <- LETTERS[1:8]
-  colnames(res) <- sapply(c(1:12), toString)
+  res <- read_xlsx(file_name, 1, range= "B42:Y57", col_names= F)%>% data.frame()
+  rownames(res) <- LETTERS[1:16] # rownames A-P
+  colnames(res) <- sapply(c(1:24), toString) #Plate columns 1-24
   
   #Vector
   map <- c()
-  for(row in c(1:8)){
+  for(row in c(1:16)){
     #sub-setting
     curRow <- unlist(res[row,])
     #get info
-    well_id <- sapply(c(1:12), function(x) paste(LETTERS[row], toString(x), sep=''))
+    well_id <- sapply(c(1:24), function(x) paste(LETTERS[row], toString(x), sep=''))
     curRow <- cbind(well_id, curRow)
     map <- rbind(map, curRow)
   }
@@ -285,113 +350,104 @@ Samplecoll <- function(file_name){
   
   gene_list$Gene <- NULL
   
-  rows <- LETTERS[1:4]  # Rows A-D
-  cols <- 1:6           # Columns 1-6
-  slots <- c()
-  for (row in rows) {
-    slots <- c(slots, paste0(row, cols))
-  }
-  
-  gene_list <- data.frame(gene_list)
-  gene_list$Deck_Id <- 9
-  gene_list$Slot_Id <- slots[seq_len(nrow(gene_list))]
-
-  na_index <- which(is.na(gene_list$Slot_Id))
-  
-  if (length(na_index) > 0) {
-    # Update Deck_Id starting from the first NA
-    gene_list$Deck_Id[na_index:length(gene_list$Deck_Id)] <- 10
-    
-    # Reset Slot_Id starting from A1
-    reset_slots <- slots[seq_len(nrow(gene_list) - na_index[1] + 1)]
-    gene_list$Slot_Id[na_index:nrow(gene_list)] <- reset_slots[seq_along(na_index:nrow(gene_list))]
-  }
-  
-  #moving the slotid to front (easier read)
-  gene_list <- gene_list %>% select(Slot_Id, everything())
-  gene_list <- gene_list %>% select(Deck_Id, everything())
-  gene_list$Count <- NULL
+  # rows <- LETTERS[1:4]  # Rows A-D
+  # cols <- 1:6           # Columns 1-6
+  # slots <- c()
+  # for (row in rows) {
+  #   slots <- c(slots, paste0(row, cols))
+  # }
+  # 
+  # gene_list <- data.frame(gene_list)
+  # gene_list$Deck_Id <- 9
+  # gene_list$Slot_Id <- slots[seq_len(nrow(gene_list))]
+  # 
+  # na_index <- which(is.na(gene_list$Slot_Id))
+  # 
+  # if (length(na_index) > 0) {
+  #   # Update Deck_Id starting from the first NA
+  #   gene_list$Deck_Id[na_index:length(gene_list$Deck_Id)] <- 10
+  #   
+  #   # Reset Slot_Id starting from A1
+  #   reset_slots <- slots[seq_len(nrow(gene_list) - na_index[1] + 1)]
+  #   gene_list$Slot_Id[na_index:nrow(gene_list)] <- reset_slots[seq_along(na_index:nrow(gene_list))]
+  # }
+  # 
+  # #moving the slotid to front (easier read)
+  # gene_list <- gene_list %>% select(Slot_Id, everything())
+  # gene_list <- gene_list %>% select(Deck_Id, everything())
+  # gene_list$Count <- NULL
   return(gene_list)
 }
 
-#CMDlist parts------------------------------
-cmd_mmprep <- function(SolList, Mastermix){
-  #remove unnessesarry stuff
+#Commandlist functions ------------
+cmd_mmprep <- function(SolList, Mastermix) {
+  
+  # --- Strip volumes from SolList (used later for commands)
   Amountsollist <- SolList$ul
-
   SolList$ul <- NULL
   
-  #make patern for recognision
+  # --- Identify primer rows
   primer_pattern <- grepl("Forward primer \\d+|Reverse primer \\d+", rownames(SolList))
+  primerres <- SolList[primer_pattern, ]
+  SolList <- SolList[!primer_pattern, ]
+                    
+  rownames(SolList) <- c("Sensimix", "buffer", "MgCl2", "H2O")
   
-  #Truncated List for primer selection
-  primerres <- SolList[primer_pattern,]
-  SolList <- SolList[!primer_pattern,]
-  rownames(SolList)<- c('Sensimix', 'buffer', 'MgCl2', 'H2O')
-  
+  # --- Build mastermix preparation commands (unchanged logic)
   cmd_start <- c()
   cur_asp <- 1
   cur_tip <- 1
   mix <- 0
-  #begin itteration
-  for(i in 1:nrow(SolList)){
-    curset <- SolList[i,]
-    print(curset)
-
-    cursol <- c()
-    cursol<- cbind(Mastermix[1], Mastermix[2], Mastermix[row.names(curset)])
-    print(cursol)
-
-    for (j in 1:nrow(cursol)){
+  
+  for (i in seq_len(nrow(SolList))) {
+    curset <- SolList[i, ]
+    cursol <- cbind(Mastermix[1], Mastermix[2], Mastermix[row.names(curset)])
+    
+    for (j in seq_len(nrow(cursol))) {
       commentvariable <- colnames(cursol[j,])
       commentvariable <- commentvariable[!commentvariable %in% c("Deck_Id", "Slot_Id")]
-      pipette <- "NVT"
-      comment <- paste("Putting" , commentvariable, "into mix")
-      cmd_cur <- bind_cols(curset, cursol[j,], mix, cur_tip, cur_asp, pipette, comment)
-      rownames(cmd_cur)<- NULL
-      colnames(cmd_cur) <- c("from_deck", "from_slot", "to_deck", "to_slot", "amt", "mix", "tip_n", "asp_set", "pipette","comment")
+      cmd_cur <- bind_cols(
+        curset,
+        cursol[j,],
+        mix,
+        cur_tip,
+        cur_asp,
+        "NVT",
+        paste("Putting", commentvariable, "into mix")
+      )
+      colnames(cmd_cur) <- c(
+        "from_deck", "from_slot",
+        "to_deck", "to_slot",
+        "amt", "mix", "tip_n", "asp_set", "pipette", "comment"
+      )
       cmd_start <- rbind(cmd_start, cmd_cur)
     }
     cur_asp <- cur_asp + 1
     cur_tip <- cur_tip + 1
   }
   
-  
-  #location of Mastermix
-  mmloc <- Mastermix[1:2]
-  volmm <- cbind(Mastermix['FWprimer'], Mastermix['RVprimer'])
-  # Dynamically assign PrimerType
-  num_mastermixes <- nrow(Mastermix)
-  
+  # --- Primer locations (base primers only)
   primer_names <- rownames(primerres)
-  
-  primer_types <- ifelse(grepl("Forward", primer_names), 'FWprimer', 'RVprimer')
-
   primer_info <- data.frame(
-    Primer = primer_names,
-    PrimerType = primer_types,
+    PrimerType = ifelse(grepl("Forward", primer_names), "FWprimer", "RVprimer"),
     Deck_ID_Primer = primerres$Deck_Id,
-    Slot_ID_Primer = primerres$Slot_Id)
-
-  # Correct PairID Assignment by ensuring FW primers are paired with RV primers
-  # Separate FW primers and RV primers
-  fw_primers <- primer_info[grepl("Forward", primer_info$Primer), ]
-  rv_primers <- primer_info[grepl("Reverse", primer_info$Primer), ]
+    Slot_ID_Primer = primerres$Slot_Id,
+    stringsAsFactors = FALSE
+  )
+  # --- Expand primers to include `_splitted` mastermixes
+  primer_info <- expand_primers_for_mastermixes(
+    primer_info = primer_info,
+    mastermix_names = rownames(Mastermix)
+  )
   
-  # Sort them by Slot_ID (or any appropriate criteria for pairing) to ensure proper pairing order
-  fw_primers <- fw_primers[order(fw_primers$Slot_ID_Primer), ]
-  rv_primers <- rv_primers[order(rv_primers$Slot_ID_Primer), ]
+  # --- Primer volumes per mastermix
+  volmm <- data.frame(
+    FWprimer = Mastermix$FWprimer,
+    RVprimer = Mastermix$RVprimer,
+    row.names = rownames(Mastermix),
+    check.names = FALSE
+  )
   
-  # Create PairID that ensures correct pairing
-  # Pair each FW primer with its corresponding RV primer
-  fw_primers$PairID <- 1:nrow(fw_primers)
-  rv_primers$PairID <- fw_primers$PairID  # Assign the same PairID to the corresponding RV primer
-  
-  # Combine the FW and RV primers back together
-  primer_info <- rbind(fw_primers, rv_primers)
-  
-  # Reshape volumes into long format with dynamic mapping
-  # Reshape volumes into long format dynamically
   volume_long <- volmm %>%
     pivot_longer(
       cols = everything(),
@@ -399,60 +455,86 @@ cmd_mmprep <- function(SolList, Mastermix){
       values_to = "Volume"
     ) %>%
     mutate(
-      Mastermix = rep(rownames(volmm), each = ncol(volmm)), # Correct Mastermix replication
-      PairID = rep(1:nrow(volmm), each = ncol(volmm)) # Dynamically group volumes into pairs
+      Mastermix = rep(rownames(volmm), each = ncol(volmm))
     )
-
-  # Merge primers and volumes by PrimerType and PairID
-  combined <- merge(primer_info, volume_long, by = c("PrimerType", "PairID"))
-
-  # Add mastermix location details
-  final_combined <- merge(combined, Mastermix, by.x = "Mastermix", by.y = "row.names")
-
-
-  # Create final table
-  final_primertable <- data.frame(
-    `Primer Deck` = final_combined$Deck_ID_Primer,
-    `Primer Slot` = final_combined$Slot_ID_Primer,
-    `Mastermix Deck` = final_combined$Deck_Id,
-    `Mastermix Slot` = final_combined$Slot_Id,
-    `Volume` = final_combined$Volume
+  
+  # --- Identity-safe merge
+  combined <- merge(
+    primer_info,
+    volume_long,
+    by = c("PrimerType", "Mastermix"),
+    sort = FALSE
   )
   
+  stopifnot(
+    nrow(combined) == 2 * nrow(Mastermix),
+    all(table(combined$Mastermix) == 2)
+  )
+  
+  # --- Add mastermix destination locations
+  combined <- merge(
+    combined,
+    Mastermix[, c("Deck_Id", "Slot_Id")],
+    by.x = "Mastermix",
+    by.y = "row.names"
+  )
+  
+  final_primertable <- data.frame(
+    from_deck = combined$Deck_ID_Primer,
+    from_slot = combined$Slot_ID_Primer,
+    to_deck   = combined$Deck_Id,
+    to_slot   = combined$Slot_Id,
+    amt       = combined$Volume
+  )
+  
+  # --- Generate primer pipetting commands
   cmd_primer <- c()
-
-  for (j in 1:nrow(final_primertable)){
-    mix <- 0
-    comment <- "Adding primers to mastermix"
-    pipette <- "NVT"
-    cmd_cur <- bind_cols(final_primertable[j,], mix, cur_tip, cur_asp, pipette, comment)
-    colnames(cmd_cur) <- c("from_deck", "from_slot", "to_deck", "to_slot", "amt", "mix", "tip_n", "asp_set", "pipette","comment")
+  
+  for (j in seq_len(nrow(final_primertable))) {
+    cmd_cur <- bind_cols(
+      final_primertable[j, ],
+      mix = 0,
+      tip_n = cur_tip,
+      asp_set = cur_asp,
+      pipette = "NVT",
+      comment = "Adding primers to mastermix"
+    )
+    colnames(cmd_cur) <- c(
+      "from_deck", "from_slot",
+      "to_deck", "to_slot",
+      "amt", "mix", "tip_n", "asp_set", "pipette", "comment"
+    )
     cmd_primer <- rbind(cmd_primer, cmd_cur)
     cur_asp <- cur_asp + 1
     cur_tip <- cur_tip + 1
   }
-  cmd_listmm <- rbind(cmd_start, cmd_primer)
-  return(cmd_listmm)
+  
+  rbind(cmd_start, cmd_primer)
 }
 
-#CMDList plating
 cmd_plate <- function(mastermix, platemap, cmd_listmm){
+  #first get all the volume in each tube.
+  allvolmmx <-mastermix[3:8]
+  allvolmmx$totalvol <- rowSums(allvolmmx)
+  totalvol <- allvolmmx[7]
+  totalvol$Mastermix <- rownames(totalvol)
+  
   #for this part only location is interesting
   locmm <- mastermix[1:2]
   
-  #omit nas
+  #omit nas from the plate map
   platemap <- platemap[!(is.na(platemap$Gene_name)),]
-  
+
   #make positions a column and remove sample name
   platemap$slot <- rownames(platemap)
   platemap$Sample_name<- NULL
   
-  # Convert factor columns to character
-  platemap[] <- lapply(platemap, function(col) {
+  #Convert factor columns to characters
+  platemap[] <- lapply(platemap, function(col){
     if (is.factor(col)) as.character(col) else col
   })
   
-  # Get unique Gene_names
+  #get the unique genenames
   unique_genes <- unique(platemap$Gene_name)
   
   # Assign Mastermix labels to each unique Gene_name
@@ -460,23 +542,54 @@ cmd_plate <- function(mastermix, platemap, cmd_listmm){
   
   # Map Mastermix labels back to the original plate_map
   platemap$Mastermix <- sapply(platemap$Gene_name, function(gene) mastermix_map[[gene]])
-
-  #change mmloc so we have something to map to
+  
+  #assign mastermix lablels to each Gene name
+  mastermix_map <- setNames(paste0("Mastermix ", seq_along(unique_genes)), unique_genes)
+  
   locmm$Mastermix <- rownames(locmm)
-  
-  #combining
-  combined <- merge(platemap, locmm, by = c("Mastermix"))
-  
-  #add location plate
-  combined$decklocplate <- 5
 
+  #define reactionvolume and leftover volume
+  Rvol <- 6
+  LRvol <- 30
+  
+  df <- platemap %>%
+    left_join(totalvol, by = "Mastermix") %>%
+    group_by(Mastermix) %>%
+    mutate(
+      rxn_index = row_number(),
+      used_volume = rxn_index * Rvol,
+      remaining_volume = totalvol - used_volume,
+      needs_split = remaining_volume < LRvol
+    ) %>%
+    ungroup() %>%
+    mutate(
+      Mastermix = if_else(
+        needs_split,
+        paste0(Mastermix, "_splitted"),
+        Mastermix
+      )
+    ) %>%
+    select(-rxn_index, -used_volume, -remaining_volume, -needs_split)
+  
+  
+  #combining the two
+  combined <- merge(df, locmm, by = c("Mastermix"))
+  
+  #removing the totalvol for combined
+  combined <- combined %>% 
+    select(-totalvol)
+  
+  #add location to the plate
+  combined$decklocplate <- 2
+  combined <- combined[order(as.numeric(sub("Mastermix ", "", combined$Mastermix))), ]
+  
   tip_n <- tail(cmd_listmm$tip_n, n=1)
   asp_set <- tail(cmd_listmm$asp_set, n=1)
   
-  #Amount Mastermix 
+  #amount to asp
   amt <- 6
   
-  #And readymake the CMD
+  #make ready the cmd itself
   res <- data.frame(
     from_deck <- combined$Deck_Id,
     from_slot <- combined$Slot_Id,
@@ -484,14 +597,15 @@ cmd_plate <- function(mastermix, platemap, cmd_listmm){
     to_slot <- combined$slot,
     amt <- amt
   )
-  
+
   # putting the columns correct
   colnames(res) <- c("from_deck", "from_slot", "to_deck", "to_slot", "amt")
   tip_n <- tip_n + 1
   asp_set<-asp_set + 1
   
-  #get a ready frame
+  #get the data frame ready
   cmdplating <- cmd_listmm
+  
   #volume counter to prevent p1000 use aka p50 values
   camtmin <- 40
   camtmax <- 50
@@ -541,13 +655,13 @@ cmd_plate <- function(mastermix, platemap, cmd_listmm){
   
   rownames(cmdplating) <- NULL
   cmdplating <- cmdplating[order(cmdplating$asp_set), ]
-  
   return(cmdplating)
 }
 
-cmd_sample<-function(sampledeck, platemap, cmd_listp){
-  #for this part only location is interesting
-  locsamp <- sampledeck[1:2]
+cmd_sample <- function(sampledeck, platemap, cmd_listp){
+  #Function to finish the entire sample cmd.
+  #First get the loc of the samples
+  locsamp <- sampledeck[2:3]
   
   #omit nas
   platemap <- platemap[!(is.na(platemap$Sample_name)),]
@@ -573,17 +687,19 @@ cmd_sample<-function(sampledeck, platemap, cmd_listp){
   platemap$Sample <- sapply(platemap$Sample_name, function(sample) samplemap[[sample]])
   
   #hardcode the amt and mixing + plate deck
-  platemap$to_deck <- 5
-  
-  #change mmloc so we have something to map to
+  platemap$to_deck <- 2
+
+  #change locsamp columns so it can be combined
   locsamp$samplenames <- rownames(locsamp)
   locsamp$Sample <- sapply(locsamp$samplenames, function(sample) samplemap[[sample]])
   locsamp$samplenames <- NULL
   colnames(locsamp) <- c("from_deck", "from_slot", "Sample")
-
-  #combining
-  combined <- merge(platemap, locsamp, by = c("Sample"))
-
+  
+  #combining Locsamp and platemap
+  combined <- merge(platemap, locsamp, by= c("Sample"))
+  #resorting so human understandable
+  combined <- combined[order(as.numeric(sub("Sample ", "", combined$Sample))), ]
+  
   #next part until combined is to make sure samples are selected on both mastermix and sample name not just samplename. prefends scenarios where sample 1 goes into mmx 1 and 2 with its tips
   # Get unique Gene_names
   unique_genes <- unique(mastermixtarget$Gene_name)
@@ -599,7 +715,7 @@ cmd_sample<-function(sampledeck, platemap, cmd_listp){
   )
   
   colnames(res2)<- c("slot", "mastermixor")
-  combined <- merge(combined, res2, by = c("slot"))
+  combined <- merge(combined, res2, by=c("slot"))
   
   #add a number to sort the sample numbers
   combined$Sample_numeric <- as.numeric(gsub("Sample ", "", combined$Sample))
@@ -648,22 +764,22 @@ cmd_sample<-function(sampledeck, platemap, cmd_listp){
     min <- res[i-1,]
     if(i != 1){
       if (cur$originalmm != min$originalmm | cur$from_slot != min$from_slot){
-          tip_n <- tip_n + 1
-          asp_set <- asp_set + 1
-          res2 <- res[i,]
-          pipette <- "NVT"
-          comment <- "Plating Sample"
-          res2 <- cbind(res2, tip_n, asp_set, pipette, comment)
-          res2$originalmm <- NULL
-          cmd_comp <- rbind(cmd_comp, res2)
-          
-        }else{
-          res2 <- res[i,]
-          pipette <- "NVT"
-          comment <- "Plating Sample"
-          res2 <- cbind(res2, tip_n, asp_set, pipette, comment)
-          res2$originalmm <- NULL
-          cmd_comp <- rbind(cmd_comp, res2)
+        tip_n <- tip_n + 1
+        asp_set <- asp_set + 1
+        res2 <- res[i,]
+        pipette <- "NVT"
+        comment <- "Plating Sample"
+        res2 <- cbind(res2, tip_n, asp_set, pipette, comment)
+        res2$originalmm <- NULL
+        cmd_comp <- rbind(cmd_comp, res2)
+        
+      }else{
+        res2 <- res[i,]
+        pipette <- "NVT"
+        comment <- "Plating Sample"
+        res2 <- cbind(res2, tip_n, asp_set, pipette, comment)
+        res2$originalmm <- NULL
+        cmd_comp <- rbind(cmd_comp, res2)
       }
     }else{
       res2 <- res[i,]
@@ -680,7 +796,7 @@ cmd_sample<-function(sampledeck, platemap, cmd_listp){
   col_order <- c("from_deck", "from_slot", "to_deck", "to_slot", "amt", "mix", "tip_n", "asp_set", "pipette", "comment")
   cmd_comp <- cmd_comp [,col_order]
   cmd_comp <- cmd_comp[order(cmd_comp$asp_set), ]
-
+  
   return(cmd_comp)
 }
 
@@ -697,7 +813,7 @@ rhandcreate<-function(sollist, mastermix, samplelist){
   rhandler <- data.frame(
     "Catagory" <- sollist$Catagory,
     "Labware" <- sollist$labware,
-    "Type" <- "1.5 Eppy",
+    "Type" <- "2 Eppy",
     "Slot" <- sollist$slot,
     "Name" <- sollist$Name,
     "RequiredAmount" <- sollist["RequiredAmount"],
@@ -713,7 +829,7 @@ rhandcreate<-function(sollist, mastermix, samplelist){
     "Labware"  <- 8,
     "Type" <- "-",
     "Slot" <- "-",
-    "Name" <- "1.5 Eppy",
+    "Name" <- "2 Eppy",
     "RequiredAmount" <- nrow(mastermix),
     "Unit" <- "tubes"
   )
@@ -737,13 +853,13 @@ rhandcreate<-function(sollist, mastermix, samplelist){
   rhandler <- list(rhandler,
                    mmixtube,
                    sampler
-                   )
+  )
   return(rhandler)
 }
 
-#MAIN -----------------
+#Mainfunctions---------
 main <- function(file_path, filename = ""){
-  #read excel------
+  # read excel
   plateMap <- tryCatch({
     GetPlateMap(file_path)
   },
@@ -753,27 +869,20 @@ main <- function(file_path, filename = ""){
     }
     return(NA)
   })
-  test<<- plateMap
+  plate <<- plateMap
   
-  samplequestion <- tryCatch({
-    Getsamplequestion(file_path)
-  },
-  error = function(cond){
-    if(errMessage == ""){
-      errMessage <<- "Input file error - samplepipetting not clear"
-    }
-    return(NA)
-  })
   
   ReactionNum <- tryCatch({
     GetreactionNum(file_path)
   },
   error = function(cond){
     if(errMessage == ""){
-      errMessage <<- "Input file error - Sample/Gene names not correct"
+      errMessage <<- "Input file error - Gene names not correct"
     }
     return(NA)
   })
+  
+  Rnum <<- ReactionNum
   
   #Calc MM components
   Mastermix <- tryCatch({
@@ -786,18 +895,22 @@ main <- function(file_path, filename = ""){
     return(NA)
   })
   
-  #SolList assignment
+  Mastermix <- Mastermix[order(as.numeric(sub(".*?(\\d+)$", "\\1", rownames(Mastermix)))), ]
+  mmx <<- Mastermix
+  
+  #Sollist assignment
   SolList <- tryCatch({
     SolList_fill(Mastermix)
   },
   error = function(cond){
     if(errMessage == ""){
-      errMessage <<- "Mastermix could not be calculated"
+      errMessage <<- "Sollist could not be calculated"
     }
     return(NA)
   })
+  sollist <<- SolList
   
-  
+  #Sample extract
   samplesdeck <- tryCatch({
     Samplecoll(file_path)
   },
@@ -807,52 +920,61 @@ main <- function(file_path, filename = ""){
     }
     return(NA)
   })
+  samples <<- samplesdeck
   
-  #sampledeck finishing
-  samplesdeck$ul <- 100
-  
-  # 1. Make assignment for destination 1. mm
-  #add location in posibility of eppy
+  #mastermix loc
   rows <- LETTERS[1:4]  # Rows A-D
   cols <- 1:6           # Columns 1-6
   slots <- c()
   for (row in rows) {
     slots <- c(slots, paste0(row, cols))
   }
-  if(errMessage== ""){
-    #Assign slot id to mastermix
-    Mastermix$Deck_Id <- 8
-    Mastermix$Slot_Id <- slots[seq_len(nrow(Mastermix))]
+  
+  if (errMessage==""){
+    last <- tail(SolList, 1)
     
-    #moving the slotid to front (easier read)
-    Mastermix <- Mastermix %>% select(Slot_Id, everything())
-    Mastermix <- Mastermix %>% select(Deck_Id, everything())
+    Mastermix <- fill_positions(
+      df = Mastermix,
+      start_deck = last$Deck_Id,
+      start_slot = last$Slot_Id,
+      slots = slots
+    )
     
-    deckmap <- data.frame(deck=c(1:12), fill = c("{empty}", "{empty}", "{empty}", "Tiprack_P1000", "Plate_A_96", "Tiprack_P50", "Epp_1_5_Stock", "Epp_1_5", "Epp_1_5_Sample", "Epp_1_5_Sample_spare", "Epp_1_5_stock_spare", "trash"))
+    last_mm <- get_last_position(Mastermix)
+    
+    SampleList <- fill_positions(
+      df = samplesdeck,
+      start_deck = last_mm$Deck_Id,
+      start_slot = last_mm$Slot_Id,
+      slots = slots
+    )
+    
+    #l;ast changes to mmx
+    Mastermix$Gene <- NULL
+    Mastermix <- Mastermix %>% select(Deck_Id, Slot_Id, everything())
+    deckmap <- data.frame(deck=c(1:12), fill = c("Tiprack_P1000", "Plate_A_384", "Tiprack_P50", "Tiprack_P50_2", "Epp_2", "Epp_2_1", "Epp_2_2", "Epp_2_3", "Epp_2_4", "Epp_2_5", "Epp_2_6", "trash"))
     #cmd_list buildup
     cmd_mastermixprep<- cmd_mmprep(SolList, Mastermix)
-    cmd_plateing <- cmd_plate(Mastermix, plateMap, cmd_mastermixprep)
-    if (samplequestion == "Yes"){
-      cmd_complete <- cmd_sample(samplesdeck, plateMap, cmd_plateing)
-    }else{
-      cmd_complete <- cmd_plateing
-    }
     
-    #Headers
+    cmd_plate <- cmd_plate(Mastermix, plateMap, cmd_mastermixprep)
+    
+    cmd_complete <- cmd_sample(SampleList, plateMap, cmd_plate)
+    
+    #make the headers
     Sollisthead <- "> SolutionList"
     CMDlisthead <- "> CmdList"
-    DECKlisthead <- "> DeckMap"
+    Decklisthead <- "> DeckMap"
     
-    #CMDlist output making
+    #making the CMDlist output
     rsollist <- SolList
-    rsample <- samplesdeck
-    if (samplequestion == "Yes"){
-      SolList <- rbind.data.frame(SolList, samplesdeck)
-    }else{
-      print("sample plating is off")
-    }
+    samplecmd <- SampleList
+    samplecmd$Count <- NULL
+    samplecmd$ul <- 100
+    rsample <- samplecmd
     
-    #making Sollist and Deckmap same column size to bind them in a list
+    SolList <- rbind.data.frame(SolList, samplecmd)
+    
+    #Making Sollist and deckmap the same column
     dis <- replicate(length(SolList[,1]), "NA")
     x <- rownames(SolList)
     cmd_sollist <- cbind.data.frame(SolList[,c(1,2)], SolList[,3], x, dis, dis, dis, dis, dis, dis, stringsAsFactors=F)
@@ -862,8 +984,8 @@ main <- function(file_path, filename = ""){
     deckmap <- cbind.data.frame(deckmap, dis, dis, dis, dis, dis, dis, dis, dis)
     cmdList_output <<- list(Sollisthead, cmd_sollist,
                             CMDlisthead, cmd_complete,
-                            DECKlisthead, deckmap
-                            )
+                            Decklisthead, deckmap
+    )
     #Robothandler/user commands ------
     Rhandlerp1 <- rhandcreate(rsollist, Mastermix, rsample)
     usercmd_output <<- Rhandlerp1
@@ -871,13 +993,28 @@ main <- function(file_path, filename = ""){
   }else{
     SolList <- errMessage
   }
-  displaylist <- cmd_sollist[c(1,2,3,5)]
+  
+  displaysollist <- cmd_sollist[c(1,2,3)]
+  displaysollist$what <- rownames(displaysollist)
+  
+  displaylist <- displaysollist[c[1,2,4,3]]
+    
   colnames(displaylist) <- c("Deck location", "Slot", "What", "Required Amount")
   return(displaylist)
 }
 
-# #TROUBLESHOOTING---------
-errMessage <<- ""
-fpath <- "C:\\Users\\jornb\\NextCloud\\Jorn Brink\\01.Opentrons\\qPCR test case 96 wells\\Test scripts\\"
-dataName <- "qPCR_prep_WE_040425.xlsx"
-dqs <- main(paste(fpath, dataName, sep="//"))
+
+
+#TEST--------------
+# input
+# errMessage <<- ""
+# fileName <- "qPCRTemplate384_PlateMap_128.xlsx"
+# #fileName <- "qPCRTemplate384_PlateMap.xlsx"
+# mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\upstream (R) processors\\384qPCR"
+# input_file_name <- paste0(mainwd, "\\", fileName)
+# #
+# output <- main(input_file_name)
+# 
+# 
+# write.csv(cmdList_output, paste0(mainwd, "/Halving_CommandList.csv"), row.names=F)
+# write_xlsx(output[[2]], paste0(mainwd, "/Halving_UserGuide.xlsx"))

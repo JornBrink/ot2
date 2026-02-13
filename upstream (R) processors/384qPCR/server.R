@@ -1,5 +1,5 @@
 #META #####
-#J. Brink Flex Controller -- 2025/01/08
+#J. Brink Flex Controller -- 2026/02/11
 # > 96 well plate for qPCR
 # > Credits for S.T. Tandar for major help and contibutions
 
@@ -16,16 +16,16 @@ options(stringsAsFactors = F)
 shinyServer(function(input, output){
   
   #first defining directorys --------- change if in troubleshooting or Servermode (not yet implemented)
-  outputDir_cmdline <- "/home/shiny-ot2/ShinyApps/outputs_cmdlist"
-  outputDir_usrGuide <- "/home/shiny-ot2/ShinyApps/outputs_usrguide"
-  inputTemplate <- "/home/shiny-ot2/ShinyApps/ot2/qPCR/qPCR_template.xlsx"
-  sourceDir <- "/home/shiny-ot2/ShinyApps/ot2/qPCR/96wellsplatefunctionqPCR.R"
+  # outputDir_cmdline <- "/home/shiny-ot2/ShinyApps/outputs_cmdlist"
+  # outputDir_usrGuide <- "/home/shiny-ot2/ShinyApps/outputs_usrguide"
+  # inputTemplate <- "/home/shiny-ot2/ShinyApps/ot2/qPCR/qPCR_template.xlsx"
+  # sourceDir <- "/home/shiny-ot2/ShinyApps/ot2/qPCR/96wellsplatefunctionqPCR.R"
   
   #Troubleshooting (local machine paths)
-  #outputDir_cmdline <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Testoutput"
-  #outputDir_usrGuide <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Testoutput"
-  #inputTemplate <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Rscript\\qPCR_template.xlsx"
-  #sourceDir <- "C:\\Users\\jornb\\ownCloud\\Jorn Brink\\01. Opentrons\\qPCR test case 96 wells\\Rscript\\96wellsplatefunction.R"
+  outputDir_cmdline <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\Execution code for OT2\\Incubator\\Test User inputs"
+  outputDir_usrGuide <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\Execution code for OT2\\Incubator\\Test User inputs"
+  inputTemplate <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\upstream (R) processors\\384qPCR\\qPCRTemplate384_PlateMap.xlsx"
+  sourceDir <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2\\upstream (R) processors\\384qPCR\\384qPCR.R"
   
   #Loading source
   source(sourceDir)
