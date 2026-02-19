@@ -349,33 +349,6 @@ Samplecoll <- function(file_name){
   rownames(gene_list) <- gene_list$Gene
   
   gene_list$Gene <- NULL
-  
-  # rows <- LETTERS[1:4]  # Rows A-D
-  # cols <- 1:6           # Columns 1-6
-  # slots <- c()
-  # for (row in rows) {
-  #   slots <- c(slots, paste0(row, cols))
-  # }
-  # 
-  # gene_list <- data.frame(gene_list)
-  # gene_list$Deck_Id <- 9
-  # gene_list$Slot_Id <- slots[seq_len(nrow(gene_list))]
-  # 
-  # na_index <- which(is.na(gene_list$Slot_Id))
-  # 
-  # if (length(na_index) > 0) {
-  #   # Update Deck_Id starting from the first NA
-  #   gene_list$Deck_Id[na_index:length(gene_list$Deck_Id)] <- 10
-  #   
-  #   # Reset Slot_Id starting from A1
-  #   reset_slots <- slots[seq_len(nrow(gene_list) - na_index[1] + 1)]
-  #   gene_list$Slot_Id[na_index:nrow(gene_list)] <- reset_slots[seq_along(na_index:nrow(gene_list))]
-  # }
-  # 
-  # #moving the slotid to front (easier read)
-  # gene_list <- gene_list %>% select(Slot_Id, everything())
-  # gene_list <- gene_list %>% select(Deck_Id, everything())
-  # gene_list$Count <- NULL
   return(gene_list)
 }
 
@@ -403,8 +376,12 @@ cmd_mmprep <- function(SolList, Mastermix) {
     curset <- SolList[i, ]
     cursol <- cbind(Mastermix[1], Mastermix[2], Mastermix[row.names(curset)])
     
+    print(cursol)
+    totalvol <- sum (cursol[3])
+    
     for (j in seq_len(nrow(cursol))) {
       commentvariable <- colnames(cursol[j,])
+      print(commentvariable)
       commentvariable <- commentvariable[!commentvariable %in% c("Deck_Id", "Slot_Id")]
       cmd_cur <- bind_cols(
         curset,
@@ -420,7 +397,12 @@ cmd_mmprep <- function(SolList, Mastermix) {
         "to_deck", "to_slot",
         "amt", "mix", "tip_n", "asp_set", "pipette", "comment"
       )
+      print(cmd_cur)
       cmd_start <- rbind(cmd_start, cmd_cur)
+      # increment asp only if totalvol >= 1000
+      if (totalvol >= 1000) {
+        cur_asp <- cur_asp + 1
+      }
     }
     cur_asp <- cur_asp + 1
     cur_tip <- cur_tip + 1
@@ -1008,7 +990,7 @@ main <- function(file_path, filename = ""){
 
 
 # #TEST--------------
-# # input
+# input
 # errMessage <<- ""
 # fileName <- "qPCRTemplate384_PlateMap_128.xlsx"
 # #fileName <- "qPCRTemplate384_PlateMap.xlsx"
