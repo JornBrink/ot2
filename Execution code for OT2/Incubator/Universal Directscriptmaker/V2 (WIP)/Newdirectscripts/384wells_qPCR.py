@@ -114,7 +114,7 @@ def cal_transferSpeed(min_trans_amt):
 
 def cal_aspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
     
-     # A | Get array index
+    # A | Get array index
     locationID = []
     for item in amt_list:
         locationID.append(str(item[0])+"_"+item[1])
@@ -152,12 +152,13 @@ def cal_aspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
             minH = 2
             stab = 5 #mm
         
-        elif("2ml" in ware_name):
+        elif("2 mL" in ware_name):
             #Tube Dimensions - Eppendorf
             h_bot = 37.8-20 #mm
             r = 8.7/2 #mm
             minH = 10
             hover = 3 #mm
+            stab = 5 #mm
 
 
         #calculate required height
@@ -169,7 +170,7 @@ def cal_aspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
             else:
                 h_tip = h_bot + (rem_v - Vmax_bot)/(pi*r**2)
         else:
-            if("1.5" in ware_name):
+            if("1.5" in ware_name or "2 mL" in ware_name):
                 h_tip = 2 # hard-code location for eppendorfs
             else:
                 h_tip = ((3*rem_v*h_bot**2)/(pi*r**2))**(1/3)
@@ -232,12 +233,12 @@ def cal_dspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
             minH = 10
             hover = 3 #mm
             
-        elif("2ml" in ware_name):
+        elif("2 mL" in ware_name):
             #Tube Dimensions - Eppendorf
             h_bot = 37.8-20 #mm
             r = 8.7/2 #mm
             minH = 10
-            hover = 3 #mm
+            hover = 3 #mm          
 
         #calculate required height
         Vmax_bot = pi*r**2*h_bot/3 #volume of bottom cone
@@ -375,7 +376,6 @@ def run(protocol: protocol_api.ProtocolContext):
         else:
             operation = 3 #same as 2 but if multiple asp groups are different lines
         
-
         #pipet selection based on volume - 04122024
         if (sum([float(a) for a in c_amt]) > 50):
             c_pipette = pipette_caller['p1000']
