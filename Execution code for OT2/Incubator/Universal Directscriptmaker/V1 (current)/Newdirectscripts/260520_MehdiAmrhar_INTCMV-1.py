@@ -1,3 +1,21 @@
+# This protocol is made for WallE
+fileName = 'CommandList_PMID-1_EXPID-INT_CMV-1_Amrhar.Mehdi.csv'
+
+pc = 'Jorn'
+
+brand = 'Greiner'
+
+touch_tips = 'Yes'
+
+#METADATA----------
+metadata = {
+	'protocolName':'INTCMV-1 tiptest',
+	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
+	'description':'Opentrons Flex custom script'' User customized qPCR'}
+
+requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}
+
+filteredtip = 'None'
 
 #IMPORTS---------
 import csv
@@ -33,7 +51,7 @@ def ReadCSV_input(file_name):
         
     return(solution_list, command_list, deck_map)
 
-def translate_labwareLibrary(string_identifier, brand):
+def translate_labwareLibrary(string_identifier, brand, filteredtip):
     if("384" in string_identifier):
         #labware_name = "greiner_384_wellplate_115ul"
         labware_name = "corning_384_wellplate_112ul_flat"
@@ -54,13 +72,19 @@ def translate_labwareLibrary(string_identifier, brand):
             labware_name = "nest_96_wellplate_2ml_deep" 
             return labware_name
         else:
-            #labware_name = "nest_96_wellplate_100ul_pcr_full_skirt"
-            labware_name = "appliedbiosystems_96_wellplate_100ul"  
+            labware_name = "nest_96_wellplate_100ul_pcr_full_skirt"
+            #labware_name = "appliedbiosystems_96_wellplate_100ul"  
             return labware_name
             
     elif("Tiprack" in string_identifier or "p5" in string_identifier or "p1" in string_identifier):
-        if("1000" in string_identifier):
+        if("1000" in string_identifier) and (filteredtip != 'both' and filteredtip != 'p1000'):
             labware_name = "opentrons_flex_96_tiprack_1000ul"
+            return labware_name
+        elif("1000" in string_identifier) and (filteredtip == 'both' or filteredtip == 'p1000'):
+            labware_name = "opentrons_flex_96_filtertiprack_1000ul"
+            return labware_name
+        elif ("50" in string_identifier) and (filteredtip == 'both' or filteredtip == 'p50'):
+            labware_name = "opentrons_flex_96_filtertiprack_50ul"
             return labware_name
         else:
             labware_name = "opentrons_flex_96_tiprack_50ul"
@@ -88,9 +112,9 @@ def get_LabwareCaller(deck_num):
 
 def cal_transferSpeed(min_trans_amt):
     if(min_trans_amt < 300):
-        trans_speed = min(min_trans_amt / 2, 50) # upper limit of 50 ul/s
+        trans_speed = min(min_trans_amt / 2, 75) # upper limit of 75 ul/s
     else:
-        trans_speed = min(min_trans_amt / 1.5, 150) # upper limit of 250 ul/s for higher volume transfers
+        trans_speed = min(min_trans_amt / 1.5, 250) # upper limit of 250 ul/s for higher volume transfers
     return(trans_speed)
 
 def cal_aspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
@@ -143,7 +167,7 @@ def cal_aspH(ware_name, transfer_v, deck_name, slot_name, amt_list):
                 h_tip = h_bot + (rem_v - Vmax_bot)/(pi*r**2)
         else:
             if("1.5" in ware_name):
-                h_tip = 1.5 # hard-code location for eppendorfs
+                h_tip = 2 # hard-code location for eppendorfs
             else:
                 h_tip = ((3*rem_v*h_bot**2)/(pi*r**2))**(1/3)
         
@@ -241,7 +265,6 @@ def update_amtList(amt_list, deck_name, slot_name, trans_amt, current_operation)
      
     return amt_list
 
-
 def add_parameters(parameters):
     parameters.add_int(
         variable_name = "stip_p50",
@@ -258,17 +281,19 @@ def add_parameters(parameters):
         minimum=1,
         maximum=96
         )
+        
+    
     
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     #global cmdList, deckMap, amtList
     try:
         if(pc =="Jorn" or pc =="jorn"):
-            sim = "1"
             os.chdir("C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//Test User inputs" )
-        elif(pc == "Sebastian" or pc== "sebastian"):
             sim = "1"
+        elif(pc == "Sebastian" or pc== "sebastian"):
             os.chdir("C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\DownstreamProcessors")
+            sim = "1"
         else:
             os.chdir(os.path.expanduser("~") + '//Desktop//User input (for direct)')
     except:
@@ -283,7 +308,7 @@ def run(protocol: protocol_api.ProtocolContext):
         #perform only if name not null
         if(deckMap[i][1]!="" and deckMap[i][1]!="trash" and deckMap[i][1]!= "{empty}"):
             #find labware name
-            current_labware_name = translate_labwareLibrary(deckMap[i][1], brand)
+            current_labware_name = translate_labwareLibrary(deckMap[i][1], brand, filteredtip)
             caller_id = 'labware_' + str(i+1)
             labwareCaller[caller_id] = protocol.load_labware(current_labware_name, i+1)
             if("tiprack" in current_labware_name):
@@ -322,15 +347,13 @@ def run(protocol: protocol_api.ProtocolContext):
     transfer_amount = [current_line[4] for current_line in cmdList]
     mix = [current_line[5] for current_line in cmdList]
     tip_n = [current_line[6] for current_line in cmdList]
+    
     #pipette = [current_line[8] for current_line in cmdList]
-    
-    #starting tip location    
     if sim != "1":
+        right_pipette.starting_tip = tipLocs_1000[0].wells()[p1000tipcounter]
         right_pipette.starting_tip = tipLocs_50[0].wells()[p50tipcounter]
-        left_pipette.starting_tip = tipLocs_1000[0].wells()[p1000tipcounter]
     
-    
-    #perform operation per-aspirate group
+        #perform operation per-aspirate group
     aspirate_groups = [int(current_line[7]) for current_line in cmdList]
     aspirate_groups2 = []
     for x in aspirate_groups:
@@ -359,7 +382,6 @@ def run(protocol: protocol_api.ProtocolContext):
         #old pipet selection based on a column        
         #c_pipette = pipette_caller[pipette[current_set[0]]]
         c_amt = [transfer_amount[i] for i in current_set]
-        
         
         # B | separate liquid transfer operations
         if(len(c_target_slot)==1):
@@ -420,7 +442,7 @@ def run(protocol: protocol_api.ProtocolContext):
         if(operation==1):
             #    setup multiple transfers when needed
             transferV = float(c_amt[0])
-            if("P50" in str(c_pipette)):
+            if("right mount" in str(c_pipette)):
                 max_trans = 50
             else:
                 max_trans = 1000
@@ -456,7 +478,13 @@ def run(protocol: protocol_api.ProtocolContext):
                     c_pipette.flow_rate.dispense=max(current_aspSpeed/2, 25) #half speed for 384 well-plate; min. of 25
           
                 # perform liquid transfer)
-                if(c_mix > 0):
+                if(c_mix > 0 and "1-Channel 1000" in str(c_pipette)):
+                    c_pipette.transfer(current_transfer, 
+                                       labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH),
+                                       labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]].bottom(current_dspH),
+                                       new_tip='never')
+                
+                elif(c_mix > 0 and "1-Channel 50 μL" in str(c_pipette)):
                     c_pipette.transfer(current_transfer, 
                                        labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH),
                                        labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]].bottom(current_dspH),
@@ -466,6 +494,7 @@ def run(protocol: protocol_api.ProtocolContext):
                                        labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH),
                                        labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]].bottom(current_dspH),
                                        new_tip='never')
+                    
 		
         		#   adjust blow out speed
                 if("384" not in str(labwareCaller[get_LabwareCaller(c_target_deck[0])])):
@@ -507,7 +536,7 @@ def run(protocol: protocol_api.ProtocolContext):
             
             # aspirate
             if(mixid == '1'):
-                c_pipette.mix(4, sum([float(a) for a in c_amt]), labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH))
+                c_pipette.mix(4, sum([float(a) for a in c_amt]), labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot])
                 c_pipette.aspirate(sum([float(a) for a in c_amt]),
                                labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH))                
             elif(mixid == '2'):
@@ -582,4 +611,10 @@ def run(protocol: protocol_api.ProtocolContext):
         if(int(tip_next) != int(current_tip) or (i == len(aspirate_groups2)-1)):
             c_pipette.drop_tip()
 
-
+##########Simulation##########
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.19', robot_type = 'Flex')
+bep.home()
+run(bep)
+for line in bep.commands():
+	print(line)
