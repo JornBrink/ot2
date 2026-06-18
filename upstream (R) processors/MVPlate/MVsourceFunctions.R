@@ -1043,7 +1043,7 @@ main <- function(file_path, file_name=""){
 }
 
 #TROUBLESHOOTING---------
-# errMessage <<- ""
-# fpath <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate\\"
-# dataName <- "CDV_TOXICITY_2.0_210325_InputTemplate 1 3.xlsx"
-# dqs <- main(paste(fpath, dataName, sep="//"))
+errMessage <<- ""
+fpath <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\MVPlate\\"
+dataName <- "RandomlocAB.xlsx"
+dqs <- main(paste(fpath, dataName, sep="//"))
