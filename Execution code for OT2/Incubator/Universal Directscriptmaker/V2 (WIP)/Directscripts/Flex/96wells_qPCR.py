@@ -246,18 +246,41 @@ def update_amtList(amt_list, deck_name, slot_name, trans_amt, current_operation)
         amt_list[location_index][2] = float(amt_list[location_index][2]) - trans_amt
      
     return amt_list
-    
+
+
+def add_parameters(parameters):
+    parameters.add_int(
+        variable_name = "stip_p50",
+        display_name = "Starting tip P50",
+        description = "Starting location of the first p50 tip",
+        default=1,
+        minimum=1,
+        maximum=96)
+    parameters.add_int(
+        variable_name = "stip_p1000",
+        display_name = "Starting tip P1000",
+        description = "Starting location of the first p1000 tip",
+        default=1,
+        minimum=1,
+        maximum=96
+        ) 
+
+   
 ############# MAIN #############
 def run(protocol: protocol_api.ProtocolContext):
     #global cmdList, deckMap, amtList
     try:
         if(pc =="Jorn" or pc =="jorn"):
+            sim = "1"
             os.chdir("C://Users//jornb//Documents//GitHub//ot2//Execution code for OT2//Incubator//Test User inputs" )
         elif(pc == "Sebastian" or pc== "sebastian"):
+            sim = "1"
             os.chdir("C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\DownstreamProcessors")
         else:
+            sim = "0"
             os.chdir(os.path.expanduser("~") + '//Desktop//User input (for direct)')
     except:
+        sim = "0"
         os.chdir('/var/lib/jupyter/notebooks/UserInputs')
         
     amtList, cmdList, deckMap = ReadCSV_input(fileName)
@@ -290,7 +313,13 @@ def run(protocol: protocol_api.ProtocolContext):
     trash = protocol.load_trash_bin(location = 'A3')
 
     ############### INITIATE TIP COUNTER ############
-    tip_counter = [0, 0] # p50, p1000
+    if sim == "1":
+        tip_counter = [0, 0] # p50, p1000
+    else:
+        p50tipcounter = protocol.params.stip_p50 - 1
+        p1000tipcounter = protocol.params.stip_p1000 - 1
+        tip_counter = [p50tipcounter, p1000tipcounter] # p50, p1000
+        
     current_tip = 0
     
     ############### EXECUTE ###############
@@ -303,6 +332,11 @@ def run(protocol: protocol_api.ProtocolContext):
     mix = [current_line[5] for current_line in cmdList]
     tip_n = [current_line[6] for current_line in cmdList]
     #pipette = [current_line[8] for current_line in cmdList]
+    
+    #starting tip location    
+    if sim != "1":
+        right_pipette.starting_tip = tipLocs_50[0].wells()[p50tipcounter]
+        left_pipette.starting_tip = tipLocs_1000[0].wells()[p1000tipcounter]
     
     #perform operation per-aspirate group
     aspirate_groups = [int(current_line[7]) for current_line in cmdList]
@@ -496,6 +530,8 @@ def run(protocol: protocol_api.ProtocolContext):
                 mixer = pipette_caller['p1000']
                 mixer.pick_up_tip()
                 mixer.mix(4, 100, labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH))
+                mixer.aspirate(300, labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH))
+                mixer.dispense(300, labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].top())
                 mixer.blow_out()
                 mixer.drop_tip()
                 c_pipette.aspirate(sum([float(a) for a in c_amt]),

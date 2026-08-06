@@ -270,8 +270,10 @@ def run(protocol: protocol_api.ProtocolContext):
             sim = "1"
             os.chdir("C:\\Users\\Sebastian\\Desktop\\MSc Leiden 2nd Year\\##LabAst Works\\ot2\\DownstreamProcessors")
         else:
+            sim = "0"
             os.chdir(os.path.expanduser("~") + '//Desktop//User input (for direct)')
     except:
+        sim = "0"
         os.chdir('/var/lib/jupyter/notebooks/UserInputs')
         
     amtList, cmdList, deckMap = ReadCSV_input(fileName)
@@ -514,6 +516,8 @@ def run(protocol: protocol_api.ProtocolContext):
                 mixer = pipette_caller['p1000']
                 mixer.pick_up_tip()
                 mixer.mix(4, 100, labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH))
+                mixer.aspirate(300, labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].bottom(current_aspH))
+                mixer.dispense(300, labwareCaller[get_LabwareCaller(c_source_deck)].wells_by_name()[c_source_slot].top())
                 mixer.blow_out()
                 mixer.drop_tip()
                 c_pipette.aspirate(sum([float(a) for a in c_amt]),
