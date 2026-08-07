@@ -479,7 +479,7 @@ def run(protocol: protocol_api.ProtocolContext):
 	        	# touch tip only if target is a deep-well plate
                 if(touch_tips == 'Yes' and "1000" not in str(c_pipette) and current_transfer < 10):
                     if("384" not in str(labwareCaller[get_LabwareCaller(c_target_deck[0])])):
-                        c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]], radius=0.8, speed = 13)
+                        c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]], radius=0.9, speed = 13)
                     else:
                         c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[0])].wells_by_name()[c_target_slot[0]],
                                             radius=0.45, speed=13)
@@ -555,7 +555,7 @@ def run(protocol: protocol_api.ProtocolContext):
                             #c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[j]]], radius=0.8, speed = 13) For now not needed when not 96 wellsplate
                             print("nope")
                         elif("96" in str(labwareCaller[get_LabwareCaller(c_target_deck[-1])]) and "384" not in str(labwareCaller[get_LabwareCaller(c_target_deck[-1])])):
-                            c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[j]], radius=0.8, speed = 13, v_offset=-5)
+                            c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[j]], radius=0.9, speed = 13, v_offset=-5)
                         else:
                             c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[j]], radius=0.45, speed=13)
                           
@@ -576,7 +576,7 @@ def run(protocol: protocol_api.ProtocolContext):
                     #c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[-1]], radius=0.8, speed = 13) For now not needed when not 96 wellsplate
                     print("nope")
                 elif("96" in str(labwareCaller[get_LabwareCaller(c_target_deck[-1])]) and "384" not in str(labwareCaller[get_LabwareCaller(c_target_deck[-1])])):
-                    c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[-1]], radius=0.8, speed = 13, v_offset=-5)
+                    c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[-1]], radius=0.9, speed = 13, v_offset=-5)
                 else:
                     c_pipette.touch_tip(labwareCaller[get_LabwareCaller(c_target_deck[-1])].wells_by_name()[c_target_slot[-1]],
                                             radius=0.5, speed=13)
