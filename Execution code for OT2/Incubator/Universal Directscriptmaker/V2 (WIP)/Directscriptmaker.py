@@ -40,7 +40,7 @@ def Mainwindow(simulation, protocollist, x):
          ]
     return sg.Window('Directscript maker', layout, finalize = True) 
 
-#cmdlistmaker Doesnt function yet
+
 def filesending():
     layout = [
         [sg.Text("Please provide all information below")],

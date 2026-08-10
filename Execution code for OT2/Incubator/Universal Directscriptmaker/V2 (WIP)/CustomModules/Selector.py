@@ -5,8 +5,9 @@ import os
 import json
 import FreeSimpleGUI as sg
 
-#functions
-#function Robots
+# =============================================================================
+# FUNCTIONS
+# =============================================================================
 def Robotdetails(simulation):
     userpath = os.path.expanduser("~")
     robotloc = userpath + "//AppData//Roaming//Opentrons//discovery.json"

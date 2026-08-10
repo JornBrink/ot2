@@ -1,15 +1,4 @@
-#this is the main installer used as a module 
-
-
-#needed to do:
-    #Make directories:
-        #Directscriptmaker (complet copy)
-        #Webdriver ( //Desktop//DO NOT TOUCH THIS FOLDER (webdriver)//geckodriver.exe)
-            #make directory DO NOT TOUCH THIS FOLDER (webdriver)
-            #add geckodriver.exe
-        #Userinputs ( \Desktop\User input (for direct))
-        #Output directory (//New Direct scripts)
-        
+#this is the main installer used as a module         
 # imports
 import os
 import shutil

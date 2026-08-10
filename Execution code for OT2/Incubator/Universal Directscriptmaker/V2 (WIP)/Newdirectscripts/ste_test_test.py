@@ -1,3 +1,21 @@
+# This protocol is made for WallE
+fileName = 'CommandList_PMID-1_EXPID-INT_CMV-1_Amrhar.Mehdi.csv'
+
+pc = 'Jorn'
+
+brand = 'Greiner'
+
+filteredtip = 'both'
+
+touch_tips = 'Yes'
+
+#METADATA----------
+metadata = {
+	'protocolName':'ste_test_test',
+	'author':'Sebastian <sebastian.tandar@gmail.com>''Jorn <jornbrink@kpnmail.nl>',
+	'description':'Opentrons Flex custom script'' User customized qPCR'}
+
+requirements = {'robotType': 'Flex', 'apiLevel': '2.19'}
 
 #IMPORTS---------
 import csv
@@ -54,8 +72,8 @@ def translate_labwareLibrary(string_identifier, brand, filteredtip):
             labware_name = "nest_96_wellplate_2ml_deep" 
             return labware_name
         else:
-            #labware_name = "nest_96_wellplate_100ul_pcr_full_skirt"
-            labware_name = "appliedbiosystems_96_wellplate_100ul"  
+            labware_name = "nest_96_wellplate_100ul_pcr_full_skirt"
+            #labware_name = "appliedbiosystems_96_wellplate_100ul"  
             return labware_name
             
     elif("Tiprack" in string_identifier or "p5" in string_identifier or "p1" in string_identifier):
@@ -303,7 +321,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
 
     #load pipettes
-        #P50 single-channel
+        #P300 single-channel
     right_pipette = protocol.load_instrument('flex_1channel_50', 'right', tip_racks=tipLocs_50)
         #p1000 single-channel
     left_pipette = protocol.load_instrument('flex_1channel_1000', 'left', tip_racks=tipLocs_1000)
@@ -600,3 +618,11 @@ def run(protocol: protocol_api.ProtocolContext):
         if(int(tip_next) != int(current_tip) or (i == len(aspirate_groups2)-1)):
             c_pipette.drop_tip()
 
+
+##########Simulation##########
+from opentrons import simulate
+bep = simulate.get_protocol_api('2.19', robot_type = 'Flex')
+bep.home()
+run(bep)
+for line in bep.commands():
+	print(line)
