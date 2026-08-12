@@ -1,0 +1,199 @@
+SourceLabware,SourceSlot,TargetLabware,TargetSlot,TransAmt,MixAmt,TipID,Comment
+>Amount List
+labware_10,A1,MER,,900,,,
+labware_10,A2,AMI,,800,,,
+labware_10,A3,FEP,,1200,,,
+labware_11,A1,PBS,,37,,,
+labware_11,A2,CAMHB,,20,,,
+>CommandLines
+labware_11,A2,labware_8,A1,1050,0,1,Initial solvent distribution
+labware_11,A2,labware_8,A2,225,0,1,Initial solvent distribution
+labware_11,A2,labware_8,A3,337.5,0,1,Initial solvent distribution
+labware_11,A2,labware_8,A4,393.75,0,1,Initial solvent distribution
+labware_11,A2,labware_8,A5,421.875,0,1,Initial solvent distribution
+labware_11,A2,labware_8,B1,435.9375,0,1,Initial solvent distribution
+labware_11,A2,labware_8,B2,442.96875,0,1,Initial solvent distribution
+labware_11,A2,labware_8,B3,446.484375,0,1,Initial solvent distribution
+labware_11,A2,labware_8,B4,448.2421875,0,1,Initial solvent distribution
+labware_11,A2,labware_8,B5,449.12109375,0,1,Initial solvent distribution
+labware_11,A2,labware_8,C1,337.17041015625,0,1,Initial solvent distribution
+labware_11,A2,labware_8,C2,225,0,1,Initial solvent distribution
+labware_11,A2,labware_8,C3,337.5,0,1,Initial solvent distribution
+labware_11,A2,labware_8,C4,393.75,0,1,Initial solvent distribution
+labware_11,A2,labware_8,C5,421.875,0,1,Initial solvent distribution
+labware_11,A2,labware_9,A1,435.9375,0,1,Initial solvent distribution
+labware_11,A2,labware_9,A2,442.96875,0,1,Initial solvent distribution
+labware_11,A2,labware_9,A3,446.484375,0,1,Initial solvent distribution
+labware_11,A2,labware_9,A4,448.2421875,0,1,Initial solvent distribution
+labware_11,A2,labware_9,A5,449.12109375,0,1,Initial solvent distribution
+labware_11,A2,labware_9,B1,449.560546875,0,1,Initial solvent distribution
+labware_11,A2,labware_9,B2,225,0,1,Initial solvent distribution
+labware_11,A2,labware_9,B3,337.5,0,1,Initial solvent distribution
+labware_11,A2,labware_9,B4,393.75,0,1,Initial solvent distribution
+labware_11,A2,labware_9,B5,421.875,0,1,Initial solvent distribution
+labware_11,A2,labware_9,C1,435.9375,0,1,Initial solvent distribution
+labware_11,A2,labware_9,C2,442.96875,0,1,Initial solvent distribution
+labware_11,A2,labware_9,C3,446.484375,0,1,Initial solvent distribution
+labware_11,A2,labware_9,C4,448.2421875,0,1,Initial solvent distribution
+labware_11,A2,labware_9,C5,449.12109375,0,1,Initial solvent distribution
+labware_11,A2,labware_10,A4,0,0,1,Initial solvent distribution
+labware_10,A1,labware_8,C1,561.95068359375,561.95068359375,2,Initial stock dilution
+labware_10,A2,labware_9,B1,449.560546875,449.560546875,3,Initial stock dilution
+labware_10,A3,labware_10,A4,899.12109375,899.12109375,4,Initial stock dilution
+labware_8,C1,labware_8,B5,449.12109375,449.12109375,5,Serially diluting to  MER 8 CAMHB
+labware_8,B5,labware_8,B4,448.2421875,448.2421875,6,Serially diluting to  MER 4 CAMHB
+labware_8,B4,labware_8,B3,446.484375,446.484375,7,Serially diluting to  MER 2 CAMHB
+labware_8,B3,labware_8,B2,442.96875,442.96875,8,Serially diluting to  MER 1 CAMHB
+labware_8,B2,labware_8,B1,435.9375,435.9375,9,Serially diluting to  MER 0.5 CAMHB
+labware_8,B1,labware_8,A5,421.875,421.875,10,Serially diluting to  MER 0.25 CAMHB
+labware_8,A5,labware_8,A4,393.75,393.75,11,Serially diluting to  MER 0.125 CAMHB
+labware_8,A4,labware_8,A3,337.5,337.5,12,Serially diluting to  MER 0.0625 CAMHB
+labware_8,A3,labware_8,A2,225,225,13,Serially diluting to  MER 0.03125 CAMHB
+labware_9,B1,labware_9,A5,449.12109375,449.12109375,14,Serially diluting to  AMI 64 CAMHB
+labware_9,A5,labware_9,A4,448.2421875,448.2421875,15,Serially diluting to  AMI 32 CAMHB
+labware_9,A4,labware_9,A3,446.484375,446.484375,16,Serially diluting to  AMI 16 CAMHB
+labware_9,A3,labware_9,A2,442.96875,442.96875,17,Serially diluting to  AMI 8 CAMHB
+labware_9,A2,labware_9,A1,435.9375,435.9375,18,Serially diluting to  AMI 4 CAMHB
+labware_9,A1,labware_8,C5,421.875,421.875,19,Serially diluting to  AMI 2 CAMHB
+labware_8,C5,labware_8,C4,393.75,393.75,20,Serially diluting to  AMI 1 CAMHB
+labware_8,C4,labware_8,C3,337.5,337.5,21,Serially diluting to  AMI 0.5 CAMHB
+labware_8,C3,labware_8,C2,225,225,22,Serially diluting to  AMI 0.25 CAMHB
+labware_10,A4,labware_9,C5,449.12109375,449.12109375,23,Serially diluting to  FEP 128 CAMHB
+labware_9,C5,labware_9,C4,448.2421875,448.2421875,24,Serially diluting to  FEP 64 CAMHB
+labware_9,C4,labware_9,C3,446.484375,446.484375,25,Serially diluting to  FEP 32 CAMHB
+labware_9,C3,labware_9,C2,442.96875,442.96875,26,Serially diluting to  FEP 16 CAMHB
+labware_9,C2,labware_9,C1,435.9375,435.9375,27,Serially diluting to  FEP 8 CAMHB
+labware_9,C1,labware_9,B5,421.875,421.875,28,Serially diluting to  FEP 4 CAMHB
+labware_9,B5,labware_9,B4,393.75,393.75,29,Serially diluting to  FEP 2 CAMHB
+labware_9,B4,labware_9,B3,337.5,337.5,30,Serially diluting to  FEP 1 CAMHB
+labware_9,B3,labware_9,B2,225,225,31,Serially diluting to  FEP 0.5 CAMHB
+labware_8,A1,labware_4,"B2, B3, B4",100,0,32,Distributing  MER 0 CAMHB
+labware_8,A1,labware_5,"B2, B3, B4",100,0,32,Distributing  MER 0 CAMHB
+labware_8,A1,labware_6,"B2, B3, B4",100,0,32,Distributing  MER 0 CAMHB
+labware_8,A2,labware_4,C11,100,0,33,Distributing  MER 0.03125 CAMHB
+labware_8,A2,labware_5,C11,100,0,33,Distributing  MER 0.03125 CAMHB
+labware_8,A2,labware_6,C11,100,0,33,Distributing  MER 0.03125 CAMHB
+labware_8,A3,labware_4,C10,100,0,34,Distributing  MER 0.0625 CAMHB
+labware_8,A3,labware_5,C10,100,0,34,Distributing  MER 0.0625 CAMHB
+labware_8,A3,labware_6,C10,100,0,34,Distributing  MER 0.0625 CAMHB
+labware_8,A4,labware_4,C9,100,0,35,Distributing  MER 0.125 CAMHB
+labware_8,A4,labware_5,C9,100,0,35,Distributing  MER 0.125 CAMHB
+labware_8,A4,labware_6,C9,100,0,35,Distributing  MER 0.125 CAMHB
+labware_8,A5,labware_4,C8,100,0,36,Distributing  MER 0.25 CAMHB
+labware_8,A5,labware_5,C8,100,0,36,Distributing  MER 0.25 CAMHB
+labware_8,A5,labware_6,C8,100,0,36,Distributing  MER 0.25 CAMHB
+labware_8,B1,labware_4,C7,100,0,37,Distributing  MER 0.5 CAMHB
+labware_8,B1,labware_5,C7,100,0,37,Distributing  MER 0.5 CAMHB
+labware_8,B1,labware_6,C7,100,0,37,Distributing  MER 0.5 CAMHB
+labware_8,B2,labware_4,C6,100,0,38,Distributing  MER 1 CAMHB
+labware_8,B2,labware_5,C6,100,0,38,Distributing  MER 1 CAMHB
+labware_8,B2,labware_6,C6,100,0,38,Distributing  MER 1 CAMHB
+labware_8,B3,labware_4,C5,100,0,39,Distributing  MER 2 CAMHB
+labware_8,B3,labware_5,C5,100,0,39,Distributing  MER 2 CAMHB
+labware_8,B3,labware_6,C5,100,0,39,Distributing  MER 2 CAMHB
+labware_8,B4,labware_4,C4,100,0,40,Distributing  MER 4 CAMHB
+labware_8,B4,labware_5,C4,100,0,40,Distributing  MER 4 CAMHB
+labware_8,B4,labware_6,C4,100,0,40,Distributing  MER 4 CAMHB
+labware_8,B5,labware_4,C3,100,0,41,Distributing  MER 8 CAMHB
+labware_8,B5,labware_5,C3,100,0,41,Distributing  MER 8 CAMHB
+labware_8,B5,labware_6,C3,100,0,41,Distributing  MER 8 CAMHB
+labware_8,C1,labware_4,C2,100,0,42,Distributing  MER 16 CAMHB
+labware_8,C1,labware_5,C2,100,0,42,Distributing  MER 16 CAMHB
+labware_8,C1,labware_6,C2,100,0,42,Distributing  MER 16 CAMHB
+labware_8,C2,labware_4,E11,100,0,43,Distributing  AMI 0.25 CAMHB
+labware_8,C2,labware_5,E11,100,0,43,Distributing  AMI 0.25 CAMHB
+labware_8,C2,labware_6,E11,100,0,43,Distributing  AMI 0.25 CAMHB
+labware_8,C3,labware_4,E10,100,0,44,Distributing  AMI 0.5 CAMHB
+labware_8,C3,labware_5,E10,100,0,44,Distributing  AMI 0.5 CAMHB
+labware_8,C3,labware_6,E10,100,0,44,Distributing  AMI 0.5 CAMHB
+labware_8,C4,labware_4,E9,100,0,45,Distributing  AMI 1 CAMHB
+labware_8,C4,labware_5,E9,100,0,45,Distributing  AMI 1 CAMHB
+labware_8,C4,labware_6,E9,100,0,45,Distributing  AMI 1 CAMHB
+labware_8,C5,labware_4,E8,100,0,46,Distributing  AMI 2 CAMHB
+labware_8,C5,labware_5,E8,100,0,46,Distributing  AMI 2 CAMHB
+labware_8,C5,labware_6,E8,100,0,46,Distributing  AMI 2 CAMHB
+labware_9,A1,labware_4,E7,100,0,47,Distributing  AMI 4 CAMHB
+labware_9,A1,labware_5,E7,100,0,47,Distributing  AMI 4 CAMHB
+labware_9,A1,labware_6,E7,100,0,47,Distributing  AMI 4 CAMHB
+labware_9,A2,labware_4,E6,100,0,48,Distributing  AMI 8 CAMHB
+labware_9,A2,labware_5,E6,100,0,48,Distributing  AMI 8 CAMHB
+labware_9,A2,labware_6,E6,100,0,48,Distributing  AMI 8 CAMHB
+labware_9,A3,labware_4,E5,100,0,49,Distributing  AMI 16 CAMHB
+labware_9,A3,labware_5,E5,100,0,49,Distributing  AMI 16 CAMHB
+labware_9,A3,labware_6,E5,100,0,49,Distributing  AMI 16 CAMHB
+labware_9,A4,labware_4,E4,100,0,50,Distributing  AMI 32 CAMHB
+labware_9,A4,labware_5,E4,100,0,50,Distributing  AMI 32 CAMHB
+labware_9,A4,labware_6,E4,100,0,50,Distributing  AMI 32 CAMHB
+labware_9,A5,labware_4,E3,100,0,51,Distributing  AMI 64 CAMHB
+labware_9,A5,labware_5,E3,100,0,51,Distributing  AMI 64 CAMHB
+labware_9,A5,labware_6,E3,100,0,51,Distributing  AMI 64 CAMHB
+labware_9,B1,labware_4,E2,100,0,52,Distributing  AMI 128 CAMHB
+labware_9,B1,labware_5,E2,100,0,52,Distributing  AMI 128 CAMHB
+labware_9,B1,labware_6,E2,100,0,52,Distributing  AMI 128 CAMHB
+labware_9,B2,labware_4,G11,100,0,53,Distributing  FEP 0.5 CAMHB
+labware_9,B2,labware_5,G11,100,0,53,Distributing  FEP 0.5 CAMHB
+labware_9,B2,labware_6,G11,100,0,53,Distributing  FEP 0.5 CAMHB
+labware_9,B3,labware_4,G10,100,0,54,Distributing  FEP 1 CAMHB
+labware_9,B3,labware_5,G10,100,0,54,Distributing  FEP 1 CAMHB
+labware_9,B3,labware_6,G10,100,0,54,Distributing  FEP 1 CAMHB
+labware_9,B4,labware_4,G9,100,0,55,Distributing  FEP 2 CAMHB
+labware_9,B4,labware_5,G9,100,0,55,Distributing  FEP 2 CAMHB
+labware_9,B4,labware_6,G9,100,0,55,Distributing  FEP 2 CAMHB
+labware_9,B5,labware_4,G8,100,0,56,Distributing  FEP 4 CAMHB
+labware_9,B5,labware_5,G8,100,0,56,Distributing  FEP 4 CAMHB
+labware_9,B5,labware_6,G8,100,0,56,Distributing  FEP 4 CAMHB
+labware_9,C1,labware_4,G7,100,0,57,Distributing  FEP 8 CAMHB
+labware_9,C1,labware_5,G7,100,0,57,Distributing  FEP 8 CAMHB
+labware_9,C1,labware_6,G7,100,0,57,Distributing  FEP 8 CAMHB
+labware_9,C2,labware_4,G6,100,0,58,Distributing  FEP 16 CAMHB
+labware_9,C2,labware_5,G6,100,0,58,Distributing  FEP 16 CAMHB
+labware_9,C2,labware_6,G6,100,0,58,Distributing  FEP 16 CAMHB
+labware_9,C3,labware_4,G5,100,0,59,Distributing  FEP 32 CAMHB
+labware_9,C3,labware_5,G5,100,0,59,Distributing  FEP 32 CAMHB
+labware_9,C3,labware_6,G5,100,0,59,Distributing  FEP 32 CAMHB
+labware_9,C4,labware_4,G4,100,0,60,Distributing  FEP 64 CAMHB
+labware_9,C4,labware_5,G4,100,0,60,Distributing  FEP 64 CAMHB
+labware_9,C4,labware_6,G4,100,0,60,Distributing  FEP 64 CAMHB
+labware_9,C5,labware_4,G3,100,0,61,Distributing  FEP 128 CAMHB
+labware_9,C5,labware_5,G3,100,0,61,Distributing  FEP 128 CAMHB
+labware_9,C5,labware_6,G3,100,0,61,Distributing  FEP 128 CAMHB
+labware_10,A4,labware_4,G2,100,0,62,Distributing  FEP 256 CAMHB
+labware_10,A4,labware_5,G2,100,0,62,Distributing  FEP 256 CAMHB
+labware_10,A4,labware_6,G2,100,0,62,Distributing  FEP 256 CAMHB
+labware_11,A1,labware_4,"A1, A2, A3, A4, A5, A6, A7, A8",200,0,63,Filling outer wells with WATER
+labware_11,A1,labware_4,"A9, A10, A11, A12, B1, B12, C1, C12",200,0,64,Filling outer wells with WATER
+labware_11,A1,labware_4,"D1, D2, D3, D4, D5, D6, D7, D8",200,0,65,Filling outer wells with WATER
+labware_11,A1,labware_4,"D9, D10, D11, D12, E1, E12, F1, F2",200,0,66,Filling outer wells with WATER
+labware_11,A1,labware_4,"F3, F4, F5, F6, F7, F8, F9, F10",200,0,67,Filling outer wells with WATER
+labware_11,A1,labware_4,"F11, F12, G1, G12, H1, H2, H3, H4",200,0,68,Filling outer wells with WATER
+labware_11,A1,labware_4,"H5, H6, H7, H8, H9, H10, H11, H12",200,0,69,Filling outer wells with WATER
+labware_11,A1,labware_5,"A1, A2, A3, A4, A5, A6, A7, A8",200,0,70,Filling outer wells with WATER
+labware_11,A1,labware_5,"A9, A10, A11, A12, B1, B12, C1, C12",200,0,71,Filling outer wells with WATER
+labware_11,A1,labware_5,"D1, D2, D3, D4, D5, D6, D7, D8",200,0,72,Filling outer wells with WATER
+labware_11,A1,labware_5,"D9, D10, D11, D12, E1, E12, F1, F2",200,0,73,Filling outer wells with WATER
+labware_11,A1,labware_5,"F3, F4, F5, F6, F7, F8, F9, F10",200,0,74,Filling outer wells with WATER
+labware_11,A1,labware_5,"F11, F12, G1, G12, H1, H2, H3, H4",200,0,75,Filling outer wells with WATER
+labware_11,A1,labware_5,"H5, H6, H7, H8, H9, H10, H11, H12",200,0,76,Filling outer wells with WATER
+labware_11,A1,labware_6,"A1, A2, A3, A4, A5, A6, A7, A8",200,0,77,Filling outer wells with WATER
+labware_11,A1,labware_6,"A9, A10, A11, A12, B1, B12, C1, C12",200,0,78,Filling outer wells with WATER
+labware_11,A1,labware_6,"D1, D2, D3, D4, D5, D6, D7, D8",200,0,79,Filling outer wells with WATER
+labware_11,A1,labware_6,"D9, D10, D11, D12, E1, E12, F1, F2",200,0,80,Filling outer wells with WATER
+labware_11,A1,labware_6,"F3, F4, F5, F6, F7, F8, F9, F10",200,0,81,Filling outer wells with WATER
+labware_11,A1,labware_6,"F11, F12, G1, G12, H1, H2, H3, H4",200,0,82,Filling outer wells with WATER
+labware_11,A1,labware_6,"H5, H6, H7, H8, H9, H10, H11, H12",200,0,83,Filling outer wells with WATER
+labware_11,A2,labware_4,"B5, B6, B7, B8, B9, B10, B11",200,0,84,Filling outer wells with WATER
+labware_11,A2,labware_5,"B5, B6, B7, B8, B9, B10, B11",200,0,85,Filling outer wells with WATER
+labware_11,A2,labware_6,"B5, B6, B7, B8, B9, B10, B11",200,0,86,Filling outer wells with WATER
+>PlateMap
+labware_1,(empty),,,,,,
+labware_2,(empty),,,,,,
+labware_3,(empty),,,,,,
+labware_4,96-well_A,,,,,,
+labware_5,96-well_B,,,,,,
+labware_6,96-well_C,,,,,,
+labware_7,tip,,,,,,
+labware_8,15_Falcon_main,,,,,,
+labware_9,15_Falcon_spare,,,,,,
+labware_10,15ml_Falcon_stock,,,,,,
+labware_11,Solvent,,,,,,
+labware_12,TRASH,,,,,,
