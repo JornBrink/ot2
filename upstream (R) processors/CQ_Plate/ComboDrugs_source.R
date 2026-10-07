@@ -520,16 +520,25 @@ Calculate_SolventAmt <- function(rack_map, cmd_list){
   solvent_rack <- rack_map[grepl("solvent", rack_map$Item, ignore.case=T),]
   rack_map <- rack_map[!grepl("solvent", rack_map$Item, ignore.case=T),]
   
+  print(solvent_rack)
+  print(rack_map)
+  print(cmd_list)
+  testmap <<- cmd_list
+  
   #zero in
   solvent_rack$FillVolume <- 0
   
   #iterate through command list
   for(i in c(1:length(cmd_list[,1]))){
+    print(i)
     if(cmd_list$SourceLabware[i] == solvent_rack$Labware[1]){
       #get volumes
       tube_fill <- solvent_rack$FillVolume[solvent_rack$Slot == cmd_list$SourceSlot[i]]
       nex_trans_amt <- as.numeric(cmd_list$TransAmt[i]) * 
         length(strsplit(cmd_list$TargetSlot[i], split=", ")[[1]])
+      
+      print(tube_fill)
+      print(nex_trans_amt)
       
       if(tube_fill + nex_trans_amt < 46000){
         #add volume
@@ -767,9 +776,9 @@ mainExec <- function(file_name){
 }
 
 #TROUBLESHOOTING--------------
-# mainwd <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\CQ_Plate\\"
-# inputFile <- "CQ_InputTemplate_GCV_FOS_LS.xlsx"
-# inputFile <- "CQ_InputTemplate.xlsx"
-# dqs <- mainExec(paste0(mainwd, inputFile))
+mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\CQ_Plate\\"
+#inputFile <- "CQ_InputTemplate_GCV_FOS_LS.xlsx"
+inputFile <- "20261006_JL_Checkerboard.xlsx"
+dqs <- mainExec(paste0(mainwd, inputFile))
 
-# write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
+write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
