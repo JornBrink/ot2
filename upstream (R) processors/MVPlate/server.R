@@ -18,10 +18,10 @@ shinyServer(function(input, output) {
   inputTemplate <- "/home/shiny-ot2/ShinyApps/ot2/MVPlate/MV_InputTemplate.xlsx"
   sourceDir <- "/home/shiny-ot2/ShinyApps/ot2/MVPlate/MVsourceFunctions.R"
 
-  # outputDir_cmdline <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate"
-  # outputDir_usrGuide <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate"
-  # inputTemplate <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate/MV_InputTemplate.xlsx"
-  # sourceDir <- "C:\\Users\\sebas\\Documents\\GitHub\\ot2\\MVPlate/MVsourceFunctions.R"
+  # outputDir_cmdline <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\MVPlate"
+  # outputDir_usrGuide <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\MVPlate"
+  # inputTemplate <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\MVPlate/MV_InputTemplate.xlsx"
+  # sourceDir <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\MVPlate/MVsourceFunctions.R"
   
   #loading functions--------
   source(sourceDir)
@@ -58,7 +58,7 @@ shinyServer(function(input, output) {
       file_name <<- strsplit(infile$name, '.xl')[[1]][1]
       
       #update table view; perform main function
-      dis <- main(infile$datapath, infile$name)
+      dis <- main(infile$datapath, infile$name, randomize = isolate(input$randomize))
       
       if(errMessage==""){
         #generate appropriate output files
@@ -162,6 +162,12 @@ shinyServer(function(input, output) {
         usrGuide_name <- paste("RobotHandler_", new_name(), '.xlsx', sep='')
         write_dir <- paste(outputDir_usrGuide, usrGuide_name, sep='/')
         write_xlsx(new_userGuideOutput, write_dir, col_names=T)
+        
+        #plate map (grid + long format); the only record of the layout when randomized
+        plateMap_name <- paste("PlateMap_", new_name(), '.xlsx', sep='')
+        write_xlsx(list(Grid = data.frame(Row = rownames(shuffled_plateGrid), shuffled_plateGrid, check.names=FALSE),
+                        Long = shuffled_plateMap),
+                   paste(outputDir_usrGuide, plateMap_name, sep='/'))
       }
     }
     return(dis)
@@ -198,6 +204,14 @@ shinyServer(function(input, output) {
     content = function(file) {
       write_xlsx(new_userGuideOutput, file, col_names=T)
       #write.csv(new_userGuideOutput, file, row.names = FALSE)
+    }
+  )
+  
+  output$plateMap <- downloadHandler(
+    filename = function(){paste("PlateMap_", new_name(), '.xlsx', sep='')},
+    content = function(file) {
+      write_xlsx(list(Grid = data.frame(Row = rownames(shuffled_plateGrid), shuffled_plateGrid, check.names=FALSE),
+                      Long = shuffled_plateMap), file)
     }
   )
   

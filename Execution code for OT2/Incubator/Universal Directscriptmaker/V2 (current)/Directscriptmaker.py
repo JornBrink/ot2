@@ -58,6 +58,7 @@ def filesending():
          sg.Radio("qPCR (Flex Only)", "group1", key= "qPCR")],                                                             
         [sg.Text("Do you want to fill outer wells in robot? (384 plate only)")],
         [sg.Radio("Yes", "group3", key = 'Fill'), sg.Radio("No", "group3", key = 'nFill', default = True)],
+        [sg.T("(MV plate only) Randomize plate layout?"), sg.Checkbox("Randomize layout", key="Random")],
         [sg.Button("Save User Inputs", s= 16, button_color = 'black on yellow'), 
          sg.Button("Send to Server", s= 16, disabled = True), sg.Push(), sg.Button("Close", s= 16, button_color = "tomato")]
         ]
@@ -286,6 +287,8 @@ while True:
                 Experiment_name = values['EXPname']
                 Experiment_num = values['EXPnum']
                 filelocation = os.path.abspath(filepath)
+                randomize = values['Random']
+                
                 
                 
                 #Now only the options and services of the webdriver need to be added
@@ -299,7 +302,7 @@ while True:
                     path = os.path.expanduser("~")
                     downloadloc = path + r"\Documents\GitHub\ot2\Execution code for OT2\Incubator\Universal Directscriptmaker\Supporting scripts and items\Webdriver\Firefox download test"
                     options.set_preference("browser.download.dir", downloadloc)
-                    service = Service(executable_path= path +  "//Documents//GitHub//ot2//Execution code for OT2//Incubator//Universal Directscriptmaker//Supporting scripts and items//Webdriver//Firefox webdriver//geckodriver.exe")
+                    service = Service(executable_path= path +  "//Documents//GitHub//ot2-JB//Execution code for OT2//Incubator//Universal Directscriptmaker//Supporting scripts and items//Webdriver//Firefox webdriver//geckodriver.exe")
 
                 else:
                     path = os.path.expanduser("~")
@@ -332,7 +335,7 @@ while True:
         elif(values['MVP'] == True):
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/MVPlate/")
             assert "Multiplate MIC - OT2 Commander.title"
-            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver)
+            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, randomize)
             
         elif(values['384p'] == True):
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/Plate384/")

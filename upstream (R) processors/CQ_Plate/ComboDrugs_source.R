@@ -144,12 +144,12 @@ cal_dilScheme_MedID <- function(current_set_id, solution_list, stock_info){
     # calculate required medium
     current_set$volMedium[i] <- current_set$finVolumes[i] - current_set$volAbove[i]
   }
-  
+
   # if pre-dilution if required
   if(stock_conc >= 10*max(current_set$ReqConc)){
     #pre-dilute stock
     predilution_conc <- 10*max(current_set$ReqConc)
-    req_volume <- max(current_set$ReqVolume[nrow(current_set)]/10 + 200, 300)
+    req_volume <- max(current_set$volAbove[nrow(current_set)] + 200, 300)
     stock_predilution <- c(current_set_id,
                            unique(current_set$Medium), unique(current_set$DrugName),
                            10*max(current_set$Conc), 
@@ -373,7 +373,7 @@ InitialStockDilution <- function(cmd_list, sol_list, rack_map){
 }
 MainDilution <- function(cmd_list, sol_list, rack_map){
   #get latest tip id
-  tip_latest <- max(as.numeric(cmd_list$TipID))
+  tip_latest <- max(as.numeric(cmd_list$TipID))+1
   #iterate through all medium-drug id
   medDrugIDs <- unique(sol_list$medDrugID)
   for(i in c(1:length(medDrugIDs))){
@@ -479,6 +479,8 @@ MainDistribution <- function(vol_info, sol_list, rack_map, drug_map, n_plate, de
     }
     
     #fill outer wells
+    testdrugmap <<- drug_map
+    testdrugmap2 <<-drug_map2
     choose_well <- drug_map$Slot[drug_map$DrugName=="mediumfill" & drug_map$Medium == medium_selected]
     if(length(choose_well)>0){
       nex_cmd2 <- c(rack_map$Labware[rack_map$FillSolution == medium_selected],
@@ -520,25 +522,17 @@ Calculate_SolventAmt <- function(rack_map, cmd_list){
   solvent_rack <- rack_map[grepl("solvent", rack_map$Item, ignore.case=T),]
   rack_map <- rack_map[!grepl("solvent", rack_map$Item, ignore.case=T),]
   
-  print(solvent_rack)
-  print(rack_map)
-  print(cmd_list)
-  testmap <<- cmd_list
-  
   #zero in
   solvent_rack$FillVolume <- 0
   
   #iterate through command list
   for(i in c(1:length(cmd_list[,1]))){
-    print(i)
     if(cmd_list$SourceLabware[i] == solvent_rack$Labware[1]){
       #get volumes
       tube_fill <- solvent_rack$FillVolume[solvent_rack$Slot == cmd_list$SourceSlot[i]]
       nex_trans_amt <- as.numeric(cmd_list$TransAmt[i]) * 
         length(strsplit(cmd_list$TargetSlot[i], split=", ")[[1]])
       
-      print(tube_fill)
-      print(nex_trans_amt)
       
       if(tube_fill + nex_trans_amt < 46000){
         #add volume
@@ -778,7 +772,7 @@ mainExec <- function(file_name){
 #TROUBLESHOOTING--------------
 mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\CQ_Plate\\"
 #inputFile <- "CQ_InputTemplate_GCV_FOS_LS.xlsx"
-inputFile <- "20261006_JL_Checkerboard.xlsx"
+inputFile <- "CQ_InputTemplate.xlsx"
 dqs <- mainExec(paste0(mainwd, inputFile))
 
-write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
+#write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)

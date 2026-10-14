@@ -9,7 +9,7 @@ import os
 import FreeSimpleGUI as sg
 
 #function
-def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, fillingrobot = False):
+def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, fillingrobot = False, randomize = False):
     #needed for the later appearence in the GUI
     x = 'NA'
     
@@ -18,12 +18,13 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
     
     #This part searches ID of the HTML and adds the variables to it
     driver.find_element(By.ID, "file").send_keys(filelocation)
-    
+ 
+    #Randomize click
+    if (randomize == True):
+        driver.find_element(By.ID, "randomize").click()    
     #348 functionality
     if (fillingrobot == True):
         driver.find_element(By.ID, "fillOuter").click()
-    else:
-        print("no outerwell will be filled by OT") 
         
     driver.find_element(By.ID, "pmid").send_keys(pmid_plate)
     driver.find_element(By.ID, "f_name").send_keys(Firstname)
@@ -40,14 +41,17 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
     textFromDiv = driver.find_element(By.XPATH, "//div[@class='shiny-text-output shiny-bound-output']").text
     file_name = "CommandList_" + textFromDiv + ".csv"
     RSPname = "Robothandler_" + textFromDiv + ".xlsx"
+    PMname = "PlateMap_" + textFromDiv + ".xlsx"
     
-    #Checking path for the check to check of orverriding things
+    #Checking path for the check to check of overriding things
     if(simulation == "1"):
         path_cmd = path + "//Documents//GitHub//ot2//Execution code for OT2//Incubator//Test User inputs//" + file_name
         path_rsp = path + "//Documents//GitHub//ot2//Execution code for OT2//Incubator//Test User inputs//" + RSPname
+        path_pm = path + "//Documents//GitHub//ot2//Execution code for OT2//Incubator//Test User inputs//" + PMname
     else: 
         path_cmd = path + "//Desktop//User input (for direct)//" + file_name
         path_rsp = path + "//Desktop//User input (for direct)//" + RSPname
+        path_pm = path + "//Platemap//Randomized_Platemaps//" + PMname
       
     checkfilepresent = os.path.isfile(path_cmd)   
     
@@ -63,11 +67,15 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
         time.sleep(3)
         driver.find_element(By.ID, "guide").click()
         time.sleep(10)
+        if (randomize == True):
+            driver.find_element(By.ID, "plateMap").click()
+            time.sleep(3)
         
         #check if the download was succesfull
         downpath = path + "//Downloads//"
         downpathcmd = downpath + file_name
         downpathrsp = downpath + RSPname
+        downpathpl = downpath + PMname
         
         #checking download
         checkdownloadcmd = os.path.isfile(downpathcmd)
@@ -84,6 +92,8 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
             os.replace(downpathcmd, path_cmd)
             
             os.replace(downpathrsp, path_rsp)
+            
+            os.replace(downpathpl, path_pm)
         except:
             pass
         
