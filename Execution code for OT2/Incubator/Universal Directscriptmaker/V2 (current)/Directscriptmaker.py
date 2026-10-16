@@ -330,7 +330,7 @@ while True:
         if(values['Checker'] == True):
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/CQ_Plate/")
             assert "CQ Plate.title"
-            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver)
+            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, randomize)
         
         elif(values['MVP'] == True):
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/MVPlate/")
