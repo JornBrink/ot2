@@ -1,5 +1,5 @@
 """
-uDirectscriptmaker - V1.5
+uDirectscriptmaker - V2
 Author: JB
 """
 
@@ -58,7 +58,7 @@ def filesending():
          sg.Radio("qPCR (Flex Only)", "group1", key= "qPCR")],                                                             
         [sg.Text("Do you want to fill outer wells in robot? (384 plate only)")],
         [sg.Radio("Yes", "group3", key = 'Fill'), sg.Radio("No", "group3", key = 'nFill', default = True)],
-        [sg.T("(MV plate only) Randomize plate layout?"), sg.Checkbox("Randomize layout", key="Random")],
+        [sg.T("(MV/CQ plate only) Randomize plate layout?"), sg.Checkbox("Randomize layout", key="Random")],
         [sg.Button("Save User Inputs", s= 16, button_color = 'black on yellow'), 
          sg.Button("Send to Server", s= 16, disabled = True), sg.Push(), sg.Button("Close", s= 16, button_color = "tomato")]
         ]
@@ -330,12 +330,12 @@ while True:
         if(values['Checker'] == True):
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/CQ_Plate/")
             assert "CQ Plate.title"
-            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, randomize)
+            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, fillingrobot=False, randomize=randomize)
         
         elif(values['MVP'] == True):
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/MVPlate/")
             assert "Multiplate MIC - OT2 Commander.title"
-            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, randomize)
+            x = Filedriver.filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Experiment_num, simulation, driver, fillingrobot=False, randomize=randomize)
             
         elif(values['384p'] == True):
             driver.get("https://ot2.lacdr.leidenuniv.nl/ot2/Plate384/")

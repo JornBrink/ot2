@@ -520,7 +520,8 @@ MainDistribution <- function(vol_info, sol_list, rack_map, drug_map, n_plate, de
     
     #concatenate; update tip
     plate_distribute <- rbind(plate_distribute, nex_cmd, nex_cmd2)
-    cur_tip <- cur_tip + 2
+    if(!is.null(nex_cmd))  cur_tip <- cur_tip + 1
+    if(!is.null(nex_cmd2)) cur_tip <- cur_tip + 1
   }
   
   #turn to data frame

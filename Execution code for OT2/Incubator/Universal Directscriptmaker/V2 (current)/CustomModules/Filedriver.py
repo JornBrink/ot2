@@ -51,7 +51,7 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
     else: 
         path_cmd = path + "//Desktop//User input (for direct)//" + file_name
         path_rsp = path + "//Desktop//User input (for direct)//" + RSPname
-        path_pm = path + "//Platemap//Randomized_Platemaps//" + PMname
+        path_pm = path + "//Desktop//Randomized_Platemaps//" + PMname
       
     checkfilepresent = os.path.isfile(path_cmd)   
     
@@ -75,7 +75,7 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
         downpath = path + "//Downloads//"
         downpathcmd = downpath + file_name
         downpathrsp = downpath + RSPname
-        downpathpl = downpath + PMname
+        downpathpl = path + "//Desktop//User input (for direct)//" + PMname
         
         #checking download
         checkdownloadcmd = os.path.isfile(downpathcmd)
@@ -90,9 +90,15 @@ def filesend(filelocation, pmid_plate, Firstname, Lastname, Experiment_name, Exp
         #now to move it to the correct spot --> if needed, Most will just go to the correct spot since its in the driveroptions
         try:
             os.replace(downpathcmd, path_cmd)
-            
+        except:
+            pass
+        
+        try:  
             os.replace(downpathrsp, path_rsp)
-            
+        except:
+            pass
+        
+        try:
             os.replace(downpathpl, path_pm)
         except:
             pass
