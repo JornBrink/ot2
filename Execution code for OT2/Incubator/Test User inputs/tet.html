@@ -1,0 +1,1462 @@
+<title>Volume Balance — CommandList_PMID-_co_culture_EXPID-COL_co_colture-20_Koumans.Annika</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg:#f5f6f9; --surface:#fff; --border:#dde2ec;
+  --fg:#1b2033; --fg-muted:#5c657d; --accent:#2563eb;
+  --safe:#15803d; --safe-bg:#f0fdf4; --safe-border:#bbf7d0;
+  --danger:#b91c1c; --danger-bg:#fef2f2; --danger-border:#fecaca;
+  --warn:#92400e;  --warn-bg:#fffbeb;  --warn-border:#fde68a;
+  --label-bg:#f0f2f7; --hdr-bg:#1b2033; --hdr-fg:#e8ecf8;
+  --mono:'IBM Plex Mono','Courier New',monospace;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1017; --surface:#161b27; --border:#252d40;
+    --fg:#dde3f4; --fg-muted:#7a85a0; --accent:#6099f8;
+    --safe:#4ade80; --safe-bg:#052e16; --safe-border:#14532d;
+    --danger:#f87171; --danger-bg:#1c0505; --danger-border:#7f1d1d;
+    --warn:#fbbf24; --warn-bg:#1c1200; --warn-border:#92400e;
+    --label-bg:#1f263a; --hdr-bg:#0d1017; --hdr-fg:#dde3f4;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1017; --surface:#161b27; --border:#252d40;
+  --fg:#dde3f4; --fg-muted:#7a85a0; --accent:#6099f8;
+  --safe:#4ade80; --safe-bg:#052e16; --safe-border:#14532d;
+  --danger:#f87171; --danger-bg:#1c0505; --danger-border:#7f1d1d;
+  --warn:#fbbf24; --warn-bg:#1c1200; --warn-border:#92400e;
+  --label-bg:#1f263a; --hdr-bg:#0d1017; --hdr-fg:#dde3f4;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--fg);
+  font-size:13px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 32px;
+}
+header{
+  background:var(--hdr-bg);color:var(--hdr-fg);
+  padding:20px max(16px,env(safe-area-inset-left,0px));
+  margin-left:max(-16px,calc(-1 * env(safe-area-inset-left,0px)));
+  margin-right:max(-16px,calc(-1 * env(safe-area-inset-right,0px)));
+  margin-bottom:24px;
+}
+header h1{font-size:17px;font-weight:600;letter-spacing:.02em}
+header p{font-size:12px;color:#8891aa;margin-top:4px}
+.summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.summary-chip{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:10px 16px;
+  display:flex;align-items:center;gap:8px;font-size:13px;
+}
+.chip-val{font-size:22px;font-weight:600;font-family:var(--mono);line-height:1}
+.chip-lbl{font-size:11px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.06em}
+.chip-val.ok{color:var(--safe)} .chip-val.bad{color:var(--danger)}
+.section-lbl{
+  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--fg-muted);margin:20px 0 8px;
+}
+details{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:8px;overflow:hidden;
+}
+details.deficit{border-color:var(--danger-border)}
+details.overflow{border-color:var(--warn-border)}
+summary{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;cursor:pointer;user-select:none;list-style:none;
+}
+summary::marker,summary::-webkit-details-marker{display:none}
+.tube-id{
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  background:var(--label-bg);border-radius:4px;padding:2px 7px;flex-shrink:0;
+}
+.tube-name{flex:1;color:var(--fg-muted);font-size:12px}
+.badge{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  border-radius:5px;padding:2px 8px;white-space:nowrap;
+}
+.badge.ok{background:var(--safe-bg);color:var(--safe);border:1px solid var(--safe-border)}
+.badge.deficit{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+.badge.overflow{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border)}
+.chev{color:var(--fg-muted);font-size:10px;transition:transform .15s;flex-shrink:0}
+details[open] .chev{transform:rotate(90deg)}
+.tube-body{padding:0 14px 12px}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+th{
+  text-align:left;color:var(--fg-muted);font-weight:500;
+  padding:4px 6px;border-bottom:1px solid var(--border);
+  font-family:var(--sans);font-size:10px;text-transform:uppercase;letter-spacing:.05em;
+}
+td{padding:4px 6px;vertical-align:top}
+tr:not(:last-child) td{border-bottom:1px solid var(--border)}
+.in{color:var(--safe);font-weight:500}
+.out{color:var(--danger);font-weight:500}
+.init{color:var(--fg-muted);font-weight:500}
+.neg{color:var(--danger);font-weight:600}
+.over{color:var(--warn);font-weight:600}
+.cmt{color:var(--fg-muted);font-family:var(--sans)}
+.cap{font-size:11px;color:var(--fg-muted);padding:4px 6px;border-top:1px solid var(--border);margin-top:4px}
+</style>
+
+<header>
+  <h1>Volume Balance Report</h1>
+  <p>CommandList_PMID-_co_culture_EXPID-COL_co_colture-20_Koumans.Annika.csv &nbsp;·&nbsp; 2026-10-19</p>
+</header>
+
+<div class="summary-bar">
+  <div class="summary-chip">
+    <div><div class="chip-val">83</div><div class="chip-lbl">Tubes tracked</div></div>
+  </div>
+  <div class="summary-chip">
+    <div><div class="chip-val ok">81</div><div class="chip-lbl">Clean</div></div>
+  </div>
+  <div class="summary-chip">
+    <div><div class="chip-val bad">2</div>
+    <div class="chip-lbl">Deficits</div></div>
+  </div>
+  <div class="summary-chip">
+    <div><div class="chip-val ok">0</div>
+    <div class="chip-lbl">Overflows</div></div>
+  </div>
+</div>
+
+<div class='section-lbl'>labware_10 — 15ml_Falcon_stock</div>
+<details class='details deficit' open>
+  <summary>
+    <span class='tube-id'>labware_10 A1</span>
+    <span class='tube-name'>15ml_Falcon_stock</span>
+    <span class='badge deficit'>DEFICIT</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='out'>▼ OUT</td><td>Step 10</td><td>-300.6738 µL</td><td class='neg'>-300.6738 µL</td><td class='cmt'>Initial stock dilution</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<div class='section-lbl'>labware_11 — Solvent</div>
+<details class='details deficit' open>
+  <summary>
+    <span class='tube-id'>labware_11 A1</span>
+    <span class='tube-name'>Solvent</span>
+    <span class='badge deficit'>DEFICIT</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='out'>▼ OUT</td><td>Step 1</td><td>-3150 µL</td><td class='neg'>-3150 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 2</td><td>-675 µL</td><td class='neg'>-3825 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 3</td><td>-562.5 µL</td><td class='neg'>-4387.5 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 4</td><td>-731.25 µL</td><td class='neg'>-5118.75 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 5</td><td>-1223.4375 µL</td><td class='neg'>-6342.1875 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 6</td><td>-980.8594 µL</td><td class='neg'>-7323.0469 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 7</td><td>-920.2148 µL</td><td class='neg'>-8243.2617 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 8</td><td>-603.3691 µL</td><td class='neg'>-8846.6309 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 9</td><td>-1202.6953 µL</td><td class='neg'>-10049.3262 µL</td><td class='cmt'>Initial solvent distribution</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 50,000 µL</div>
+  </div>
+</details>
+<div class='section-lbl'>labware_4 — 96-well_A</div>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B1</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B2</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B3</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 28</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 512 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B4</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 28</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 512 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B5</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 26</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 64 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B6</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 26</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 64 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B7</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 24</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 4 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B8</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 24</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 4 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B9</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 22</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 1 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B10</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 22</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 1 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B11</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 B12</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C1</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C2</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C3</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 28</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 512 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C4</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 28</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 512 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C5</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 26</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 64 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C6</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 26</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 64 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C7</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 24</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 4 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C8</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 24</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 4 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C9</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 22</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 1 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C10</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 22</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 1 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C11</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 C12</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 18</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D1</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D2</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D3</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 28</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 512 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D4</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 28</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 512 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D5</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 26</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 64 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D6</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 26</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 64 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D7</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 24</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 4 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D8</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 24</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 4 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D9</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 22</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 1 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D10</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 22</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 1 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D11</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 D12</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E1</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E2</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E3</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 27</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 256 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E4</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 27</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 256 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E5</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 25</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 16 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E6</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 25</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 16 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E7</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 23</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 2 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E8</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 23</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 2 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E9</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 21</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0.25 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E10</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 21</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0.25 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E11</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 E12</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 19</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F1</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F2</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F3</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 27</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 256 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F4</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 27</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 256 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F5</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 25</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 16 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F6</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 25</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 16 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F7</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 23</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 2 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F8</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 23</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 2 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F9</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 21</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0.25 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F10</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 21</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0.25 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F11</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 F12</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G1</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G2</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G3</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 27</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 256 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G4</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 27</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 256 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G5</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 25</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 16 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G6</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 25</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 16 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G7</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 23</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 2 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G8</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 23</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 2 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G9</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 21</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0.25 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G10</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 21</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0.25 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G11</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_4 G12</span>
+    <span class='tube-name'>96-well_A</span>
+    <span class='badge ok'>125 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 20</td><td>+125 µL</td><td>125 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 200 µL</div>
+  </div>
+</details>
+<div class='section-lbl'>labware_8 — 15_Falcon_spare</div>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 A1</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 1</td><td>+3150 µL</td><td>3150 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 18</td><td>-1000 µL</td><td>2150 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 19</td><td>-1000 µL</td><td>1150 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 20</td><td>-1000 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 0 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 A2</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 2</td><td>+675 µL</td><td>675 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 17</td><td>+225 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 0.25 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 21</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 0.25 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 A3</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 3</td><td>+562.5 µL</td><td>562.5 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 16</td><td>+562.5 µL</td><td>1125 µL</td><td class='cmt'>Serially diluting to  MIN 1 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 17</td><td>-225 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 0.25 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 22</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 1 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 A4</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 4</td><td>+731.25 µL</td><td>731.25 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 15</td><td>+731.25 µL</td><td>1462.5 µL</td><td class='cmt'>Serially diluting to  MIN 2 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 16</td><td>-562.5 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 1 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 23</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 2 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 A5</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 5</td><td>+1223.4375 µL</td><td>1223.4375 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 14</td><td>+407.8125 µL</td><td>1631.25 µL</td><td class='cmt'>Serially diluting to  MIN 4 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 15</td><td>-731.25 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 2 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 24</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 4 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 B1</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 6</td><td>+980.8594 µL</td><td>980.8594 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 13</td><td>+326.9531 µL</td><td>1307.8125 µL</td><td class='cmt'>Serially diluting to  MIN 16 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 14</td><td>-407.8125 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 4 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 25</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 16 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 B2</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 7</td><td>+920.2148 µL</td><td>920.2148 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 12</td><td>+306.7383 µL</td><td>1226.9531 µL</td><td class='cmt'>Serially diluting to  MIN 64 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 13</td><td>-326.9531 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 16 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 26</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 64 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 B3</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 8</td><td>+603.3691 µL</td><td>603.3691 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 11</td><td>+603.3691 µL</td><td>1206.7383 µL</td><td class='cmt'>Serially diluting to  MIN 256 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 12</td><td>-306.7383 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 64 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 27</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 256 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
+<details class=''>
+  <summary>
+    <span class='tube-id'>labware_8 B4</span>
+    <span class='tube-name'>15_Falcon_spare</span>
+    <span class='badge ok'>150 µL</span>
+    <span class='chev'>&#9658;</span>
+  </summary>
+  <div class='tube-body'>
+    <table><thead><tr>
+      <th>Dir</th><th>Step</th><th>Volume</th><th>Balance</th><th>Comment</th>
+    </tr></thead><tbody>
+      <tr><td class='in'>▲ IN</td><td>Step 9</td><td>+1202.6953 µL</td><td>1202.6953 µL</td><td class='cmt'>Initial solvent distribution</td></tr><tr><td class='in'>▲ IN</td><td>Step 10</td><td>+300.6738 µL</td><td>1503.3691 µL</td><td class='cmt'>Initial stock dilution</td></tr><tr><td class='out'>▼ OUT</td><td>Step 11</td><td>-603.3691 µL</td><td>900 µL</td><td class='cmt'>Serially diluting to  MIN 256 MED_A</td></tr><tr><td class='out'>▼ OUT</td><td>Step 28</td><td>-750 µL</td><td>150 µL</td><td class='cmt'>Distributing  MIN 512 MED_A</td></tr>
+    </tbody></table>
+    <div class='cap'>Max capacity: 15,000 µL</div>
+  </div>
+</details>
