@@ -1,5 +1,6 @@
 #### META ####
 # S. T. Tandar - 2021-1-1
+# Troubleshooting : J.Brink 2026
 # Universal CQ processor
 #LIBRARIES------
 library(dplyr)
@@ -26,9 +27,25 @@ ReadInput <- function(data_path){
   rownames(stock_info) <- stock_info[,1]
   stock_info <- stock_info[,-c(1, length(stock_info[1,]))]
   
+  # Check that all stock concentrations are numeric and greater than 0
+  stock_concs <- suppressWarnings(as.numeric(unlist(stock_info[1,])))
+  bad_stocks <- colnames(stock_info)[is.na(stock_concs) | stock_concs <= 0]
+  if (length(bad_stocks) > 0) {
+    stop(paste0(
+      "ERROR: Missing or invalid stock concentration for: ",
+      paste(bad_stocks, collapse = ", "),
+      "\nStock concentrations must be numeric and greater than 0."
+    ))
+  }
+  
   #B. gather volume information
   vol_info <- as.numeric(input_file[c(4:5), c(3)])
   names(vol_info) <- c("Total", "Inoculum")
+  
+  #check innoc volume
+  checkvol <- vol_info["Total"] <= vol_info["Inoculum"]
+  if (checkvol){
+    stop(paste0("ERROR: Inoculum volume (",vol_info["Inoculum"],") must be less than total well volume (",vol_info["Total"],")."))}
   
   #C. gather info about number of plate
   n_plate <- as.numeric(input_file[5,6])
@@ -46,6 +63,7 @@ ReadInput <- function(data_path){
   
   ## read solution map
   medium_map <- unlist(input_file[c(29:36), c(2:13)])
+  medium_map <- toupper(trimws(medium_map))
   
   ##innocmap
   innoc_map <- unlist(input_file[c(39:46), c(2:13)])
@@ -55,6 +73,75 @@ ReadInput <- function(data_path){
   colnames(drug_map) <- c("Slot", "DrugName", "Conc", "Medium", "Innoc")
   rownames(drug_map) <- c()
   drug_map$DrugName[is.na(drug_map$DrugName)] <- "mediumfill"
+  
+  plate_drugs <- unique(unlist(strsplit(drug_map$DrugName[drug_map$DrugName != "mediumfill"], split = "_")))
+  
+  #check for missing drugs
+  missing_drugs <- plate_drugs[!(plate_drugs %in% colnames(stock_info))]
+  
+  if (length(missing_drugs) > 0) {
+    stop(paste0(
+      "ERROR: Drug(s) on plate map not found in stock info: ",
+      paste(missing_drugs, collapse = ", "),
+      "\nCheck spelling and capitalisation in both the stock header and the drug name map."
+    ))
+  }
+  
+  #missing drug concentration
+  is_valid_conc <- function(x) {
+    if (is.na(x) || x == "") return(FALSE)
+    parts <- strsplit(x, "_")[[1]]
+    all(!is.na(suppressWarnings(as.numeric(parts))))
+  }
+  
+  bad_conc_na         <- drug_map$Slot[drug_map$DrugName != "mediumfill" & is.na(drug_map$Conc)]
+  bad_conc_nonnumeric <- drug_map$Slot[drug_map$DrugName != "mediumfill" &
+                                         !is.na(drug_map$Conc) &
+                                         !sapply(drug_map$Conc, is_valid_conc)]
+  
+  bad_conc <- unique(c(bad_conc_na, bad_conc_nonnumeric))
+  
+  if (length(bad_conc) > 0) {
+    stop(paste0(
+      "ERROR: Drug wells with missing or non-numeric concentration: ",
+      paste(bad_conc, collapse = ", "),
+      "\nConcentrations must be numbers (e.g. '0.125') or paired for combos (e.g. '0.125_0.5')."
+    ))
+  }
+  
+  
+  has_drug <- drug_map$DrugName != "mediumfill"
+  has_innoc <- !is.na(drug_map$Innoc)
+  no_medium <- is.na(drug_map$Medium)
+  
+  bad_wells <- drug_map$Slot[(has_drug | has_innoc) & no_medium]
+  if (length(bad_wells) > 0) {
+    stop(paste0(
+      "ERROR: Wells with drug/inoculum but no medium filled in: ",
+      paste(bad_wells, collapse = ", "),
+      "\nPlease complete the Medium map for these wells."
+    ))
+  }
+  
+  # Check that conc entries match the number of drugs in each well
+  combo_wells <- drug_map[grepl("_", drug_map$DrugName) & !is.na(drug_map$DrugName), ]
+  if (nrow(combo_wells) > 0) {
+    mismatch <- combo_wells$Slot[sapply(seq_len(nrow(combo_wells)), function(i){
+      n_drugs  <- length(strsplit(combo_wells$DrugName[i], "_")[[1]])
+      conc_str <- combo_wells$Conc[i]
+      if (!is.na(conc_str) && conc_str == "0") return(FALSE)  # plain "0" always OK
+      n_concs  <- length(strsplit(conc_str, "_")[[1]])
+      n_drugs != n_concs
+    })]
+    if (length(mismatch) > 0) {
+      stop(paste0(
+        "ERROR: Combo drug wells have mismatched concentration count: ",
+        paste(mismatch, collapse = ", "),
+        "\nFor a combo like 'CIP_TOB', concentrations must be paired (e.g. '0.125_0.5').",
+        "\nUse '0' or '0_0' to indicate no drug added."
+      ))
+    }
+  }
   
   return(list(stock_info, vol_info, drug_map, n_plate))
 }
@@ -116,6 +203,7 @@ CalculateRequired_ConcVol <- function(drug_map, vol_info, sol_list, n_plate){
   
   return(sol_list)
 }
+
 cal_dilScheme_MedID <- function(current_set_id, solution_list, stock_info){
   # subset
   current_set <- subset(solution_list, medDrugID==current_set_id) %>% filter(Conc>0) %>%
@@ -126,7 +214,7 @@ cal_dilScheme_MedID <- function(current_set_id, solution_list, stock_info){
     removeNonNumeric() %>% as.numeric()
 
   # main dilutions
-  for(i in c(1:nrow(current_set))){
+  for(i in seq_len(nrow(current_set))){
     # assign required volume
     current_set$finVolumes[i] <- current_set$ReqVolume[i] + 200 # excess
     
@@ -295,20 +383,32 @@ AssignSolutions <- function(sol_list, rack_map){
   rack_map <- rack_map[!grepl("1.5", rack_map$Item),]
   
   #iterate through all items in solution list
-  for(i in c(1:length(sol_list[,1]))){
-    #select rack
-    if(sol_list$finVolumes[i]<=1200){
-      #fill 1.5 mL rack (same rack as stock rack)
-      fill_loc <- which(dil_rack_Epp$FillSolution=="(empty)")[1]
+  for(i in seq_len(nrow(sol_list))){
+    if(sol_list$finVolumes[i] <= 1200){
+      fill_loc <- which(dil_rack_Epp$FillSolution == "(empty)")[1]
+      if (is.na(fill_loc)) {
+        stop(paste0(
+          "ERROR: Not enough Eppendorf tube slots for all dilutions. ",
+          "Required more than ", nrow(dil_rack_Epp), " slots. ",
+          "Consider splitting into multiple runs."
+        ))
+      }
       dil_rack_Epp$FillSolution[fill_loc] <- sol_list$solID[i]
-      dil_rack_Epp$FillVolume[fill_loc] <- sol_list$finVolumes[i]
-    }else{
-      #fill 15 mL Falcon tube rack
-      fill_loc <- which(dil_rack_falcon$FillSolution=="(empty)")[1]
+      dil_rack_Epp$FillVolume[fill_loc]   <- sol_list$finVolumes[i]
+    } else {
+      fill_loc <- which(dil_rack_falcon$FillSolution == "(empty)")[1]
+      if (is.na(fill_loc)) {
+        stop(paste0(
+          "ERROR: Not enough Falcon tube slots for all dilutions. ",
+          "Required more than ", nrow(dil_rack_falcon), " slots. ",
+          "Consider splitting into multiple runs."
+        ))
+      }
       dil_rack_falcon$FillSolution[fill_loc] <- sol_list$solID[i]
-      dil_rack_falcon$FillVolume[fill_loc] <- sol_list$finVolumes[i]
+      dil_rack_falcon$FillVolume[fill_loc]   <- sol_list$finVolumes[i]
     }
   }
+  
   #concatenate back
   rack_map <- rbind.data.frame(rack_map, dil_rack_Epp, dil_rack_falcon)
   
@@ -481,14 +581,19 @@ MainDistribution <- function(vol_info, sol_list, rack_map, drug_map, n_plate, de
   }
   
   #fill 0 ng/uL solutions with respective mediums
-  for(medium_selected in unique(drug_map$Medium)){
+  for(medium_selected in unique(drug_map$Medium[!is.na(drug_map$Medium)])){
     # filter relevant wells according to medium
     relevant_wells <- filter(drug_map2, Medium==medium_selected)
     
-    # select wells to apply additional medium to
-    well_index <- sapply(c(1:nrow(relevant_wells)), function(xi){
-      parse_conc <- strsplit(relevant_wells$Conc[xi], split="_")[[1]] %>% as.numeric()
-      return(sum(parse_conc==0))
+    # Count zero-concentration drug slots per well.
+    # Plain "0" is accepted as shorthand for all drugs being at zero concentration.
+    well_index <- sapply(seq_len(nrow(relevant_wells)), function(xi){
+      raw_conc <- relevant_wells$Conc[xi]
+      n_drugs  <- length(strsplit(relevant_wells$DrugName[xi], split="_")[[1]])
+      # plain "0" means all drugs at zero — expand to the full drug count
+      if (!is.na(raw_conc) && raw_conc == "0") return(n_drugs)
+      parse_conc <- strsplit(raw_conc, split="_")[[1]] %>% as.numeric()
+      return(sum(parse_conc == 0))
     })
     
     choose_well <- relevant_wells$Slot[which(well_index>0)]
@@ -507,15 +612,32 @@ MainDistribution <- function(vol_info, sol_list, rack_map, drug_map, n_plate, de
       nex_cmd <- NULL
     }
     
-    #fill outer wells
-    choose_well <- drug_map$Slot[drug_map$DrugName=="mediumfill" & drug_map$Medium == medium_selected]
-    if(length(choose_well)>0){
-      nex_cmd2 <- c(rack_map$Labware[rack_map$FillSolution == medium_selected],
-                    rack_map$Slot[rack_map$FillSolution == medium_selected],
-                    "", paste(choose_well, collapse=", "), vol_info[1], 0, cur_tip + 1,
-                    paste(medium_selected, "fillings for"))
-    }else{
-      nex_cmd2 <- NULL
+    # Fill mediumfill (border) wells — split by inoculum presence:
+    #   no inoculum  → full volume (vol_info[1], e.g. 200 uL)
+    #   has inoculum → reduced volume (vol_info[1] - vol_info[2], e.g. 150 uL)
+    choose_well_full    <- drug_map$Slot[!is.na(drug_map$Medium) &
+                                           drug_map$DrugName == "mediumfill" &
+                                           drug_map$Medium   == medium_selected &
+                                           is.na(drug_map$Innoc)]
+    choose_well_reduced <- drug_map$Slot[!is.na(drug_map$Medium) &
+                                           drug_map$DrugName == "mediumfill" &
+                                           drug_map$Medium   == medium_selected &
+                                           !is.na(drug_map$Innoc)]
+    
+    nex_cmd2 <- NULL
+    if(length(choose_well_full) > 0){
+      nex_cmd2 <- rbind(nex_cmd2,
+                        c(rack_map$Labware[rack_map$FillSolution == medium_selected],
+                          rack_map$Slot[rack_map$FillSolution == medium_selected],
+                          "", paste(choose_well_full, collapse=", "), vol_info[1], 0, cur_tip + 1,
+                          paste(medium_selected, "fillings for")))
+    }
+    if(length(choose_well_reduced) > 0){
+      nex_cmd2 <- rbind(nex_cmd2,
+                        c(rack_map$Labware[rack_map$FillSolution == medium_selected],
+                          rack_map$Slot[rack_map$FillSolution == medium_selected],
+                          "", paste(choose_well_reduced, collapse=", "), vol_info[1] - vol_info[2], 0, cur_tip + 1,
+                          paste(medium_selected, "fillings for")))
     }
     
     #concatenate; update tip
@@ -537,7 +659,7 @@ MainDistribution <- function(vol_info, sol_list, rack_map, drug_map, n_plate, de
     if(i==1){grand_plateDis <- data.frame(nex_cmd)}else{grand_plateDis <- rbind.data.frame(grand_plateDis, nex_cmd)}
   }
   
-  grand_plateDis <- grand_plateDis[order(grand_plateDis$TipID, decreasing=F),]
+  grand_plateDis <- grand_plateDis[order(as.numeric(grand_plateDis$TipID), decreasing=F),]
   
   #concatenate to command list
   cmd_list <- rbind.data.frame(cmd_list, grand_plateDis)
@@ -555,10 +677,11 @@ Calculate_SolventAmt <- function(rack_map, cmd_list){
   
   #iterate through command list
   for(i in c(1:length(cmd_list[,1]))){
-    if(cmd_list$SourceLabware[i] == solvent_rack$Labware[1]){
+    # Guard against NA source (e.g. rows generated for zero-conc wells with no rack entry)
+    if(!is.na(cmd_list$SourceLabware[i]) && cmd_list$SourceLabware[i] == solvent_rack$Labware[1]){
       #get volumes
       tube_fill <- solvent_rack$FillVolume[solvent_rack$Slot == cmd_list$SourceSlot[i]]
-      nex_trans_amt <- as.numeric(cmd_list$TransAmt[i]) * 
+      nex_trans_amt <- as.numeric(cmd_list$TransAmt[i]) *
         length(strsplit(cmd_list$TargetSlot[i], split=", ")[[1]])
       
       
@@ -670,7 +793,6 @@ AdjustDeck <- function(deck_map, rack_map, n_plate){
 mainExec <- function(file_name, randomize = FALSE){
   # ---------- SECTION A - Read and Preparation -------------
   allInput <- ReadInput(file_name)
-  allinputtest <<- allInput
   stockInfo <- allInput[[1]]
   volInfo <- allInput[[2]]
   drugMap <- allInput[[3]]
@@ -692,6 +814,16 @@ mainExec <- function(file_name, randomize = FALSE){
            volAbove=as.numeric(volAbove)) %>% 
     dplyr::select(Medium, DrugName, Conc, solID, nWell, ReqVolume, 
                   ReqConc, medDrugID, finVolumes, volAbove)
+  
+  bad_rows <- solList[solList$volAbove > solList$finVolumes, ]
+  
+  if (nrow(bad_rows) > 0) {
+    stop(paste0(
+      "ERROR: Requested concentration exceeds stock for: ",
+      paste(unique(bad_rows$solID), collapse = ", "),
+      ". Check stock concentrations or well layout."
+    ))
+  }
   
   #D. Calculate required stock amounts
   stockInfo <- CalculateStockAmt(solList, stockInfo)
@@ -799,9 +931,9 @@ mainExec <- function(file_name, randomize = FALSE){
 }
 
 #TROUBLESHOOTING--------------
-# mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\CQ_Plate\\"
-#inputFile <- "CQ_InputTemplate_GCV_FOS_LS.xlsx"
-# inputFile <- "CQ_InputTemplate.xlsx"
-# dqs <- mainExec(paste0(mainwd, inputFile), randomize = FALSE)
+mainwd <- "C:\\Users\\jornb\\Documents\\GitHub\\ot2-JB\\upstream (R) processors\\CQ_Plate\\"
+inputFile <- "JL_Trial_STK_20261027_OT2.xlsx"
+#inputFile <- "CQ_InputTemplate.xlsx"
+dqs <- mainExec(paste0(mainwd, inputFile), randomize = FALSE)
 
 #write.csv(robotCommands, paste0(mainwd, "/CommandList_test.csv"), row.names=F)
